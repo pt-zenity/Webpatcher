@@ -113,7 +113,7 @@ def main():
     env['TERM'] = 'dumb'
     env['NO_COLOR'] = '1'
     env['JAVA_HOME'] = '/usr/lib/jvm/java-21-openjdk-amd64'
-    env['PYTHONPATH'] = '/usr/local/lib/python3.12/site-packages'
+    env['PYTHONPATH'] = '/usr/local/lib/python3.12/dist-packages:/usr/local/lib/python3.12/site-packages:/usr/lib/python3/dist-packages'
     env['PATH'] = '/usr/bin:/usr/local/bin:/usr/lib/jvm/java-21-openjdk-amd64/bin:' + env.get('PATH', '')
 
     emit('info', 'CMD: ' + ' '.join(cmd))
@@ -204,7 +204,7 @@ function patchApk(apkPath, outputPath, options, onLog) {
     const env = {
       ...process.env,
       PYTHONUNBUFFERED: '1',
-      PYTHONPATH: '/usr/local/lib/python3.12/site-packages',
+      PYTHONPATH: '/usr/local/lib/python3.12/dist-packages:/usr/local/lib/python3.12/site-packages:/usr/lib/python3/dist-packages',
       TERM: 'dumb',
       NO_COLOR: '1',
       JAVA_HOME: '/usr/lib/jvm/java-21-openjdk-amd64',
