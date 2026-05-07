@@ -126,6 +126,81 @@ else
   warn "Apktool terpasang tapi verifikasi gagal — cek manual dengan: apktool --version"
 fi
 
+# ── 5b. ApkPatcherX (Python) ──────────────────────────────────────────────────
+step "5b/9  Install ApkPatcherX & patch untuk Ubuntu..."
+
+# Install ApkPatcherX via pip
+pip3 install ApkPatcherX --quiet || pip3 install ApkPatcherX --break-system-packages --quiet
+ok "ApkPatcherX terinstall: $(pip3 show ApkPatcherX 2>/dev/null | grep Version)"
+
+# ── Patch APK_PATCHER.py agar tidak crash di Ubuntu (bukan Termux) ────────────
+APK_PATCHER_FILE="$(python3 -c 'import importlib.util; s=importlib.util.find_spec("ApkPatcher"); print(s.submodule_search_locations[0])' 2>/dev/null)/APK_PATCHER.py"
+
+if [[ -f "$APK_PATCHER_FILE" ]]; then
+  info "Menerapkan patch Ubuntu ke $APK_PATCHER_FILE ..."
+
+  # 1. Patch install_package() — skip Termux pkg manager
+  python3 - "$APK_PATCHER_FILE" << 'PYEOF'
+import sys, re
+
+path = sys.argv[1]
+with open(path, 'r') as f:
+    src = f.read()
+
+# Patch 1: install_package body → pass
+src = re.sub(
+    r"(def install_package\(pkg\):)\n(    try:.*?)(check_dependencies\(\))",
+    r"\1\n    pass  # Patched: skip Termux pkg manager on Ubuntu\n\n\3",
+    src, flags=re.DOTALL
+)
+
+# Patch 2: termux-wake-lock → pass
+src = re.sub(
+    r"M\.subprocess\.run\(\['termux-wake-lock'\]\)",
+    r"pass  # Patched: no termux-wake-lock on Ubuntu",
+    src
+)
+
+# Patch 3: termux-wake-unlock + exit → just exit(0)
+src = re.sub(
+    r"M\.subprocess\.run\(\['termux-wake-unlock'\]\)\s*\n\s*exit\(.*?\)",
+    r"pass  # Patched: no termux-wake-unlock on Ubuntu",
+    src
+)
+
+# Patch 4: install_package('aapt') one-liner
+src = re.sub(
+    r"if M\.os\.name == 'posix': install_package\('aapt'\)",
+    r"pass  # Patched: aapt already installed via apt",
+    src
+)
+
+with open(path, 'w') as f:
+    f.write(src)
+
+print("Patch applied OK")
+PYEOF
+
+  ok "Patch APK_PATCHER.py selesai"
+else
+  warn "APK_PATCHER.py tidak ditemukan — skip patch"
+fi
+
+# Pre-download JAR files (APKEditor, APKTool, Uber-Apk-Signer)
+info "Pre-download JAR files ApkPatcher..."
+python3 -c "
+import sys, os
+sys.argv = ['ApkPatcher', '-C']
+os.environ['PYTHONPATH'] = '/usr/local/lib/python3.12/site-packages'
+try:
+    from ApkPatcher.APK_PATCHER import RK_Techno_IND
+except SystemExit:
+    pass
+except Exception as e:
+    pass
+" 2>/dev/null || true
+ok "JAR files siap"
+
 # ── 6. PM2 ────────────────────────────────────────────────────────────────────
 step "6/9  Install PM2..."
 if command -v pm2 &>/dev/null; then

@@ -4,3 +4,5 @@ outputs/
 logs/
 *.log
 .env
+*.jar
+.wrangler/
