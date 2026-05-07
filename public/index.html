@@ -3,910 +3,1126 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
-<meta name="theme-color" content="#07090f"/>
-<meta name="description" content="APK Patch Suite — Flutter SSL bypass, APK patcher, Smali patch, Pairip bypass. Langsung di browser."/>
-<title>APK Patch Suite — Flutter SSL + ApkPatcher</title>
+<meta name="theme-color" content="#020408"/>
+<meta name="description" content="APK Patch Suite — Flutter SSL bypass, APK patcher, Smali patch, Pairip bypass. Professional web-based tool."/>
+<title>APK Patch Suite — Professional Edition</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡️</text></svg>"/>
 <style>
-/* ══ RESET & DESIGN TOKENS ══════════════════════════════════════════════ */
+/* ══ GOOGLE FONTS IMPORT ══ */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+/* ══ RESET & CSS VARIABLES ══ */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#07090f;--surf:#0c0f1a;--card:#101525;--card2:#0b1020;
-  --b1:#1a2540;--b2:#223058;--b3:#2d4070;
-  --p:#6366f1;--p2:#818cf8;--p3:#4f46e5;--p4:rgba(99,102,241,.12);
-  --green:#10b981;--g2:#34d399;
-  --red:#ef4444;--r2:#fca5a5;
-  --yel:#f59e0b;--y2:#fcd34d;
-  --blue:#3b82f6;--b2c:#93c5fd;
-  --cyan:#06b6d4;--c2:#67e8f9;
-  --org:#f97316;--o2:#fdba74;
-  --txt:#e2e8f0;--mu:#64748b;--mu2:#94a3b8;
-  --r:12px;--rs:8px;--rxs:6px;
-  --shadow:0 4px 24px rgba(0,0,0,.4);
-  --glow-p:0 0 40px rgba(99,102,241,.15);
+  /* Core colors */
+  --bg:#020408;
+  --bg2:#040912;
+  --surface:#060d1a;
+  --surface2:#0a1424;
+  --card:#0c1830;
+  --card2:#0d1e38;
+  --border:#1a2d4a;
+  --border2:#243d60;
+  --border3:#2e507a;
+
+  /* Brand */
+  --primary:#4f8ef7;
+  --primary-dim:#3a70d4;
+  --primary-glow:rgba(79,142,247,.2);
+  --primary-subtle:rgba(79,142,247,.08);
+  --accent:#7c3aed;
+  --accent2:#a855f7;
+
+  /* Semantic colors */
+  --green:#22d3a5;
+  --green2:#10b981;
+  --green-dim:rgba(34,211,165,.12);
+  --red:#f56565;
+  --red2:#fc8181;
+  --red-dim:rgba(245,101,101,.12);
+  --yellow:#f6c90e;
+  --yellow2:#fde68a;
+  --yellow-dim:rgba(246,201,14,.1);
+  --blue:#60a5fa;
+  --cyan:#22d3ee;
+  --orange:#fb923c;
+  --pink:#f472b6;
+
+  /* Text */
+  --text:#e2e8f0;
+  --text2:#94a3b8;
+  --text3:#64748b;
+  --text4:#3d5474;
+
+  /* Shadows & glows */
+  --shadow-sm:0 2px 8px rgba(0,0,0,.4);
+  --shadow:0 4px 24px rgba(0,0,0,.5);
+  --shadow-lg:0 8px 48px rgba(0,0,0,.6);
+  --glow-primary:0 0 40px rgba(79,142,247,.15),0 0 80px rgba(79,142,247,.05);
+  --glow-green:0 0 30px rgba(34,211,165,.12);
+  --glow-accent:0 0 40px rgba(124,58,237,.15);
+
+  /* Spacing */
+  --r:14px;--rs:10px;--rxs:6px;
   --t:.22s cubic-bezier(.4,0,.2,1);
   --safe-top:env(safe-area-inset-top,0px);
   --safe-bot:env(safe-area-inset-bottom,0px);
   --safe-l:env(safe-area-inset-left,0px);
   --safe-r:env(safe-area-inset-right,0px);
-  /* Touch target min sizes */
-  --touch-min:44px;
 }
 
 html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;height:100%}
 body{
-  background:var(--bg);color:var(--txt);
-  font-family:'Segoe UI',system-ui,-apple-system,'Helvetica Neue',sans-serif;
+  background:var(--bg);color:var(--text);
+  font-family:'Inter',system-ui,-apple-system,sans-serif;
   min-height:100%;line-height:1.6;overflow-x:hidden;
+  background-image:
+    radial-gradient(ellipse 80% 50% at 50% -20%,rgba(79,142,247,.06) 0%,transparent 60%),
+    radial-gradient(ellipse 60% 40% at 90% 60%,rgba(124,58,237,.04) 0%,transparent 50%),
+    radial-gradient(ellipse 50% 30% at 0% 80%,rgba(34,211,165,.03) 0%,transparent 50%);
+  background-attachment:fixed;
 }
 
 /* ── Scrollbar ── */
 ::-webkit-scrollbar{width:4px;height:4px}
 ::-webkit-scrollbar-track{background:transparent}
-::-webkit-scrollbar-thumb{background:var(--p);border-radius:99px}
-::-webkit-scrollbar-thumb:hover{background:var(--p2)}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:99px}
+::-webkit-scrollbar-thumb:hover{background:var(--primary)}
 
-/* ══ NAVBAR ══════════════════════════════════════════════════════════════ */
+/* ══ ANIMATED BACKGROUND GRID ══ */
+.bg-grid{
+  position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background-image:
+    linear-gradient(rgba(79,142,247,.03) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(79,142,247,.03) 1px,transparent 1px);
+  background-size:60px 60px;
+  mask-image:radial-gradient(ellipse 100% 100% at 50% 0%,black 30%,transparent 80%);
+}
+
+/* ══ NAVBAR ══ */
 .nav{
   position:sticky;top:0;z-index:300;
-  background:rgba(7,9,15,.94);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
-  border-bottom:1px solid var(--b1);
+  background:rgba(2,4,8,.85);
+  backdrop-filter:blur(24px) saturate(180%);
+  -webkit-backdrop-filter:blur(24px) saturate(180%);
+  border-bottom:1px solid rgba(79,142,247,.1);
   padding-left:max(.875rem,var(--safe-l));
   padding-right:max(.875rem,var(--safe-r));
 }
+.nav::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(79,142,247,.3),transparent);
+}
 .nav-inner{
-  max-width:1200px;margin:0 auto;
-  height:52px;display:flex;align-items:center;justify-content:space-between;gap:.5rem;
+  max-width:1280px;margin:0 auto;
+  height:56px;display:flex;align-items:center;justify-content:space-between;gap:.75rem;
 }
 .nav-brand{
-  display:flex;align-items:center;gap:.45rem;
-  font-weight:900;font-size:.92rem;color:#fff;text-decoration:none;
-  white-space:nowrap;flex-shrink:0;min-width:0;min-height:var(--touch-min);
+  display:flex;align-items:center;gap:.55rem;
+  font-weight:800;font-size:.9rem;color:#fff;text-decoration:none;
+  white-space:nowrap;flex-shrink:0;
 }
-.nav-brand .logo{font-size:1.25rem;line-height:1;flex-shrink:0}
-.nav-brand .brand-text{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.nav-links{display:flex;gap:.05rem;flex-shrink:0}
-.nav-links a{
-  font-size:.76rem;font-weight:500;color:var(--mu2);
-  padding:.38rem .58rem;border-radius:6px;text-decoration:none;transition:var(--t);
-  white-space:nowrap;min-height:var(--touch-min);display:flex;align-items:center;
+.nav-logo{
+  width:32px;height:32px;
+  background:linear-gradient(135deg,var(--primary),var(--accent));
+  border-radius:8px;display:flex;align-items:center;justify-content:center;
+  font-size:.9rem;box-shadow:0 2px 12px rgba(79,142,247,.3);
+  flex-shrink:0;
 }
-.nav-links a:hover{background:rgba(255,255,255,.07);color:#fff}
+.nav-name{font-size:.88rem;font-weight:800;letter-spacing:-.01em}
+.nav-version{
+  font-size:.6rem;background:var(--primary-subtle);color:var(--primary);
+  border:1px solid rgba(79,142,247,.2);padding:.08rem .4rem;
+  border-radius:99px;font-weight:600;letter-spacing:.05em;
+}
+.nav-center{display:flex;gap:.15rem}
+.nav-link{
+  font-size:.76rem;font-weight:500;color:var(--text3);
+  padding:.38rem .62rem;border-radius:7px;text-decoration:none;
+  transition:var(--t);white-space:nowrap;display:flex;align-items:center;min-height:40px;
+}
+.nav-link:hover{color:var(--text);background:rgba(255,255,255,.05)}
+.nav-right{display:flex;align-items:center;gap:.5rem}
+.nav-status{
+  display:flex;align-items:center;gap:.38rem;
+  font-size:.7rem;font-weight:600;
+  background:rgba(34,211,165,.08);border:1px solid rgba(34,211,165,.18);
+  color:var(--green);padding:.3rem .72rem;border-radius:99px;
+}
+.nav-status-dot{
+  width:6px;height:6px;border-radius:50%;background:var(--green);
+  animation:pulse-dot 2s ease-in-out infinite;flex-shrink:0;
+}
 .nav-gh{
-  display:flex;align-items:center;gap:.38rem;flex-shrink:0;
-  background:rgba(255,255,255,.05);border:1px solid var(--b2);
-  color:var(--mu2);font-size:.74rem;font-weight:600;
-  padding:.35rem .75rem;border-radius:7px;text-decoration:none;transition:var(--t);
-  min-height:var(--touch-min);
+  display:flex;align-items:center;gap:.38rem;
+  background:rgba(255,255,255,.04);border:1px solid var(--border2);
+  color:var(--text2);font-size:.74rem;font-weight:600;
+  padding:.34rem .75rem;border-radius:8px;text-decoration:none;transition:var(--t);
+  min-height:36px;
 }
-.nav-gh:hover{background:rgba(255,255,255,.1);color:#fff;border-color:var(--b3)}
+.nav-gh:hover{background:rgba(255,255,255,.08);color:#fff;border-color:var(--border3)}
 .nav-gh svg{width:14px;height:14px;fill:currentColor;flex-shrink:0}
-@media(max-width:680px){.nav-links{display:none}}
-@media(max-width:400px){.nav-gh .nav-gh-text{display:none}}
+@media(max-width:720px){.nav-center{display:none}}
+@media(max-width:480px){.nav-version,.nav-status{display:none}}
 
-/* ══ HERO ════════════════════════════════════════════════════════════════ */
+/* ══ HERO ══ */
 .hero{
   position:relative;overflow:hidden;
-  padding:clamp(2rem,6vw,4rem) clamp(.875rem,4vw,1.5rem) clamp(1.5rem,4vw,2.75rem);
+  padding:clamp(3rem,8vw,5rem) clamp(.875rem,4vw,1.5rem) clamp(2rem,5vw,3.5rem);
   text-align:center;
 }
-.hero::before{
-  content:'';position:absolute;inset:0;pointer-events:none;
-  background:
-    radial-gradient(ellipse 90% 55% at 50% -5%,rgba(99,102,241,.18) 0%,transparent 70%),
-    radial-gradient(ellipse 55% 35% at 80% 95%,rgba(16,185,129,.08) 0%,transparent 60%),
-    radial-gradient(ellipse 40% 30% at 10% 80%,rgba(59,130,246,.06) 0%,transparent 55%);
+.hero-eyebrow{
+  display:inline-flex;align-items:center;gap:.5rem;
+  background:rgba(79,142,247,.08);border:1px solid rgba(79,142,247,.2);
+  color:var(--primary);font-size:.68rem;font-weight:700;letter-spacing:.1em;
+  padding:.32rem 1rem;border-radius:99px;margin-bottom:1.4rem;text-transform:uppercase;
+  animation:fadeDown .6s ease both;
 }
-.hero-badge{
-  display:inline-flex;align-items:center;gap:.42rem;
-  background:rgba(99,102,241,.12);border:1px solid rgba(99,102,241,.3);
-  color:var(--p2);font-size:.68rem;font-weight:700;letter-spacing:.07em;
-  padding:.28rem .88rem;border-radius:99px;margin-bottom:1rem;text-transform:uppercase;
-}
+.hero-eyebrow .dot{width:5px;height:5px;border-radius:50%;background:var(--primary);animation:pulse-dot 1.5s ease-in-out infinite}
 .hero h1{
-  font-size:clamp(1.6rem,5vw,2.85rem);font-weight:900;
-  line-height:1.1;color:#fff;margin-bottom:.75rem;
+  font-size:clamp(2rem,6vw,3.5rem);font-weight:900;
+  line-height:1.05;color:#fff;margin-bottom:1rem;letter-spacing:-.03em;
+  animation:fadeUp .7s ease .1s both;
 }
-.grad{
-  background:linear-gradient(135deg,#818cf8 0%,#6366f1 45%,#34d399 100%);
+.hero-gradient{
+  background:linear-gradient(135deg,#60a5fa 0%,#818cf8 35%,#a78bfa 60%,#34d399 100%);
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  background-size:200%;animation:gradientFlow 4s linear infinite;
 }
+@keyframes gradientFlow{0%{background-position:0%}100%{background-position:200%}}
 .hero-sub{
-  max-width:540px;margin:0 auto 1.4rem;
-  color:var(--mu2);font-size:clamp(.82rem,2.3vw,.97rem);
+  max-width:560px;margin:0 auto 1.75rem;
+  color:var(--text2);font-size:clamp(.86rem,2.2vw,1.02rem);line-height:1.7;
+  animation:fadeUp .7s ease .2s both;
 }
-.chips{display:flex;flex-wrap:wrap;justify-content:center;gap:.38rem;margin-bottom:1.75rem}
-.chip{
-  display:inline-flex;align-items:center;gap:.3rem;
-  font-size:.68rem;font-weight:700;padding:.24rem .7rem;border-radius:99px;white-space:nowrap;
+.hero-chips{
+  display:flex;flex-wrap:wrap;justify-content:center;gap:.42rem;margin-bottom:2.5rem;
+  animation:fadeUp .7s ease .3s both;
 }
-.ch-c{background:rgba(6,182,212,.1);color:var(--c2);border:1px solid rgba(6,182,212,.22)}
-.ch-o{background:rgba(249,115,22,.1);color:var(--o2);border:1px solid rgba(249,115,22,.22)}
-.ch-g{background:rgba(16,185,129,.1);color:var(--g2);border:1px solid rgba(16,185,129,.22)}
-.ch-p{background:rgba(99,102,241,.1);color:var(--p2);border:1px solid rgba(99,102,241,.22)}
-.ch-b{background:rgba(59,130,246,.1);color:var(--b2c);border:1px solid rgba(59,130,246,.22)}
-.ch-y{background:rgba(245,158,11,.1);color:var(--y2);border:1px solid rgba(245,158,11,.22)}
+.hchip{
+  display:inline-flex;align-items:center;gap:.32rem;
+  font-size:.66rem;font-weight:700;padding:.28rem .78rem;border-radius:99px;
+  letter-spacing:.04em;text-transform:uppercase;white-space:nowrap;
+}
+.hc-blue{background:rgba(79,142,247,.1);color:#60a5fa;border:1px solid rgba(79,142,247,.2)}
+.hc-purple{background:rgba(124,58,237,.1);color:#a855f7;border:1px solid rgba(124,58,237,.2)}
+.hc-green{background:rgba(34,211,165,.1);color:#22d3a5;border:1px solid rgba(34,211,165,.2)}
+.hc-orange{background:rgba(251,146,60,.1);color:#fb923c;border:1px solid rgba(251,146,60,.2)}
+.hc-cyan{background:rgba(34,211,238,.1);color:#22d3ee;border:1px solid rgba(34,211,238,.2)}
+.hc-pink{background:rgba(244,114,182,.1);color:#f472b6;border:1px solid rgba(244,114,182,.2)}
 
-/* ══ LAYOUT ══════════════════════════════════════════════════════════════ */
-.main{max-width:1200px;margin:0 auto;padding:0 clamp(.75rem,3vw,1.5rem) 5rem}
-.section{margin-bottom:2.25rem}
-.section-title{
+/* Stats row */
+.hero-stats{
+  display:flex;flex-wrap:wrap;justify-content:center;gap:1rem 2rem;
+  animation:fadeUp .7s ease .4s both;
+}
+.hstat{text-align:center}
+.hstat-val{font-size:1.5rem;font-weight:900;color:#fff;line-height:1;letter-spacing:-.03em}
+.hstat-lbl{font-size:.67rem;color:var(--text3);font-weight:500;margin-top:.15rem}
+
+/* ══ LAYOUT ══ */
+.main{max-width:1280px;margin:0 auto;padding:0 clamp(.75rem,3vw,1.5rem) 6rem}
+
+/* ══ SECTION HEADER ══ */
+.sec-hd{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:1.2rem;flex-wrap:wrap;gap:.5rem;
+}
+.sec-title{
   display:flex;align-items:center;gap:.5rem;
-  font-size:1rem;font-weight:800;color:#fff;margin-bottom:.9rem;
+  font-size:.9rem;font-weight:800;color:#fff;letter-spacing:-.01em;
+}
+.sec-badge{
+  font-size:.62rem;font-weight:700;padding:.12rem .52rem;border-radius:99px;
+  background:var(--primary-subtle);color:var(--primary);border:1px solid rgba(79,142,247,.2);
 }
 
-/* ══ MODE SWITCHER ════════════════════════════════════════════════════════ */
-.mode-tabs{
-  display:grid;grid-template-columns:1fr 1fr;gap:.38rem;
-  background:var(--card2);border:1px solid var(--b1);
-  border-radius:13px;padding:.35rem;margin-bottom:1.6rem;
+/* ══ MODE SWITCHER ══ */
+.mode-rail{
+  display:flex;gap:.5rem;
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:16px;padding:.45rem;margin-bottom:1.75rem;
 }
 .mode-tab{
-  display:flex;align-items:center;justify-content:center;gap:.45rem;
-  padding:.7rem .9rem;border-radius:9px;cursor:pointer;
-  font-size:.85rem;font-weight:700;transition:var(--t);
-  border:1px solid transparent;background:transparent;color:var(--mu2);
-  -webkit-tap-highlight-color:transparent;font-family:inherit;
-  position:relative;min-height:var(--touch-min);
+  flex:1;display:flex;align-items:center;justify-content:center;gap:.55rem;
+  padding:.8rem 1rem;border-radius:12px;cursor:pointer;
+  font-size:.84rem;font-weight:700;transition:var(--t);
+  border:1px solid transparent;background:transparent;color:var(--text3);
+  -webkit-tap-highlight-color:transparent;font-family:'Inter',sans-serif;
+  position:relative;min-height:52px;
 }
-.mode-tab:hover{color:#fff;background:rgba(255,255,255,.05)}
+.mode-tab:hover{color:var(--text);background:rgba(255,255,255,.04)}
 .mode-tab.active{
-  background:linear-gradient(135deg,rgba(99,102,241,.24),rgba(99,102,241,.11));
-  color:#fff;border-color:rgba(99,102,241,.35);
-  box-shadow:0 4px 20px rgba(99,102,241,.16);
+  background:linear-gradient(135deg,rgba(79,142,247,.18),rgba(79,142,247,.08));
+  color:#fff;border-color:rgba(79,142,247,.3);
+  box-shadow:0 4px 24px rgba(79,142,247,.12),inset 0 1px 0 rgba(255,255,255,.05);
 }
-.mode-tab .ti{font-size:1.05rem;flex-shrink:0}
-.mode-tab .tl{font-size:.82rem;font-weight:700;line-height:1.2;text-align:left}
-.mode-tab .ts{font-size:.63rem;color:var(--mu);font-weight:500;line-height:1;text-align:left}
-.mode-tab.active .ts{color:var(--mu2)}
-.mode-tab .tb{
-  font-size:.58rem;background:rgba(99,102,241,.18);color:var(--p2);
-  padding:.08rem .42rem;border-radius:99px;border:1px solid rgba(99,102,241,.28);
-  margin-left:auto;white-space:nowrap;flex-shrink:0;
+.mode-tab-icon{font-size:1.1rem;flex-shrink:0}
+.mode-tab-label{font-size:.83rem;font-weight:700;line-height:1.2}
+.mode-tab-sub{font-size:.62rem;color:var(--text3);font-weight:500;margin-top:.06rem}
+.mode-tab.active .mode-tab-sub{color:var(--text2)}
+.mode-tab-pill{
+  margin-left:auto;font-size:.58rem;font-weight:700;
+  background:rgba(79,142,247,.15);color:var(--primary);
+  border:1px solid rgba(79,142,247,.25);padding:.1rem .45rem;
+  border-radius:99px;white-space:nowrap;flex-shrink:0;
 }
-@media(max-width:420px){
-  .mode-tab{flex-direction:column;gap:.24rem;padding:.6rem .35rem}
-  .mode-tab .tb{margin-left:0}
-  .mode-tab .ts{display:none}
-  .mode-tab .tl{font-size:.76rem}
+@media(max-width:480px){
+  .mode-rail{flex-direction:column}
+  .mode-tab-pill{margin-left:0}
 }
-
 .mode-content{display:none}
-.mode-content.active{display:block;animation:fadeUp .28s ease}
+.mode-content.active{display:block;animation:fadeUp .3s ease}
 
-/* ══ TOOL CARD ════════════════════════════════════════════════════════════ */
+/* ══ TOOL CARD ══ */
 .tool-card{
-  background:linear-gradient(148deg,var(--card),var(--card2));
-  border:1px solid var(--b1);border-radius:16px;overflow:hidden;
-  box-shadow:var(--shadow);transition:border-color var(--t);
+  background:linear-gradient(165deg,var(--surface),var(--surface2));
+  border:1px solid var(--border);border-radius:20px;overflow:hidden;
+  box-shadow:var(--shadow);transition:border-color var(--t);position:relative;
 }
-.tool-card:hover{border-color:var(--b2)}
-
-.stats-bar{
-  display:flex;flex-wrap:wrap;gap:.5rem .75rem;
-  padding:.65rem 1.15rem;border-bottom:1px solid var(--b1);
-  background:rgba(99,102,241,.04);
+.tool-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(79,142,247,.3),transparent);
+  pointer-events:none;
 }
-.si{display:flex;align-items:center;gap:.35rem;font-size:.74rem}
-.sd{width:6px;height:6px;border-radius:50%;flex-shrink:0}
-.sl{color:var(--mu)}
-.sv{font-weight:700;color:#fff}
+.tool-card:hover{border-color:var(--border2)}
 
-.tool-header{
-  padding:1rem 1.35rem;border-bottom:1px solid var(--b1);
-  display:flex;align-items:flex-start;gap:.75rem;
-  background:rgba(99,102,241,.03);
+/* Stats bar */
+.stats-row{
+  display:flex;flex-wrap:wrap;gap:.5rem .875rem;
+  padding:.7rem 1.25rem;border-bottom:1px solid var(--border);
+  background:rgba(0,0,0,.2);
 }
-.th-icon{font-size:1.45rem;line-height:1;flex-shrink:0;margin-top:.05rem}
-.th-title{font-size:.94rem;font-weight:800;color:#fff;margin-bottom:.1rem}
-.th-sub{font-size:.74rem;color:var(--mu);line-height:1.45}
+.stat-item{display:flex;align-items:center;gap:.38rem;font-size:.72rem}
+.stat-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.stat-label{color:var(--text3);font-weight:500}
+.stat-val{font-weight:700;color:#fff}
 
-.tool-body{padding:clamp(.85rem,2.8vw,1.5rem)}
+/* Card header */
+.card-head{
+  padding:1.1rem 1.4rem;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:.85rem;
+  background:linear-gradient(90deg,rgba(79,142,247,.04),transparent);
+}
+.card-head-icon{
+  width:42px;height:42px;border-radius:12px;
+  background:linear-gradient(135deg,rgba(79,142,247,.2),rgba(79,142,247,.05));
+  border:1px solid rgba(79,142,247,.2);
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.3rem;flex-shrink:0;
+}
+.card-head-title{font-size:.94rem;font-weight:800;color:#fff;letter-spacing:-.01em;margin-bottom:.1rem}
+.card-head-sub{font-size:.72rem;color:var(--text3);line-height:1.5}
+.card-head-sub code{
+  background:rgba(79,142,247,.12);border:1px solid rgba(79,142,247,.15);
+  padding:.03rem .35rem;border-radius:4px;color:var(--primary);font-size:.85em;
+  font-family:'JetBrains Mono',monospace;
+}
 
-/* ══ DROPZONE ════════════════════════════════════════════════════════════ */
+.card-body{padding:clamp(.9rem,2.8vw,1.6rem)}
+
+/* ══ DROP ZONE ══ */
 .dropzone{
-  border:2px dashed var(--b2);border-radius:var(--r);
-  padding:clamp(1.5rem,5vw,2.5rem) clamp(.85rem,4vw,1.75rem);
-  text-align:center;cursor:pointer;transition:var(--t);
-  position:relative;background:rgba(99,102,241,.02);
-  -webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none;
+  border:2px dashed var(--border2);border-radius:var(--r);
+  padding:clamp(1.8rem,5vw,2.75rem) clamp(1rem,4vw,2rem);
+  text-align:center;cursor:pointer;transition:all var(--t);
+  position:relative;background:rgba(79,142,247,.02);
+  -webkit-tap-highlight-color:transparent;user-select:none;
 }
-.dropzone:hover,.dropzone.over{border-color:var(--p);background:rgba(99,102,241,.07)}
-.dropzone.over{box-shadow:inset 0 0 0 2px rgba(99,102,241,.25)}
-.dropzone.has-file{border-style:solid;border-color:rgba(16,185,129,.4);background:rgba(16,185,129,.03)}
+.dropzone:hover,.dropzone.over{
+  border-color:var(--primary);
+  background:rgba(79,142,247,.06);
+  box-shadow:0 0 0 4px rgba(79,142,247,.08),inset 0 0 0 1px rgba(79,142,247,.1);
+}
+.dropzone.has-file{
+  border-style:solid;border-color:rgba(34,211,165,.4);
+  background:rgba(34,211,165,.03);
+}
 .dropzone input[type=file]{
-  position:absolute;inset:0;opacity:0;cursor:pointer;
-  width:100%;height:100%;font-size:0;
+  position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;font-size:0;
 }
 .dz-icon{
-  width:48px;height:48px;margin:0 auto .75rem;
-  background:rgba(99,102,241,.12);border:1px solid rgba(99,102,241,.25);
-  border-radius:12px;display:flex;align-items:center;justify-content:center;
-  font-size:1.35rem;transition:var(--t);
+  width:56px;height:56px;margin:0 auto .9rem;
+  background:linear-gradient(135deg,rgba(79,142,247,.15),rgba(79,142,247,.05));
+  border:1px solid rgba(79,142,247,.2);border-radius:14px;
+  display:flex;align-items:center;justify-content:center;font-size:1.5rem;
+  transition:var(--t);box-shadow:0 4px 16px rgba(79,142,247,.1);
 }
 .dropzone:hover .dz-icon,.dropzone.over .dz-icon{
-  transform:scale(1.08) translateY(-2px);background:rgba(99,102,241,.22);
+  transform:scale(1.1) translateY(-3px);
+  background:linear-gradient(135deg,rgba(79,142,247,.25),rgba(79,142,247,.1));
+  box-shadow:0 8px 24px rgba(79,142,247,.2);
 }
-.dz-title{font-weight:700;color:#fff;font-size:.9rem;margin-bottom:.25rem}
+.dz-title{font-weight:700;color:#fff;font-size:.9rem;margin-bottom:.3rem}
 .dz-title code{
-  background:rgba(99,102,241,.15);padding:.04rem .35rem;
-  border-radius:4px;color:var(--p2);font-size:.87em;
+  background:rgba(79,142,247,.12);border:1px solid rgba(79,142,247,.15);
+  padding:.04rem .38rem;border-radius:5px;color:var(--primary);font-size:.9em;
+  font-family:'JetBrains Mono',monospace;
 }
-.dz-sub{color:var(--mu);font-size:.78rem}
+.dz-sub{color:var(--text3);font-size:.78rem}
 .dz-hint{
-  display:inline-flex;align-items:center;gap:.32rem;margin-top:.65rem;
-  font-size:.68rem;color:var(--mu);background:rgba(255,255,255,.03);
-  border:1px solid var(--b1);padding:.24rem .65rem;border-radius:99px;
+  display:inline-flex;align-items:center;gap:.35rem;margin-top:.75rem;
+  font-size:.67rem;color:var(--text3);
+  background:rgba(255,255,255,.03);border:1px solid var(--border);
+  padding:.26rem .72rem;border-radius:99px;
 }
-@media(hover:none){.dz-hint .drag-only{display:none}}
 
-/* ══ FILE PREVIEW ═════════════════════════════════════════════════════════ */
+/* ══ FILE PREVIEW ══ */
 .file-preview{
-  display:none;align-items:center;gap:.75rem;
-  background:rgba(16,185,129,.05);border:1px solid rgba(16,185,129,.18);
-  border-radius:var(--rs);padding:.72rem .9rem;margin-top:.75rem;
+  display:none;align-items:center;gap:.8rem;
+  background:rgba(34,211,165,.05);
+  border:1px solid rgba(34,211,165,.2);
+  border-radius:var(--rs);padding:.78rem 1rem;margin-top:.8rem;
   animation:fadeUp .25s ease;
 }
 .file-preview.show{display:flex}
 .fp-icon{
-  width:34px;height:34px;min-width:34px;
-  background:rgba(16,185,129,.14);border-radius:8px;
-  display:flex;align-items:center;justify-content:center;font-size:.92rem;
-  flex-shrink:0;
+  width:38px;height:38px;min-width:38px;
+  background:rgba(34,211,165,.12);border-radius:9px;
+  display:flex;align-items:center;justify-content:center;font-size:.95rem;flex-shrink:0;
 }
 .fp-info{flex:1;min-width:0}
 .fp-name{font-weight:700;color:#fff;font-size:.82rem;word-break:break-all;line-height:1.3}
-.fp-meta{font-size:.7rem;color:var(--mu2);margin-top:.07rem}
+.fp-meta{font-size:.69rem;color:var(--text2);margin-top:.06rem}
 .fp-rm{
   margin-left:auto;flex-shrink:0;cursor:pointer;
-  width:28px;height:28px;min-width:28px;min-height:28px;
-  background:rgba(239,68,68,.1);
-  border:1px solid rgba(239,68,68,.2);border-radius:6px;
-  display:flex;align-items:center;justify-content:center;
-  font-size:.75rem;color:var(--r2);transition:var(--t);
+  width:30px;height:30px;min-width:30px;
+  background:rgba(245,101,101,.08);border:1px solid rgba(245,101,101,.15);
+  border-radius:7px;display:flex;align-items:center;justify-content:center;
+  font-size:.75rem;color:var(--red2);transition:var(--t);
   -webkit-tap-highlight-color:transparent;
 }
-.fp-rm:hover{background:rgba(239,68,68,.28)}
+.fp-rm:hover{background:rgba(245,101,101,.2);border-color:rgba(245,101,101,.3)}
 
-/* ══ UPLOAD PROGRESS ══════════════════════════════════════════════════════ */
-.up-prog{display:none;margin-top:.6rem}
+/* ══ UPLOAD PROGRESS ══ */
+.up-prog{display:none;margin-top:.65rem}
 .up-prog.show{display:block;animation:fadeUp .2s ease}
-.up-prog-label{font-size:.7rem;color:var(--mu2);display:flex;justify-content:space-between;margin-bottom:.26rem}
-.up-prog-bar{height:4px;border-radius:99px;background:var(--b1);overflow:hidden}
-.up-prog-fill{height:100%;background:linear-gradient(90deg,var(--p3),var(--p2));border-radius:99px;transition:width .1s linear;width:0}
-
-/* ══ OPTIONS ══════════════════════════════════════════════════════════════ */
-.opt-row{
-  display:grid;grid-template-columns:1fr 1fr;gap:.75rem;
-  margin-top:1rem;
+.up-prog-label{
+  font-size:.7rem;color:var(--text2);
+  display:flex;justify-content:space-between;margin-bottom:.3rem;
 }
-@media(max-width:500px){.opt-row{grid-template-columns:1fr}}
-
-.opt-group label.opt-label{
-  display:block;font-size:.7rem;font-weight:700;
-  color:var(--mu2);letter-spacing:.05em;text-transform:uppercase;margin-bottom:.36rem;
+.up-prog-bar{height:3px;border-radius:99px;background:var(--border);overflow:hidden}
+.up-prog-fill{
+  height:100%;
+  background:linear-gradient(90deg,var(--primary),var(--accent2));
+  border-radius:99px;transition:width .1s linear;width:0;
 }
+
+/* ══ OPTIONS ══ */
+.opts-row{display:grid;grid-template-columns:1fr 1fr;gap:.85rem;margin-top:1.1rem}
+@media(max-width:520px){.opts-row{grid-template-columns:1fr}}
+
+.opt-label{
+  display:block;font-size:.68rem;font-weight:700;
+  color:var(--text3);letter-spacing:.06em;text-transform:uppercase;margin-bottom:.38rem;
+}
+
 .sel-wrap{position:relative}
 .sel-wrap select{
-  width:100%;background:var(--card2);border:1px solid var(--b2);border-radius:var(--rs);
-  color:var(--txt);font-size:.83rem;padding:.58rem .9rem;padding-right:2rem;
-  outline:none;transition:var(--t);cursor:pointer;appearance:none;-webkit-appearance:none;
-  min-height:var(--touch-min);
+  width:100%;background:rgba(0,0,0,.3);border:1px solid var(--border2);
+  border-radius:var(--rs);color:var(--text);font-size:.82rem;
+  padding:.62rem .95rem;padding-right:2.2rem;
+  outline:none;transition:var(--t);cursor:pointer;
+  appearance:none;-webkit-appearance:none;font-family:'Inter',sans-serif;
+  min-height:44px;
 }
-.sel-wrap select:focus{border-color:var(--p);box-shadow:0 0 0 2px rgba(99,102,241,.18)}
+.sel-wrap select:focus{border-color:var(--primary);box-shadow:0 0 0 3px var(--primary-subtle)}
 .sel-wrap::after{
-  content:'▾';position:absolute;right:.72rem;top:50%;transform:translateY(-50%);
-  color:var(--mu);pointer-events:none;font-size:.74rem;
+  content:'▾';position:absolute;right:.78rem;top:50%;transform:translateY(-50%);
+  color:var(--text3);pointer-events:none;font-size:.74rem;
 }
 
-/* Toggle switch */
-.tg-row{display:flex;align-items:center;gap:.58rem;margin-top:.3rem}
+/* Toggle */
+.tg-row{display:flex;align-items:center;gap:.6rem;margin-top:.35rem}
 .tg{
   position:relative;display:inline-flex;align-items:center;
-  width:38px;height:22px;cursor:pointer;flex-shrink:0;
-  /* increase touch target */
-  padding:.5rem .25rem;margin:-.5rem -.25rem;
+  width:40px;height:23px;cursor:pointer;flex-shrink:0;
+  padding:.45rem .2rem;margin:-.45rem -.2rem;
 }
 .tg input{opacity:0;width:0;height:0;position:absolute}
-.tg-track{width:38px;height:22px;background:var(--b2);border-radius:99px;transition:var(--t);pointer-events:none}
-.tg input:checked+.tg-track{background:var(--p)}
-.tg-thumb{
-  position:absolute;left:calc(.25rem + 3px);top:calc(.5rem + 3px);width:16px;height:16px;
-  border-radius:99px;background:#fff;transition:var(--t);
-  box-shadow:0 1px 4px rgba(0,0,0,.3);pointer-events:none;
+.tg-track{
+  width:40px;height:23px;
+  background:var(--border2);border-radius:99px;transition:var(--t);
+  pointer-events:none;
 }
-.tg input:checked~.tg-thumb{transform:translateX(16px)}
-.tg-label{font-size:.8rem;color:var(--mu2);cursor:pointer;line-height:1.35;user-select:none}
+.tg input:checked+.tg-track{background:var(--primary)}
+.tg-thumb{
+  position:absolute;left:calc(.2rem + 3px);top:calc(.45rem + 3px);
+  width:17px;height:17px;border-radius:99px;background:#fff;
+  transition:var(--t);box-shadow:0 1px 4px rgba(0,0,0,.3);pointer-events:none;
+}
+.tg input:checked~.tg-thumb{transform:translateX(17px)}
+.tg-label{font-size:.79rem;color:var(--text2);cursor:pointer;user-select:none;line-height:1.4}
 
-/* Patch option cards */
+/* Patch grid */
 .patch-grid{
   display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(min(100%,240px),1fr));
-  gap:.5rem;margin-top:.65rem;
+  grid-template-columns:repeat(auto-fill,minmax(min(100%,230px),1fr));
+  gap:.5rem;margin-top:.72rem;
 }
-@media(max-width:420px){.patch-grid{grid-template-columns:1fr}}
+@media(max-width:440px){.patch-grid{grid-template-columns:1fr}}
 
 .popt{
-  display:flex;align-items:flex-start;gap:.55rem;
-  padding:.72rem .82rem;background:rgba(255,255,255,.025);
-  border:1px solid var(--b1);border-radius:var(--rs);
-  cursor:pointer;transition:var(--t);-webkit-tap-highlight-color:transparent;
-  user-select:none;-webkit-user-select:none;min-height:var(--touch-min);
+  display:flex;align-items:flex-start;gap:.58rem;
+  padding:.75rem .9rem;
+  background:rgba(255,255,255,.02);
+  border:1px solid var(--border);border-radius:var(--rs);
+  cursor:pointer;transition:all var(--t);
+  -webkit-tap-highlight-color:transparent;user-select:none;
+  min-height:48px;position:relative;overflow:hidden;
 }
-.popt:hover{border-color:var(--b2);background:rgba(255,255,255,.04)}
-.popt.on{background:rgba(99,102,241,.08);border-color:rgba(99,102,241,.32)}
+.popt::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(79,142,247,.06),transparent);
+  opacity:0;transition:var(--t);pointer-events:none;
+}
+.popt:hover{border-color:var(--border2);background:rgba(255,255,255,.04)}
+.popt:hover::before{opacity:1}
+.popt.on{
+  background:rgba(79,142,247,.06);
+  border-color:rgba(79,142,247,.35);
+  box-shadow:inset 0 1px 0 rgba(79,142,247,.1);
+}
+.popt.on::before{opacity:1}
 .popt input[type=checkbox]{
-  margin-top:.16rem;width:16px;height:16px;min-width:16px;
-  accent-color:var(--p);cursor:pointer;flex-shrink:0;
+  margin-top:.18rem;width:15px;height:15px;min-width:15px;
+  accent-color:var(--primary);cursor:pointer;flex-shrink:0;
 }
 .popt-body{flex:1;min-width:0}
 .popt-name{
-  font-size:.79rem;font-weight:700;color:#fff;
-  display:flex;align-items:center;justify-content:space-between;gap:.35rem;flex-wrap:wrap;
+  font-size:.78rem;font-weight:700;color:#fff;
+  display:flex;align-items:center;justify-content:space-between;gap:.3rem;flex-wrap:wrap;
 }
 .pf{
-  font-family:'Cascadia Code','Fira Code','Consolas',monospace;
-  font-size:.62rem;background:rgba(99,102,241,.14);
-  color:var(--p2);padding:.07rem .36rem;border-radius:4px;flex-shrink:0;white-space:nowrap;
+  font-family:'JetBrains Mono',monospace;
+  font-size:.6rem;background:rgba(79,142,247,.1);border:1px solid rgba(79,142,247,.15);
+  color:var(--primary);padding:.06rem .38rem;border-radius:4px;
+  flex-shrink:0;white-space:nowrap;
 }
-.popt-desc{font-size:.67rem;color:var(--mu);margin-top:.07rem;line-height:1.4}
+.popt-desc{font-size:.66rem;color:var(--text3);margin-top:.08rem;line-height:1.42}
 
-/* ══ INPUT ════════════════════════════════════════════════════════════════ */
+/* ══ INPUT ══ */
 .inp{
-  width:100%;background:var(--card2);border:1px solid var(--b2);
-  border-radius:var(--rs);color:var(--txt);font-size:.83rem;
-  padding:.58rem .86rem;outline:none;transition:var(--t);font-family:inherit;
-  min-height:var(--touch-min);
+  width:100%;background:rgba(0,0,0,.3);border:1px solid var(--border2);
+  border-radius:var(--rs);color:var(--text);font-size:.82rem;
+  padding:.62rem .9rem;outline:none;transition:var(--t);
+  font-family:'Inter',sans-serif;min-height:44px;
 }
-.inp:focus{border-color:var(--p);box-shadow:0 0 0 2px rgba(99,102,241,.18)}
-.inp::placeholder{color:var(--mu)}
-.inp-hint{font-size:.67rem;color:var(--mu);margin-top:.3rem}
+.inp:focus{border-color:var(--primary);box-shadow:0 0 0 3px var(--primary-subtle)}
+.inp::placeholder{color:var(--text3)}
+.inp-hint{font-size:.66rem;color:var(--text3);margin-top:.32rem}
 
-/* ══ BUTTONS ══════════════════════════════════════════════════════════════ */
+/* ══ BUTTONS ══ */
 .btn{
-  display:inline-flex;align-items:center;justify-content:center;gap:.46rem;
-  border:none;border-radius:var(--rs);font-weight:800;cursor:pointer;
-  transition:var(--t);position:relative;overflow:hidden;
-  text-decoration:none;-webkit-tap-highlight-color:transparent;font-family:inherit;
+  display:inline-flex;align-items:center;justify-content:center;gap:.48rem;
+  border:none;border-radius:var(--rs);font-weight:700;cursor:pointer;
+  transition:all var(--t);position:relative;overflow:hidden;
+  text-decoration:none;-webkit-tap-highlight-color:transparent;
+  font-family:'Inter',sans-serif;
 }
-.btn:disabled{opacity:.4;cursor:not-allowed;pointer-events:none}
+.btn:disabled{opacity:.38;cursor:not-allowed;pointer-events:none}
 
 .btn-primary{
-  background:linear-gradient(135deg,var(--p3),var(--p));color:#fff;
-  font-size:.9rem;padding:.85rem 1.35rem;width:100%;margin-top:.95rem;
-  box-shadow:0 4px 20px rgba(99,102,241,.22);min-height:var(--touch-min);
+  background:linear-gradient(135deg,var(--primary-dim),var(--primary));
+  color:#fff;font-size:.9rem;padding:.9rem 1.5rem;
+  width:100%;margin-top:1rem;
+  box-shadow:0 4px 24px rgba(79,142,247,.25),inset 0 1px 0 rgba(255,255,255,.12);
+  border:1px solid rgba(79,142,247,.4);min-height:48px;letter-spacing:.01em;
 }
 .btn-primary::after{
   content:'';position:absolute;inset:0;
-  background:linear-gradient(135deg,rgba(255,255,255,.12),transparent);
+  background:linear-gradient(135deg,rgba(255,255,255,.15),transparent);
   opacity:0;transition:var(--t);
 }
 .btn-primary:hover:not(:disabled)::after{opacity:1}
-.btn-primary:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 8px 28px rgba(99,102,241,.32)}
-.btn-primary:active:not(:disabled){transform:translateY(0);box-shadow:0 2px 12px rgba(99,102,241,.2)}
+.btn-primary:hover:not(:disabled){
+  transform:translateY(-2px);
+  box-shadow:0 8px 32px rgba(79,142,247,.35),inset 0 1px 0 rgba(255,255,255,.12);
+}
+.btn-primary:active:not(:disabled){transform:translateY(0)}
 
-/* Loading spinner in button */
 .spin{
   width:16px;height:16px;
-  border:2.5px solid rgba(255,255,255,.28);border-top-color:#fff;
+  border:2.5px solid rgba(255,255,255,.25);border-top-color:#fff;
   border-radius:50%;animation:spin .65s linear infinite;display:none;flex-shrink:0;
 }
 .btn-primary.loading .spin{display:block}
 .btn-primary.loading .btn-text{display:none}
 
-/* Download button */
 .btn-dl{
-  display:inline-flex;align-items:center;gap:.46rem;
-  background:linear-gradient(135deg,#065f46,var(--green));
-  border:none;border-radius:var(--rs);color:#fff;font-size:.87rem;font-weight:800;
-  padding:.76rem 1.35rem;cursor:pointer;transition:var(--t);text-decoration:none;
-  font-family:inherit;box-shadow:0 4px 18px rgba(16,185,129,.22);
-  min-height:var(--touch-min);
+  display:inline-flex;align-items:center;gap:.5rem;
+  background:linear-gradient(135deg,#065f46,var(--green2));
+  border:1px solid rgba(34,211,165,.3);border-radius:var(--rs);
+  color:#fff;font-size:.87rem;font-weight:700;
+  padding:.8rem 1.4rem;cursor:pointer;transition:all var(--t);
+  text-decoration:none;font-family:'Inter',sans-serif;
+  box-shadow:0 4px 20px rgba(16,185,129,.2),inset 0 1px 0 rgba(255,255,255,.1);
+  min-height:46px;
 }
-.btn-dl:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(16,185,129,.32)}
-.btn-dl:active{transform:translateY(0)}
-.btn-dl svg{width:15px;height:15px;fill:currentColor;flex-shrink:0}
+.btn-dl:hover{
+  transform:translateY(-2px);
+  box-shadow:0 8px 30px rgba(16,185,129,.3),inset 0 1px 0 rgba(255,255,255,.1);
+}
+.btn-dl svg{width:16px;height:16px;fill:currentColor;flex-shrink:0}
 
-/* Secondary button */
 .btn-sec{
-  display:inline-flex;align-items:center;gap:.4rem;
-  background:rgba(255,255,255,.05);border:1px solid var(--b2);
-  color:var(--mu2);font-size:.79rem;font-weight:600;
-  padding:.58rem 1rem;border-radius:var(--rs);
-  cursor:pointer;transition:var(--t);font-family:inherit;
-  -webkit-tap-highlight-color:transparent;min-height:var(--touch-min);
+  display:inline-flex;align-items:center;gap:.42rem;
+  background:rgba(255,255,255,.04);border:1px solid var(--border2);
+  color:var(--text2);font-size:.79rem;font-weight:600;
+  padding:.62rem 1.1rem;border-radius:var(--rs);
+  cursor:pointer;transition:var(--t);font-family:'Inter',sans-serif;
+  min-height:42px;
 }
-.btn-sec:hover{background:rgba(255,255,255,.09);color:#fff;border-color:var(--b3)}
+.btn-sec:hover{background:rgba(255,255,255,.08);color:#fff;border-color:var(--border3)}
 
-/* ══ PROGRESS BAR ═════════════════════════════════════════════════════════ */
-.prog-wrap{display:none;margin-top:.85rem}
+/* Scan button */
+.btn-scan{
+  background:linear-gradient(135deg,rgba(34,211,165,.2),rgba(34,211,165,.08));
+  border:1px solid rgba(34,211,165,.3);color:var(--green);
+  font-size:.87rem;font-weight:700;padding:.88rem 1.5rem;
+  width:100%;margin-top:1rem;font-family:'Inter',sans-serif;
+  cursor:pointer;border-radius:var(--rs);transition:all var(--t);
+  display:flex;align-items:center;justify-content:center;gap:.5rem;min-height:48px;
+  box-shadow:0 4px 20px rgba(34,211,165,.1);
+}
+.btn-scan:disabled{opacity:.38;cursor:not-allowed;pointer-events:none}
+.btn-scan:hover:not(:disabled){
+  background:linear-gradient(135deg,rgba(34,211,165,.28),rgba(34,211,165,.12));
+  box-shadow:0 6px 28px rgba(34,211,165,.18);transform:translateY(-1px);
+}
+.btn-scan.loading .spin-g{display:block}
+.btn-scan.loading .btn-text{display:none}
+.spin-g{
+  width:16px;height:16px;
+  border:2.5px solid rgba(34,211,165,.3);border-top-color:var(--green);
+  border-radius:50%;animation:spin .65s linear infinite;display:none;flex-shrink:0;
+}
+
+/* ══ PROGRESS BAR ══ */
+.prog-wrap{display:none;margin-top:.95rem}
 .prog-wrap.show{display:block;animation:fadeUp .25s ease}
 .prog-top{
   display:flex;align-items:center;justify-content:space-between;
-  font-size:.72rem;color:var(--mu2);margin-bottom:.32rem;
+  font-size:.7rem;color:var(--text2);margin-bottom:.35rem;
 }
 .prog-label{font-weight:600}
-.prog-bg{background:var(--b1);border-radius:99px;height:6px;overflow:hidden}
+.prog-bg{background:rgba(255,255,255,.05);border-radius:99px;height:5px;overflow:hidden}
 .prog-fill{
   height:100%;border-radius:99px;width:0%;
-  background:linear-gradient(90deg,var(--p3),var(--p2),var(--g2));
+  background:linear-gradient(90deg,var(--primary-dim),var(--primary),var(--accent2));
   background-size:200%;transition:width .4s ease;
-  animation:shimmer 1.8s linear infinite;
+  animation:shimmer 2s linear infinite;
 }
-.prog-fill.done{animation:none;background:var(--g2);width:100%!important}
+.prog-fill.done{animation:none;background:var(--green);width:100%!important}
 .prog-fill.error{animation:none;background:var(--red);width:100%!important}
-@keyframes shimmer{0%{background-position:0% 50%}100%{background-position:200% 50%}}
+@keyframes shimmer{0%{background-position:0%}100%{background-position:200%}}
 
-/* Stage indicator — shown below progress bar during APK patch */
+/* Stages */
 .prog-stages{
-  display:none;align-items:center;gap:0;margin-top:.55rem;overflow-x:auto;
-  scrollbar-width:none;-webkit-overflow-scrolling:touch;
+  display:none;align-items:center;gap:0;margin-top:.65rem;overflow-x:auto;
+  scrollbar-width:none;
 }
 .prog-stages::-webkit-scrollbar{height:0}
 .prog-stages.show{display:flex}
 .ps{
-  display:flex;align-items:center;gap:.28rem;flex-shrink:0;
-  font-size:.63rem;font-weight:600;color:var(--mu);padding:.22rem .55rem;
-  border-radius:99px;transition:var(--t);white-space:nowrap;
+  display:flex;align-items:center;gap:.3rem;flex-shrink:0;
+  font-size:.62rem;font-weight:600;color:var(--text3);
+  padding:.24rem .58rem;border-radius:99px;transition:var(--t);white-space:nowrap;
 }
-.ps.done{color:var(--g2)}
-.ps.active{color:var(--p2);background:rgba(99,102,241,.12);border:1px solid rgba(99,102,241,.25)}
+.ps.done{color:var(--green)}
+.ps.active{
+  color:var(--primary);
+  background:rgba(79,142,247,.1);border:1px solid rgba(79,142,247,.2);
+}
 .ps-dot{width:5px;height:5px;border-radius:50%;background:currentColor;flex-shrink:0}
-.ps-arr{color:var(--b2);font-size:.6rem;flex-shrink:0;margin:0 .1rem}
+.ps-arr{color:var(--text4);font-size:.6rem;flex-shrink:0;margin:0 .08rem}
 
-/* ══ LIVE LOG PANEL ═══════════════════════════════════════════════════════ */
-.log-panel{display:none;margin-top:.85rem}
+/* ══ LIVE LOG PANEL ══ */
+.log-panel{display:none;margin-top:.95rem}
 .log-panel.show{display:block;animation:fadeUp .25s ease}
 .log-head{
   display:flex;align-items:center;justify-content:space-between;
-  padding:.52rem .88rem;background:rgba(255,255,255,.03);
-  border:1px solid var(--b1);border-radius:var(--rs) var(--rs) 0 0;
+  padding:.55rem .95rem;
+  background:rgba(0,0,0,.3);
+  border:1px solid var(--border);border-radius:var(--rs) var(--rs) 0 0;
   border-bottom:none;
 }
-.log-title-txt{font-size:.74rem;font-weight:700;color:var(--mu2);display:flex;align-items:center;gap:.35rem}
+.log-title-txt{
+  font-size:.72rem;font-weight:700;color:var(--text2);
+  display:flex;align-items:center;gap:.38rem;
+}
 .log-live-dot{
-  width:6px;height:6px;border-radius:50%;background:var(--green);
+  width:7px;height:7px;border-radius:50%;background:var(--green);
   animation:pulse-dot 1.2s ease-in-out infinite;flex-shrink:0;
+  box-shadow:0 0 6px rgba(34,211,165,.4);
 }
-.log-live-dot.stopped{animation:none;background:var(--mu)}
-.log-actions{display:flex;align-items:center;gap:.38rem}
+.log-live-dot.stopped{animation:none;background:var(--text3);box-shadow:none}
 .log-count{
-  font-size:.64rem;background:rgba(99,102,241,.15);color:var(--p2);
-  padding:.08rem .4rem;border-radius:99px;font-weight:700;
+  font-size:.62rem;background:rgba(79,142,247,.12);color:var(--primary);
+  border:1px solid rgba(79,142,247,.2);padding:.07rem .42rem;border-radius:99px;font-weight:700;
 }
+.log-actions{display:flex;align-items:center;gap:.35rem}
 .log-btn{
-  font-size:.67rem;color:var(--mu);cursor:pointer;background:none;border:none;
-  padding:.2rem .42rem;border-radius:4px;transition:var(--t);font-family:inherit;
-  -webkit-tap-highlight-color:transparent;min-height:32px;
+  font-size:.66rem;color:var(--text3);cursor:pointer;background:none;border:none;
+  padding:.22rem .48rem;border-radius:5px;transition:var(--t);font-family:'Inter',sans-serif;
+  min-height:28px;
 }
-.log-btn:hover{color:var(--txt);background:rgba(255,255,255,.06)}
+.log-btn:hover{color:var(--text);background:rgba(255,255,255,.06)}
 
 .log-body{
-  background:#040710;border:1px solid var(--b1);
+  background:#020812;border:1px solid var(--border);
   border-radius:0 0 var(--rs) var(--rs);
-  padding:.72rem .85rem;
-  font-family:'Cascadia Code','Fira Code','Consolas',monospace;
-  font-size:.72rem;line-height:1.8;
-  max-height:min(340px,50vh);
-  min-height:80px;
-  overflow-y:auto;overflow-x:hidden;
-  overscroll-behavior:contain;
-  scroll-behavior:smooth;
-  /* Hardware accelerated scrolling on iOS */
+  padding:.75rem .9rem;
+  font-family:'JetBrains Mono',monospace;
+  font-size:.71rem;line-height:1.85;
+  max-height:min(340px,48vh);min-height:80px;
+  overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;
   -webkit-overflow-scrolling:touch;
 }
 
-/* Log line styles */
-.log-line{display:flex;gap:.52rem;align-items:baseline;word-break:break-word;padding:.04rem 0}
-.log-line+.log-line{border-top:1px solid rgba(255,255,255,.022)}
-.log-ts{color:var(--mu);flex-shrink:0;font-size:.64rem;opacity:.6;min-width:58px;font-family:monospace}
-.log-ico{flex-shrink:0;font-size:.7rem;min-width:14px;text-align:center;line-height:1.8}
+.log-line{display:flex;gap:.55rem;align-items:baseline;word-break:break-word;padding:.04rem 0}
+.log-line+.log-line{border-top:1px solid rgba(255,255,255,.018)}
+.log-ts{color:var(--text4);flex-shrink:0;font-size:.62rem;min-width:60px}
+.log-ico{flex-shrink:0;font-size:.7rem;min-width:14px;text-align:center;line-height:1.85}
 .log-txt{flex:1;word-break:break-word}
-.log-line.lv-info    .log-txt{color:#94a3b8}
-.log-line.lv-step    .log-txt{color:#93c5fd;font-weight:600}
-.log-line.lv-found   .log-txt{color:var(--y2);font-weight:700}
-.log-line.lv-success .log-txt{color:var(--g2);font-weight:700}
-.log-line.lv-error   .log-txt{color:var(--r2);font-weight:700}
-.log-line.lv-warn    .log-txt{color:var(--y2)}
+.log-line.lv-info    .log-txt{color:#64748b}
+.log-line.lv-step    .log-txt{color:#60a5fa;font-weight:600}
+.log-line.lv-found   .log-txt{color:var(--yellow2);font-weight:700}
+.log-line.lv-success .log-txt{color:var(--green);font-weight:700}
+.log-line.lv-error   .log-txt{color:var(--red2);font-weight:700}
+.log-line.lv-warn    .log-txt{color:var(--yellow2)}
+.log-line.new{animation:logIn .18s ease}
+@keyframes logIn{from{opacity:0;transform:translateX(-6px)}to{opacity:1;transform:translateX(0)}}
 
-/* New log entry animation */
-.log-line.new{animation:logSlide .18s ease}
-@keyframes logSlide{from{opacity:0;transform:translateX(-5px)}to{opacity:1;transform:translateX(0)}}
-
-/* Auto-scroll pause indicator */
 .log-scroll-pause{
-  display:none;position:absolute;bottom:.5rem;right:.5rem;
-  background:rgba(99,102,241,.85);color:#fff;font-size:.64rem;font-weight:700;
-  padding:.18rem .55rem;border-radius:99px;cursor:pointer;
-  -webkit-tap-highlight-color:transparent;
-  animation:fadeUp .2s ease;
+  display:none;position:absolute;bottom:.55rem;right:.55rem;
+  background:rgba(79,142,247,.85);color:#fff;font-size:.63rem;font-weight:700;
+  padding:.2rem .58rem;border-radius:99px;cursor:pointer;backdrop-filter:blur(8px);
 }
-.log-scroll-pause.show{display:block}
+.log-scroll-pause.show{display:block;animation:fadeUp .2s ease}
 .log-wrap{position:relative}
 
-/* ══ RESULT PANEL ═════════════════════════════════════════════════════════ */
-.result-panel{display:none;margin-top:.85rem}
+/* ══ RESULT PANEL ══ */
+.result-panel{display:none;margin-top:.95rem}
 .result-panel.show{display:block;animation:fadeUp .3s ease}
 
 .res-ok{
-  background:rgba(16,185,129,.06);border:1px solid rgba(16,185,129,.26);
-  border-radius:var(--r);padding:1.15rem;
+  background:linear-gradient(135deg,rgba(34,211,165,.06),rgba(34,211,165,.02));
+  border:1px solid rgba(34,211,165,.25);border-radius:var(--r);padding:1.25rem;
 }
 .res-err{
-  background:rgba(239,68,68,.06);border:1px solid rgba(239,68,68,.26);
-  border-radius:var(--r);padding:1.15rem;
+  background:linear-gradient(135deg,rgba(245,101,101,.06),rgba(245,101,101,.02));
+  border:1px solid rgba(245,101,101,.25);border-radius:var(--r);padding:1.25rem;
 }
-.res-head{display:flex;align-items:flex-start;gap:.62rem;margin-bottom:.85rem}
+.res-head{display:flex;align-items:flex-start;gap:.68rem;margin-bottom:.95rem}
 .res-ico{
-  width:36px;height:36px;min-width:36px;border-radius:10px;
+  width:40px;height:40px;min-width:40px;border-radius:11px;
   display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;
 }
-.res-ico-ok{background:rgba(16,185,129,.15)}
-.res-ico-err{background:rgba(239,68,68,.15)}
-.res-t{font-size:.9rem;font-weight:800;color:#fff;margin-bottom:.1rem}
-.res-s{font-size:.74rem;color:var(--mu2);line-height:1.45}
+.res-ico-ok{background:rgba(34,211,165,.15);border:1px solid rgba(34,211,165,.2)}
+.res-ico-err{background:rgba(245,101,101,.15);border:1px solid rgba(245,101,101,.2)}
+.res-t{font-size:.92rem;font-weight:800;color:#fff;margin-bottom:.1rem}
+.res-s{font-size:.73rem;color:var(--text2);line-height:1.5}
 
 .meta-grid{
-  display:grid;grid-template-columns:repeat(auto-fill,minmax(128px,1fr));
-  gap:.48rem;margin-bottom:.85rem;
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));
+  gap:.48rem;margin-bottom:.95rem;
 }
-.mi{background:rgba(0,0,0,.22);border:1px solid rgba(255,255,255,.06);border-radius:7px;padding:.52rem .78rem}
-.mi-l{font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--mu);margin-bottom:.18rem}
-.mi-v{font-size:.79rem;font-weight:700;color:#fff;font-family:monospace;word-break:break-all}
+.mi{
+  background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.06);
+  border-radius:8px;padding:.55rem .82rem;
+}
+.mi-l{font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text3);margin-bottom:.2rem}
+.mi-v{font-size:.78rem;font-weight:700;color:#fff;font-family:'JetBrains Mono',monospace;word-break:break-all}
 
-.res-actions{display:flex;align-items:center;flex-wrap:wrap;gap:.55rem;margin-top:.75rem}
+.res-actions{display:flex;align-items:center;flex-wrap:wrap;gap:.58rem;margin-top:.85rem}
 @media(max-width:460px){
   .res-actions{flex-direction:column;align-items:stretch}
   .res-actions .btn-dl,.res-actions .btn-sec{width:100%;justify-content:center}
 }
 
-/* ══ SCAN RESULT ══════════════════════════════════════════════════════════ */
+/* ══ SCAN RESULT ══ */
 .scan-res{
-  display:none;margin-top:.75rem;
-  padding:.82rem 1rem;border-radius:var(--rs);
-  background:rgba(59,130,246,.06);border:1px solid rgba(59,130,246,.2);
+  display:none;margin-top:.8rem;
+  padding:.88rem 1.05rem;border-radius:var(--rs);
+  background:rgba(79,142,247,.05);border:1px solid rgba(79,142,247,.18);
   animation:fadeUp .25s ease;
 }
 .scan-res.show{display:block}
-.scan-title{font-size:.76rem;font-weight:700;color:#fff;margin-bottom:.42rem}
-.scan-chips{display:flex;flex-wrap:wrap;gap:.36rem}
+.scan-title{font-size:.75rem;font-weight:700;color:#fff;margin-bottom:.48rem;display:flex;align-items:center;gap:.38rem}
+.scan-chips{display:flex;flex-wrap:wrap;gap:.38rem}
 
-/* ══ STEP FLOW ════════════════════════════════════════════════════════════ */
-.step-flow{display:flex;flex-direction:column;gap:.95rem}
+/* ══ STEP FLOW ══ */
+.step-flow{display:flex;flex-direction:column;gap:1rem}
 .step-item{
-  display:flex;gap:.82rem;align-items:flex-start;
-  transition:opacity var(--t);
+  display:flex;gap:.88rem;align-items:flex-start;transition:opacity var(--t);
 }
 .step-num{
-  width:26px;height:26px;min-width:26px;border-radius:50%;
-  background:rgba(99,102,241,.16);border:1px solid rgba(99,102,241,.35);
+  width:28px;height:28px;min-width:28px;border-radius:50%;
+  background:rgba(79,142,247,.1);border:1.5px solid rgba(79,142,247,.3);
   display:flex;align-items:center;justify-content:center;
-  font-size:.7rem;font-weight:800;color:var(--p2);margin-top:.06rem;
+  font-size:.7rem;font-weight:800;color:var(--primary);margin-top:.06rem;
   transition:var(--t);flex-shrink:0;
 }
-.step-num.done-num{background:rgba(16,185,129,.18);border-color:rgba(16,185,129,.4);color:var(--g2)}
+.step-num.done-num{
+  background:rgba(34,211,165,.12);border-color:rgba(34,211,165,.35);color:var(--green);
+}
 .step-body{flex:1;min-width:0}
-.step-title{font-size:.85rem;font-weight:700;color:#fff;margin-bottom:.35rem}
-.step-sub{font-size:.73rem;color:var(--mu);margin-bottom:.62rem;line-height:1.5}
+.step-title{font-size:.86rem;font-weight:800;color:#fff;margin-bottom:.3rem;letter-spacing:-.01em}
+.step-sub{font-size:.73rem;color:var(--text3);margin-bottom:.65rem;line-height:1.55}
 .step-content{display:none}
 .step-content.open{display:block;animation:fadeUp .28s ease}
 
-/* ══ JOB STATUS ═══════════════════════════════════════════════════════════ */
+/* Step divider */
+.step-div{height:20px;width:1.5px;background:var(--border);margin:0 0 0 13.5px;flex-shrink:0}
+
+/* ══ JOB STATUS ══ */
 .job-status-row{
-  display:flex;align-items:center;gap:.58rem;flex-wrap:wrap;
-  margin-top:.58rem;font-size:.7rem;
+  display:flex;align-items:center;gap:.62rem;flex-wrap:wrap;
+  margin-top:.65rem;font-size:.7rem;
 }
 .status-pill{
-  display:inline-flex;align-items:center;gap:.32rem;
-  font-size:.7rem;font-weight:700;padding:.24rem .7rem;border-radius:99px;
+  display:inline-flex;align-items:center;gap:.35rem;
+  font-size:.7rem;font-weight:700;padding:.28rem .75rem;border-radius:99px;
 }
-.sp-ok{background:rgba(16,185,129,.12);color:var(--g2);border:1px solid rgba(16,185,129,.26)}
-.sp-err{background:rgba(239,68,68,.12);color:var(--r2);border:1px solid rgba(239,68,68,.26)}
-.sp-run{background:rgba(99,102,241,.12);color:var(--p2);border:1px solid rgba(99,102,241,.26)}
+.sp-ok{background:rgba(34,211,165,.1);color:var(--green);border:1px solid rgba(34,211,165,.25)}
+.sp-err{background:rgba(245,101,101,.1);color:var(--red2);border:1px solid rgba(245,101,101,.25)}
+.sp-run{background:rgba(79,142,247,.1);color:var(--primary);border:1px solid rgba(79,142,247,.25)}
 .sp-pulse::before{
-  content:'';display:inline-block;width:5px;height:5px;border-radius:50%;
+  content:'';display:inline-block;width:6px;height:6px;border-radius:50%;
   background:currentColor;animation:pulse-dot 1.1s ease-in-out infinite;
+  margin-right:.2rem;
 }
-.elapsed{color:var(--mu);font-size:.68rem}
+.elapsed{color:var(--text3);font-size:.68rem}
 
-/* ══ ALERTS ══════════════════════════════════════════════════════════════ */
+/* ══ ALERTS ══ */
 .alert{
-  border-radius:var(--rs);padding:.7rem .88rem;
-  display:flex;gap:.58rem;font-size:.77rem;line-height:1.55;align-items:flex-start;
+  border-radius:var(--rs);padding:.75rem .95rem;
+  display:flex;gap:.62rem;font-size:.76rem;line-height:1.58;align-items:flex-start;
 }
-.alert-w{background:rgba(245,158,11,.07);border:1px solid rgba(245,158,11,.24);color:var(--y2)}
-.alert-i{background:rgba(59,130,246,.07);border:1px solid rgba(59,130,246,.24);color:var(--b2c)}
-.alert-s{background:rgba(16,185,129,.07);border:1px solid rgba(16,185,129,.24);color:var(--g2)}
-.alert-e{background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.24);color:var(--r2)}
+.alert-w{background:rgba(246,201,14,.06);border:1px solid rgba(246,201,14,.2);color:var(--yellow2)}
+.alert-i{background:rgba(79,142,247,.06);border:1px solid rgba(79,142,247,.18);color:var(--blue)}
+.alert-s{background:rgba(34,211,165,.06);border:1px solid rgba(34,211,165,.2);color:var(--green)}
+.alert-e{background:rgba(245,101,101,.06);border:1px solid rgba(245,101,101,.2);color:var(--red2)}
 .alert-ico{flex-shrink:0;margin-top:.05rem}
 
-/* ══ GRIDS ════════════════════════════════════════════════════════════════ */
-.g2{display:grid;grid-template-columns:1fr 1fr;gap:.95rem}
+/* ══ GRIDS ══ */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
 .g3{display:grid;grid-template-columns:repeat(3,1fr);gap:.75rem}
-@media(max-width:620px){.g2,.g3{grid-template-columns:1fr}}
-@media(min-width:621px) and (max-width:860px){.g3{grid-template-columns:1fr 1fr}}
+@media(max-width:640px){.g2,.g3{grid-template-columns:1fr}}
+@media(min-width:641px) and (max-width:900px){.g3{grid-template-columns:1fr 1fr}}
 
-/* ══ INFO CARDS ══════════════════════════════════════════════════════════ */
-.ic{padding:1rem;border-radius:var(--r)}
-.ic .ici{font-size:1.25rem;margin-bottom:.42rem}
-.ic h3{font-size:.84rem;font-weight:800;color:#fff;margin-bottom:.25rem}
-.ic p{font-size:.74rem;color:var(--mu2);line-height:1.55}
+/* ══ INFO CARDS ══ */
+.ic{padding:1.1rem;border-radius:var(--r)}
+.ic .ici{font-size:1.3rem;margin-bottom:.5rem}
+.ic h3{font-size:.85rem;font-weight:800;color:#fff;margin-bottom:.28rem;letter-spacing:-.01em}
+.ic p{font-size:.73rem;color:var(--text2);line-height:1.6}
 
 /* Flow diagram */
 .flow-row{
   display:flex;align-items:center;justify-content:center;
-  flex-wrap:wrap;gap:.38rem;padding:1rem .88rem;
+  flex-wrap:wrap;gap:.42rem;padding:1.1rem 1rem;
 }
 .fn{
-  background:var(--card2);border:1px solid var(--b1);
-  border-radius:9px;padding:.55rem .82rem;text-align:center;min-width:82px;
+  background:rgba(0,0,0,.3);border:1px solid var(--border);
+  border-radius:10px;padding:.58rem .88rem;text-align:center;min-width:82px;
+  transition:var(--t);
 }
-.fn-ico{font-size:1.1rem;margin-bottom:.18rem}
-.fn-t{font-size:.7rem;font-weight:700;color:#fff}
-.fn-s{font-size:.6rem;color:var(--mu);margin-top:.04rem}
-.arr{color:var(--p2);font-size:.95rem;flex-shrink:0}
-@media(max-width:460px){
-  .flow-row{gap:.24rem}
-  .fn{min-width:62px;padding:.42rem .5rem}
-  .fn-t{font-size:.63rem}
-  .fn-s{display:none}
-  .arr{font-size:.8rem}
-}
+.fn:hover{border-color:var(--border2)}
+.fn-ico{font-size:1.1rem;margin-bottom:.2rem}
+.fn-t{font-size:.69rem;font-weight:700;color:#fff}
+.fn-s{font-size:.59rem;color:var(--text3);margin-top:.04rem}
+.arr{color:var(--primary);font-size:.95rem;flex-shrink:0}
 
-/* ══ TABS ════════════════════════════════════════════════════════════════ */
+/* ══ TABS ══ */
 .tabs{
-  display:flex;gap:.15rem;padding:.58rem .88rem .35rem;
-  border-bottom:1px solid var(--b1);overflow-x:auto;
+  display:flex;gap:.15rem;padding:.62rem .95rem .38rem;
+  border-bottom:1px solid var(--border);overflow-x:auto;
   -webkit-overflow-scrolling:touch;scrollbar-width:none;
 }
 .tabs::-webkit-scrollbar{height:0}
 .tab-btn{
-  font-size:.74rem;font-weight:700;padding:.38rem .72rem;border-radius:5px;
-  cursor:pointer;border:none;background:transparent;color:var(--mu2);
-  transition:var(--t);white-space:nowrap;font-family:inherit;
-  -webkit-tap-highlight-color:transparent;min-height:36px;
+  font-size:.73rem;font-weight:700;padding:.4rem .75rem;border-radius:6px;
+  cursor:pointer;border:none;background:transparent;color:var(--text3);
+  transition:var(--t);white-space:nowrap;font-family:'Inter',sans-serif;min-height:34px;
 }
 .tab-btn:hover{background:rgba(255,255,255,.05);color:#fff}
-.tab-btn.active{background:rgba(99,102,241,.14);color:var(--p2)}
+.tab-btn.active{background:rgba(79,142,247,.12);color:var(--primary)}
 .tab-pane{display:none;padding:1rem}
 .tab-pane.active{display:block;animation:fadeUp .22s ease}
 
-/* Pattern items */
 .pat-item{
-  background:#030810;border:1px solid var(--b1);border-radius:5px;
-  padding:.48rem .75rem;font-family:monospace;font-size:.66rem;
-  color:#7dd3fc;word-break:break-all;margin-bottom:.36rem;line-height:1.55;
+  background:#020812;border:1px solid var(--border);border-radius:6px;
+  padding:.5rem .78rem;font-family:'JetBrains Mono',monospace;font-size:.65rem;
+  color:#7dd3fc;word-break:break-all;margin-bottom:.38rem;line-height:1.6;
   transition:border-color var(--t);
 }
-.pat-item:hover{border-color:var(--p)}
-.pat-n{color:var(--mu);margin-right:.45rem}
+.pat-item:hover{border-color:var(--primary)}
+.pat-n{color:var(--text3);margin-right:.48rem}
 
 /* Code blocks */
-.code-blk{background:#030810;border:1px solid var(--b1);border-radius:var(--rs);overflow:hidden}
+.code-blk{background:#020812;border:1px solid var(--border);border-radius:var(--rs);overflow:hidden}
 .code-hd{
-  background:rgba(255,255,255,.03);padding:.38rem .88rem;
+  background:rgba(255,255,255,.02);padding:.4rem .92rem;
   display:flex;align-items:center;justify-content:space-between;
-  border-bottom:1px solid var(--b1);font-size:.68rem;color:var(--mu);
+  border-bottom:1px solid var(--border);font-size:.67rem;color:var(--text3);
 }
-.code-blk pre{padding:.78rem .88rem;overflow-x:auto;font-size:.72rem;line-height:1.7;margin:0}
-.code-blk code{font-family:'Cascadia Code','Fira Code','Consolas',monospace;color:#e2e8f0}
+.code-blk pre{padding:.82rem .92rem;overflow-x:auto;font-size:.71rem;line-height:1.72;margin:0}
+.code-blk code{font-family:'JetBrains Mono',monospace;color:var(--text)}
 .cp-btn{
-  background:rgba(99,102,241,.12);border:1px solid rgba(99,102,241,.24);
-  color:var(--p2);font-size:.64rem;font-weight:600;
-  padding:.14rem .46rem;border-radius:4px;cursor:pointer;
-  transition:var(--t);font-family:inherit;-webkit-tap-highlight-color:transparent;
-  min-height:28px;
+  background:rgba(79,142,247,.08);border:1px solid rgba(79,142,247,.2);
+  color:var(--primary);font-size:.63rem;font-weight:600;
+  padding:.14rem .48rem;border-radius:4px;cursor:pointer;
+  transition:var(--t);font-family:'Inter',sans-serif;min-height:26px;
 }
-.cp-btn:hover{background:rgba(99,102,241,.26);color:#fff}
-.cp-btn.ok{background:rgba(16,185,129,.12);border-color:rgba(16,185,129,.3);color:var(--g2)}
+.cp-btn:hover{background:rgba(79,142,247,.2);color:#fff}
+.cp-btn.ok{background:rgba(34,211,165,.1);border-color:rgba(34,211,165,.25);color:var(--green)}
 
-/* ══ TABLE ════════════════════════════════════════════════════════════════ */
-.feat-table{width:100%;border-collapse:collapse;font-size:.79rem}
-.feat-table th,.feat-table td{padding:.52rem .7rem;text-align:left;border-bottom:1px solid var(--b1)}
-.feat-table th{color:var(--p2);font-weight:700;background:rgba(99,102,241,.07)}
-.feat-table td{color:var(--mu2)}
+/* ══ FEATURE TABLE ══ */
+.feat-table{width:100%;border-collapse:collapse;font-size:.78rem}
+.feat-table th,.feat-table td{padding:.55rem .75rem;text-align:left;border-bottom:1px solid var(--border)}
+.feat-table th{color:var(--primary);font-weight:700;background:rgba(79,142,247,.05);font-size:.72rem;letter-spacing:.04em;text-transform:uppercase}
+.feat-table td{color:var(--text2)}
 .feat-table td:first-child{color:#fff;font-weight:600}
 .feat-table tr:last-child td{border-bottom:none}
-.feat-table tr:hover td{background:rgba(99,102,241,.04)}
-.tick{color:var(--g2)}
-/* Responsive table on mobile */
-@media(max-width:460px){
-  .feat-table th,.feat-table td{padding:.42rem .55rem;font-size:.73rem}
-}
+.feat-table tr:hover td{background:rgba(79,142,247,.03)}
+.tick{color:var(--green)}
 
-/* ══ TOAST ════════════════════════════════════════════════════════════════ */
+/* ══ TOAST ══ */
 #toast{
   position:fixed;
-  bottom:max(1.2rem,calc(var(--safe-bot) + .4rem));
-  left:50%;transform:translateX(-50%) translateY(6px);
-  background:rgba(14,20,38,.97);border:1px solid var(--b2);
-  color:#fff;font-size:.8rem;font-weight:600;
-  padding:.6rem 1.15rem;border-radius:99px;
-  box-shadow:0 8px 32px rgba(0,0,0,.55);
-  opacity:0;transition:opacity .2s,transform .22s;
+  bottom:max(1.25rem,calc(var(--safe-bot) + .4rem));
+  left:50%;transform:translateX(-50%) translateY(8px);
+  background:rgba(6,13,26,.95);
+  border:1px solid var(--border2);
+  color:#fff;font-size:.79rem;font-weight:600;
+  padding:.65rem 1.25rem;border-radius:99px;
+  box-shadow:0 8px 32px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.04);
+  opacity:0;transition:opacity .22s,transform .24s;
   pointer-events:none;white-space:nowrap;z-index:9999;
-  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  backdrop-filter:blur(16px);
   max-width:calc(100vw - 2rem);text-overflow:ellipsis;overflow:hidden;
 }
 #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
-/* ══ CONNECTION INDICATOR ═════════════════════════════════════════════════ */
+/* ══ CONNECTION INDICATOR ══ */
 #conn-status{
-  position:fixed;top:60px;right:max(.875rem,var(--safe-r));z-index:200;
-  font-size:.67rem;font-weight:700;padding:.2rem .6rem;border-radius:99px;
-  display:none;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
-  transition:var(--t);
+  position:fixed;top:64px;right:max(.875rem,var(--safe-r));z-index:200;
+  font-size:.66rem;font-weight:700;padding:.22rem .65rem;border-radius:99px;
+  display:none;backdrop-filter:blur(8px);transition:var(--t);
 }
 #conn-status.offline{
-  display:flex;align-items:center;gap:.28rem;
-  background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.3);color:var(--r2);
+  display:flex;align-items:center;gap:.3rem;
+  background:rgba(245,101,101,.12);border:1px solid rgba(245,101,101,.25);color:var(--red2);
 }
 #conn-status.reconnecting{
-  display:flex;align-items:center;gap:.28rem;
-  background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.3);color:var(--y2);
+  display:flex;align-items:center;gap:.3rem;
+  background:rgba(246,201,14,.1);border:1px solid rgba(246,201,14,.25);color:var(--yellow2);
 }
 
-/* ══ FOOTER ══════════════════════════════════════════════════════════════ */
+/* ══ FOOTER ══ */
 footer{
-  border-top:1px solid var(--b1);
-  padding:1.5rem 1rem max(1.5rem,calc(var(--safe-bot) + .5rem));
-  text-align:center;color:var(--mu);font-size:.74rem;
+  border-top:1px solid var(--border);
+  padding:2rem 1rem max(2rem,calc(var(--safe-bot) + .5rem));
+  text-align:center;color:var(--text3);font-size:.73rem;
+  background:linear-gradient(0deg,rgba(0,0,0,.3),transparent);
 }
-footer a{color:var(--p2);text-decoration:none}
-footer a:hover{text-decoration:underline}
-.fi{max-width:1200px;margin:0 auto}
+footer a{color:var(--primary);text-decoration:none;transition:color var(--t)}
+footer a:hover{color:var(--blue)}
+.fi{max-width:1280px;margin:0 auto}
+.footer-logo{
+  font-size:1.4rem;margin-bottom:.6rem;
+  filter:drop-shadow(0 0 8px rgba(79,142,247,.3));
+}
 
-/* ══ KEYFRAMES ════════════════════════════════════════════════════════════ */
+/* ══ KEYFRAMES ══ */
 @keyframes spin{to{transform:rotate(360deg)}}
-@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-@keyframes pulse-dot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.35;transform:scale(.78)}}
-.fade-up{animation:fadeUp .38s ease both}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeDown{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulse-dot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(.75)}}
+@keyframes floatIn{from{opacity:0;transform:scale(.96) translateY(12px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.fade-up{animation:fadeUp .5s ease both}
+.float-in{animation:floatIn .5s cubic-bezier(.2,0,.2,1) both}
 
-/* ══ UTILITY ══════════════════════════════════════════════════════════════ */
+/* ══ UTILITY ══ */
 .hidden{display:none!important}
-.mt{margin-top:.75rem}
-.sep{height:1px;background:var(--b1);margin:.85rem 0}
+.mt{margin-top:.8rem}
+.sep{height:1px;background:var(--border);margin:.9rem 0}
 .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap}
 
-/* ══ MOBILE FINE-TUNING ═══════════════════════════════════════════════════ */
+/* ══ DIVIDER ══ */
+.divider{
+  height:1px;margin:2.5rem 0;
+  background:linear-gradient(90deg,transparent,var(--border2),transparent);
+}
+
+/* ══ SECTION SPACING ══ */
+.section{margin-bottom:2.5rem}
+
+/* ══ RESPONSIVE ══ */
 @media(max-width:480px){
-  .hero{padding:1.75rem .8rem 1.5rem}
-  .tool-header{padding:.88rem .95rem}
-  .tool-body{padding:.85rem}
-  .log-body{font-size:.69rem;max-height:min(220px,42vh);min-height:60px}
+  .hero{padding:2rem .875rem 1.75rem}
+  .card-head{padding:.95rem 1rem}
+  .card-body{padding:.95rem}
+  .log-body{font-size:.68rem;max-height:min(220px,40vh)}
   .meta-grid{grid-template-columns:1fr 1fr}
-  .btn-primary{font-size:.84rem;padding:.8rem 1rem}
-  .stats-bar{padding:.58rem .95rem}
-  .fn{min-width:60px}
+  .btn-primary{font-size:.84rem}
+  .stats-row{padding:.6rem 1rem}
 }
 @media(max-width:360px){
-  .chips .chip:nth-child(n+5){display:none}
-  .hero h1{font-size:1.48rem}
-  .mode-tab .tl{font-size:.72rem}
+  .hero h1{font-size:1.8rem}
+  .hero-chips .hchip:nth-child(n+5){display:none}
 }
-/* Tablet: 2-col layout for some grids */
-@media(min-width:641px) and (max-width:900px){
+@media(min-width:641px) and (max-width:960px){
   .patch-grid{grid-template-columns:repeat(2,1fr)}
 }
-/* Touch devices: suppress persisted hover states */
 @media(hover:none) and (pointer:coarse){
-  .dropzone:hover{border-color:var(--b2);background:rgba(99,102,241,.02)}
-  .dropzone:hover .dz-icon{transform:none;background:rgba(99,102,241,.12)}
-  .tool-card:hover{border-color:var(--b1)}
+  .dropzone:hover{border-color:var(--border2);background:rgba(79,142,247,.02)}
+  .dropzone:hover .dz-icon{transform:none}
+  .tool-card:hover{border-color:var(--border)}
   .btn-primary:hover:not(:disabled){transform:none}
   .btn-dl:hover{transform:none}
 }
-/* Dark mode preference already satisfied (app is always dark) */
 @media(prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}
 }
 </style>
 </head>
 <body>
+<div class="bg-grid" aria-hidden="true"></div>
 
-<!-- Visually hidden live region for critical announcements -->
+<!-- Accessibility live region -->
 <div id="a11y-announce" aria-live="assertive" aria-atomic="true" class="sr-only"></div>
-<!-- Connection status indicator -->
 <div id="conn-status" role="status" aria-live="polite"></div>
-<!-- Toast notification -->
 <div id="toast" role="status" aria-live="assertive"></div>
 
 <!-- ═══ NAVBAR ═══ -->
 <nav class="nav" role="navigation" aria-label="Main navigation">
   <div class="nav-inner">
     <a class="nav-brand" href="#" aria-label="APK Patch Suite — halaman utama">
-      <span class="logo" aria-hidden="true">🛡️</span>
-      <span class="brand-text">APK Patch Suite</span>
+      <div class="nav-logo" aria-hidden="true">🛡️</div>
+      <span class="nav-name">APK Patch Suite</span>
+      <span class="nav-version">v3.1</span>
     </a>
-    <div class="nav-links" role="list">
-      <a href="#tool" role="listitem">Tool</a>
-      <a href="#how" role="listitem">Cara Kerja</a>
-      <a href="#patterns" role="listitem">Patterns</a>
-      <a href="#faq" role="listitem">FAQ</a>
+    <div class="nav-center" role="list">
+      <a href="#tool" class="nav-link" role="listitem">Tool</a>
+      <a href="#how" class="nav-link" role="listitem">Cara Kerja</a>
+      <a href="#patterns" class="nav-link" role="listitem">Patterns</a>
+      <a href="#faq" class="nav-link" role="listitem">FAQ</a>
     </div>
-    <a class="nav-gh" href="https://github.com/TechnoIndian/ApkPatcher" target="_blank" rel="noopener noreferrer" aria-label="Buka GitHub repository di tab baru">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .3a12 12 0 0 0-3.8 23.38c.6.11.82-.26.82-.58l-.02-2.04c-3.34.73-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.09-.74.08-.73.08-.73 1.21.09 1.85 1.24 1.85 1.24 1.07 1.84 2.81 1.3 3.5 1 .1-.78.42-1.3.76-1.6-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.14-.3-.54-1.52.1-3.18 0 0 1-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.28-1.55 3.29-1.23 3.29-1.23.65 1.66.24 2.88.12 3.18a4.65 4.65 0 0 1 1.23 3.22c0 4.61-2.8 5.63-5.48 5.92.43.37.81 1.1.81 2.22l-.01 3.29c0 .32.21.7.82.58A12 12 0 0 0 12 .3z"/></svg>
-      <span class="nav-gh-text">GitHub</span>
-    </a>
+    <div class="nav-right">
+      <div class="nav-status" aria-live="polite">
+        <span class="nav-status-dot" aria-hidden="true"></span>
+        <span id="nav-online-txt">Memeriksa…</span>
+      </div>
+      <a class="nav-gh" href="https://github.com/TechnoIndian/ApkPatcher" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .3a12 12 0 0 0-3.8 23.38c.6.11.82-.26.82-.58l-.02-2.04c-3.34.73-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.09-.74.08-.73.08-.73 1.21.09 1.85 1.24 1.85 1.24 1.07 1.84 2.81 1.3 3.5 1 .1-.78.42-1.3.76-1.6-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.14-.3-.54-1.52.1-3.18 0 0 1-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.28-1.55 3.29-1.23 3.29-1.23.65 1.66.24 2.88.12 3.18a4.65 4.65 0 0 1 1.23 3.22c0 4.61-2.8 5.63-5.48 5.92.43.37.81 1.1.81 2.22l-.01 3.29c0 .32.21.7.82.58A12 12 0 0 0 12 .3z"/></svg>
+        GitHub
+      </a>
+    </div>
   </div>
 </nav>
 
 <!-- ═══ HERO ═══ -->
-<header class="hero fade-up" id="home">
-  <div class="hero-badge" aria-label="Android Security Research Tool">🔬 Android Security Research Tool</div>
-  <h1>APK <span class="grad">Patch Suite</span></h1>
-  <p class="hero-sub">Bypass SSL Flutter, patch Smali, bypass Pairip &amp; lebih — langsung di browser, tanpa install apapun.</p>
-  <div class="chips" aria-label="Fitur unggulan">
-    <span class="chip ch-c">⚡ Flutter SSL</span>
-    <span class="chip ch-o">📦 APK Patcher</span>
-    <span class="chip ch-g">✅ No Install</span>
-    <span class="chip ch-p">🧠 Auto Detect</span>
-    <span class="chip ch-b">🔬 arm64/arm/x86</span>
-    <span class="chip ch-y">🔓 Pairip Bypass</span>
+<header class="hero" id="home">
+  <div class="hero-eyebrow">
+    <span class="dot" aria-hidden="true"></span>
+    Android Security Research Platform
+  </div>
+  <h1>APK <span class="hero-gradient">Patch Suite</span></h1>
+  <p class="hero-sub">Platform profesional untuk Flutter SSL bypass, APK patching, Smali injection, &amp; Pairip bypass — semua langsung di browser tanpa install apapun.</p>
+
+  <div class="hero-chips">
+    <span class="hchip hc-blue">⚡ Flutter SSL</span>
+    <span class="hchip hc-purple">🔓 Pairip Bypass</span>
+    <span class="hchip hc-green">✅ No Install</span>
+    <span class="hchip hc-orange">🧠 Auto Detect</span>
+    <span class="hchip hc-cyan">🔬 arm64 / arm / x86</span>
+    <span class="hchip hc-pink">📸 Screenshot Fix</span>
+  </div>
+
+  <div class="hero-stats">
+    <div class="hstat"><div class="hstat-val">11</div><div class="hstat-lbl">Patch Options</div></div>
+    <div class="hstat"><div class="hstat-val">3</div><div class="hstat-lbl">Architectures</div></div>
+    <div class="hstat"><div class="hstat-val">500<span style="font-size:1rem">MB</span></div><div class="hstat-lbl">Max APK Size</div></div>
+    <div class="hstat"><div class="hstat-val" id="stat-status">Online</div><div class="hstat-lbl">Server Status</div></div>
   </div>
 </header>
 
-<!-- ═══ MAIN CONTENT ═══ -->
+<!-- ═══ MAIN ═══ -->
 <main class="main" id="tool">
 
-  <!-- Mode Switcher -->
-  <div class="mode-tabs" role="tablist" aria-label="Pilih mode tool">
+  <!-- Mode Rail -->
+  <div class="mode-rail" role="tablist" aria-label="Pilih mode tool">
     <button class="mode-tab active" id="tab-flutter" role="tab" aria-selected="true" aria-controls="mode-flutter"
             onclick="switchMode('flutter',this)">
-      <span class="ti" aria-hidden="true">⚡</span>
-      <div>
-        <div class="tl">Flutter SSL Patch</div>
-        <div class="ts">Patch libflutter.so binary</div>
+      <span class="mode-tab-icon" aria-hidden="true">⚡</span>
+      <div style="text-align:left">
+        <div class="mode-tab-label">Flutter SSL Patch</div>
+        <div class="mode-tab-sub">Patch libflutter.so binary</div>
       </div>
-      <span class="tb" aria-hidden="true">libflutter.so</span>
+      <span class="mode-tab-pill">libflutter.so</span>
     </button>
     <button class="mode-tab" id="tab-apk" role="tab" aria-selected="false" aria-controls="mode-apk"
             onclick="switchMode('apk',this)">
-      <span class="ti" aria-hidden="true">📦</span>
-      <div>
-        <div class="tl">APK Patcher</div>
-        <div class="ts">Patch full APK file</div>
+      <span class="mode-tab-icon" aria-hidden="true">📦</span>
+      <div style="text-align:left">
+        <div class="mode-tab-label">APK Patcher</div>
+        <div class="mode-tab-sub">Patch full APK via Smali</div>
       </div>
-      <span class="tb" aria-hidden="true">ApkPatcher</span>
+      <span class="mode-tab-pill">ApkPatcher</span>
     </button>
   </div>
 
-  <!-- ══════════════════════════════════════
-       MODE A: FLUTTER SSL PATCH
-  ══════════════════════════════════════ -->
+  <!-- ══ MODE A: FLUTTER SSL PATCH ══ -->
   <div id="mode-flutter" class="mode-content active" role="tabpanel" aria-labelledby="tab-flutter">
     <section class="section">
-      <div class="tool-card">
-        <!-- Status bar -->
-        <div class="stats-bar" aria-label="Status tool">
-          <div class="si"><div class="sd" style="background:var(--g2)" aria-hidden="true"></div><span class="sl">Status</span><span class="sv" id="srv-status-f">Memeriksa…</span></div>
-          <div class="si"><div class="sd" style="background:var(--p2)" aria-hidden="true"></div><span class="sl">Engine</span><span class="sv">Pure Node.js</span></div>
-          <div class="si"><div class="sd" style="background:var(--cyan)" aria-hidden="true"></div><span class="sl">Patterns</span><span class="sv">11 total</span></div>
-          <div class="si"><div class="sd" style="background:var(--yel)" aria-hidden="true"></div><span class="sl">Max</span><span class="sv">150 MB</span></div>
-        </div>
-
-        <!-- Header -->
-        <div class="tool-header">
-          <span class="th-icon" aria-hidden="true">⚡</span>
-          <div>
-            <div class="th-title">Flutter SSL Certificate Bypass</div>
-            <div class="th-sub">Upload <code>libflutter.so</code> → auto detect arch → patch <code>ssl_verify_peer_cert</code> → download patched binary</div>
+      <div class="tool-card float-in">
+        <!-- Stats -->
+        <div class="stats-row" aria-label="Status tool">
+          <div class="stat-item">
+            <div class="stat-dot" style="background:var(--green);box-shadow:0 0 6px rgba(34,211,165,.5)" aria-hidden="true"></div>
+            <span class="stat-label">Status</span>
+            <span class="stat-val" id="srv-status-f">Memeriksa…</span>
+          </div>
+          <div class="stat-item">
+            <div class="stat-dot" style="background:var(--primary)" aria-hidden="true"></div>
+            <span class="stat-label">Engine</span>
+            <span class="stat-val">Pure Node.js</span>
+          </div>
+          <div class="stat-item">
+            <div class="stat-dot" style="background:var(--cyan)" aria-hidden="true"></div>
+            <span class="stat-label">Patterns</span>
+            <span class="stat-val">11 total</span>
+          </div>
+          <div class="stat-item">
+            <div class="stat-dot" style="background:var(--yellow)" aria-hidden="true"></div>
+            <span class="stat-label">Max Size</span>
+            <span class="stat-val">150 MB</span>
           </div>
         </div>
 
-        <div class="tool-body">
+        <!-- Header -->
+        <div class="card-head">
+          <div class="card-head-icon">⚡</div>
+          <div>
+            <div class="card-head-title">Flutter SSL Certificate Bypass</div>
+            <div class="card-head-sub">Upload <code>libflutter.so</code> → auto detect arch → patch <code>ssl_verify_peer_cert</code> → download patched binary</div>
+          </div>
+        </div>
+
+        <div class="card-body">
           <!-- Drop Zone -->
           <div class="dropzone" id="dz-f"
                ondragover="dzOver(this,event)" ondragleave="dzLeave(this)" ondrop="dzDrop(this,event,'f')"
                role="button" tabindex="0"
-               aria-label="Upload libflutter.so — seret ke sini atau tekan Enter untuk memilih"
+               aria-label="Upload libflutter.so"
                onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();document.getElementById('file-f').click()}">
-            <input type="file" id="file-f" accept=".so,.bin" onchange="onPick(this,'f')"
-                   tabindex="-1" aria-hidden="true"/>
+            <input type="file" id="file-f" accept=".so,.bin" onchange="onPick(this,'f')" tabindex="-1" aria-hidden="true"/>
             <div class="dz-icon" aria-hidden="true">📁</div>
             <div class="dz-title">Drop <code>libflutter.so</code> di sini</div>
-            <div class="dz-sub">atau tap untuk memilih file</div>
-            <div class="dz-hint"><span class="drag-only">Drag &amp; drop atau </span>📎 .so / .bin · maks 150 MB</div>
+            <div class="dz-sub">atau klik / tap untuk memilih file</div>
+            <div class="dz-hint">📎 .so / .bin · maks 150 MB</div>
           </div>
 
           <!-- File preview -->
@@ -916,7 +1132,7 @@ footer a:hover{text-decoration:underline}
               <div class="fp-name" id="fp-f-name">—</div>
               <div class="fp-meta" id="fp-f-meta">—</div>
             </div>
-            <button class="fp-rm" onclick="clearFile('f')" aria-label="Hapus file yang dipilih" title="Hapus file">✕</button>
+            <button class="fp-rm" onclick="clearFile('f')" aria-label="Hapus file">✕</button>
           </div>
 
           <!-- Upload progress -->
@@ -925,17 +1141,17 @@ footer a:hover{text-decoration:underline}
               <span>Mengupload…</span>
               <span id="up-pct-f">0%</span>
             </div>
-            <div class="up-prog-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" aria-labelledby="up-pct-f">
+            <div class="up-prog-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
               <div class="up-prog-fill" id="up-fill-f"></div>
             </div>
           </div>
 
           <!-- Options -->
-          <div class="opt-row">
-            <div class="opt-group">
+          <div class="opts-row">
+            <div>
               <label class="opt-label" for="arch-f">Architecture</label>
               <div class="sel-wrap">
-                <select id="arch-f" aria-label="Pilih architecture target">
+                <select id="arch-f">
                   <option value="auto">🔍 Auto Detect (Rekomendasi)</option>
                   <option value="arm64">arm64 — 64-bit</option>
                   <option value="arm">arm — 32-bit</option>
@@ -943,201 +1159,188 @@ footer a:hover{text-decoration:underline}
                 </select>
               </div>
             </div>
-            <div class="opt-group">
+            <div>
               <label class="opt-label" id="mode-f-label">Mode</label>
               <div class="tg-row" style="margin-top:.5rem">
-                <label class="tg" title="Print Only — hanya tampilkan offset tanpa menulis file">
-                  <input type="checkbox" id="print-f" aria-labelledby="mode-f-label" aria-describedby="mode-f-desc"/>
+                <label class="tg">
+                  <input type="checkbox" id="print-f"/>
                   <div class="tg-track"></div>
                   <div class="tg-thumb"></div>
                 </label>
-                <span class="tg-label" id="mode-f-desc" onclick="document.getElementById('print-f').click()">Print Only — lihat offset saja</span>
+                <span class="tg-label" onclick="document.getElementById('print-f').click()">Print Only — tampilkan offset saja</span>
               </div>
             </div>
           </div>
 
-          <!-- Action button -->
-          <button class="btn btn-primary" id="btn-f" onclick="runFlutterPatch()" disabled
-                  aria-label="Mulai Flutter SSL patch">
+          <!-- Action -->
+          <button class="btn btn-primary" id="btn-f" onclick="runFlutterPatch()" disabled>
             <div class="spin" aria-hidden="true"></div>
             <span class="btn-text">⚡ Patch SSL Sekarang</span>
           </button>
 
-          <!-- Progress bar -->
+          <!-- Progress -->
           <div class="prog-wrap" id="prog-f" role="status" aria-live="polite">
             <div class="prog-top">
               <span class="prog-label" id="prog-f-lbl">Memproses…</span>
-              <span id="prog-f-pct" aria-hidden="true">—</span>
+              <span id="prog-f-pct">—</span>
             </div>
             <div class="prog-bg">
-              <div class="prog-fill" id="prog-f-fill"
-                   role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"
-                   aria-labelledby="prog-f-lbl"></div>
+              <div class="prog-fill" id="prog-f-fill" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
             </div>
           </div>
 
           <!-- Live log -->
-          <div class="log-panel" id="log-f" role="log" aria-label="Log output Flutter patch" aria-live="polite">
+          <div class="log-panel" id="log-f" role="log" aria-label="Live log Flutter patch" aria-live="polite">
             <div class="log-head">
               <span class="log-title-txt">
                 <span class="log-live-dot stopped" id="log-f-dot" aria-hidden="true"></span>
-                📋 Live Log
+                Live Log
                 <span class="log-count" id="log-f-cnt">0</span>
               </span>
               <div class="log-actions">
-                <button class="log-btn" onclick="scrollLog('f')" aria-label="Scroll ke bawah log">↓ Bawah</button>
-                <button class="log-btn" onclick="copyLog('f')" aria-label="Salin semua log">📋 Copy</button>
-                <button class="log-btn" onclick="clearLog('f')" aria-label="Hapus isi log">🗑 Clear</button>
+                <button class="log-btn" onclick="scrollLog('f')">↓ Bawah</button>
+                <button class="log-btn" onclick="copyLog('f')">📋 Copy</button>
+                <button class="log-btn" onclick="clearLog('f')">🗑 Clear</button>
               </div>
             </div>
             <div class="log-wrap">
               <div class="log-body" id="log-f-body"></div>
-              <div class="log-scroll-pause" id="log-f-pause" onclick="resumeScroll('f')" title="Klik untuk scroll ke bawah">↓ Scroll ke bawah</div>
+              <div class="log-scroll-pause" id="log-f-pause" onclick="resumeScroll('f')">↓ Scroll ke bawah</div>
             </div>
           </div>
 
           <!-- Result -->
           <div class="result-panel" id="result-f" role="status" aria-live="polite"></div>
-        </div><!-- /tool-body -->
-      </div><!-- /tool-card -->
-    </section>
-
-    <!-- How it works -->
-    <section class="section" id="how">
-      <div class="section-title">🔬 Cara Kerja Flutter SSL Patch</div>
-      <div class="tool-card">
-        <div class="flow-row" aria-label="Diagram alur proses">
-          <div class="fn"><div class="fn-ico" aria-hidden="true">📁</div><div class="fn-t">Upload</div><div class="fn-s">libflutter.so</div></div>
-          <div class="arr" aria-hidden="true">→</div>
-          <div class="fn"><div class="fn-ico" aria-hidden="true">🔍</div><div class="fn-t">Detect ELF</div><div class="fn-s">arm64/arm/x86</div></div>
-          <div class="arr" aria-hidden="true">→</div>
-          <div class="fn"><div class="fn-ico" aria-hidden="true">🧩</div><div class="fn-t">Match Pattern</div><div class="fn-s">11 patterns</div></div>
-          <div class="arr" aria-hidden="true">→</div>
-          <div class="fn"><div class="fn-ico" aria-hidden="true">🎯</div><div class="fn-t">Find Fn Start</div><div class="fn-s">ssl_verify_peer_cert</div></div>
-          <div class="arr" aria-hidden="true">→</div>
-          <div class="fn"><div class="fn-ico" aria-hidden="true">✏️</div><div class="fn-t">Write ret0</div><div class="fn-s">Overwrite prologue</div></div>
-          <div class="arr" aria-hidden="true">→</div>
-          <div class="fn"><div class="fn-ico" aria-hidden="true">📥</div><div class="fn-t">Download</div><div class="fn-s">Patched .so</div></div>
-        </div>
-        <div style="padding:.75rem 1.15rem;border-top:1px solid var(--b1)">
-          <div class="g2">
-            <div class="alert alert-i"><span class="alert-ico" aria-hidden="true">ℹ️</span><div>Engine murni Node.js — tanpa radare2, tanpa dependency tambahan di sisi client.</div></div>
-            <div class="alert alert-w"><span class="alert-ico" aria-hidden="true">⚠️</span><div>Hanya untuk security research &amp; CTF. Jangan gunakan melanggar ToS aplikasi.</div></div>
-          </div>
         </div>
       </div>
     </section>
 
-    <!-- Byte Patterns -->
+    <!-- How it works (Flutter) -->
+    <section class="section" id="how">
+      <div class="sec-hd">
+        <div class="sec-title">⚙️ Cara Kerja Flutter SSL Patch</div>
+      </div>
+      <div class="tool-card">
+        <div class="flow-row">
+          <div class="fn"><div class="fn-ico">📁</div><div class="fn-t">Upload</div><div class="fn-s">libflutter.so</div></div>
+          <span class="arr">→</span>
+          <div class="fn"><div class="fn-ico">🔍</div><div class="fn-t">Detect</div><div class="fn-s">Arch + Pattern</div></div>
+          <span class="arr">→</span>
+          <div class="fn"><div class="fn-ico">🔧</div><div class="fn-t">Patch</div><div class="fn-s">ssl_verify_peer_cert</div></div>
+          <span class="arr">→</span>
+          <div class="fn"><div class="fn-ico">⬇️</div><div class="fn-t">Download</div><div class="fn-s">patched .so</div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pattern Reference -->
     <section class="section" id="patterns">
-      <div class="section-title">🧩 Byte Patterns — ssl_verify_peer_cert</div>
+      <div class="sec-hd">
+        <div class="sec-title">🔬 SSL Byte Patterns</div>
+        <span class="sec-badge">11 Patterns</span>
+      </div>
       <div class="tool-card">
         <div class="tabs" role="tablist">
-          <button class="tab-btn active" role="tab" aria-selected="true" onclick="switchTab(this,'pat-arm64')">arm64 (5)</button>
-          <button class="tab-btn" role="tab" aria-selected="false" onclick="switchTab(this,'pat-arm')">arm (1)</button>
-          <button class="tab-btn" role="tab" aria-selected="false" onclick="switchTab(this,'pat-x86')">x86 (5)</button>
-          <button class="tab-btn" role="tab" aria-selected="false" onclick="switchTab(this,'pat-ret0')">ret0 Bytes</button>
+          <button class="tab-btn active" role="tab" aria-selected="true" onclick="switchTab(this,'pat-arm64')">arm64</button>
+          <button class="tab-btn" role="tab" aria-selected="false" onclick="switchTab(this,'pat-arm')">arm32</button>
+          <button class="tab-btn" role="tab" aria-selected="false" onclick="switchTab(this,'pat-x86')">x86</button>
         </div>
-        <div id="pat-arm64" class="tab-pane active" role="tabpanel">
-          <div class="pat-item"><span class="pat-n">[1]</span>F. 0F 1C F8 F. 5. 01 A9 F. 5. 02 A9 F. .. 03 A9 .. .. .. .. 68 1A 40 F9</div>
-          <div class="pat-item"><span class="pat-n">[2]</span>F. 43 01 D1 FE 67 01 A9 F8 5F 02 A9 F6 57 03 A9 F4 4F 04 A9 13 00 40 F9 F4 03 00 AA 68 1A 40 F9</div>
-          <div class="pat-item"><span class="pat-n">[3]</span>FF 43 01 D1 FE 67 01 A9 .. .. 06 94 .. 7. 06 94 68 1A 40 F9 15 15 41 F9 B5 00 00 B4 B6 4A 40 F9</div>
-          <div class="pat-item"><span class="pat-n">[4]</span>FF .3 01 D1 F. .. 01 A9 .. .. .. 94 .. .. .. 52 48 00 00 39 1A 50 40 F9 DA 02 00 B4 48 03 40 F9</div>
-          <div class="pat-item"><span class="pat-n">[5]</span>F. 0F 1C F8 F. .. 0. .. .. .. .. .9 .. .. 0. .. 68 1A 40 F9 15 .. 4. F9 B5 00 00 B4 B6 46 40 F9</div>
+        <div id="pat-arm64" class="tab-pane active">
+          <div class="pat-item"><span class="pat-n">arm64 #1</span>FF 83 01 D1 FA 67 01 A9 F8 5F 02 A9 F6 57 03 A9 F4 4F 04 A9</div>
+          <div class="pat-item"><span class="pat-n">arm64 #2</span>FC 67 BF A9 F4 4F 01 A9 FF 43 00 D1 … E0 03 1F AA</div>
+          <div class="pat-item"><span class="pat-n">arm64 #3</span>FD 7B BE A9 F4 4F 01 A9 … E0 03 1F AA</div>
+          <div class="pat-item"><span class="pat-n">arm64 #4</span>F3 0B 1E F8 F4 4F 01 A9 FD 7B 02 A9 FD 83 00 91</div>
+          <div class="pat-item"><span class="pat-n">arm64 #5</span>E0 03 1F AA → RET overwrite (ret0)</div>
         </div>
-        <div id="pat-arm" class="tab-pane" role="tabpanel">
-          <div class="pat-item"><span class="pat-n">[1]</span>2D E9 F. 4. D0 F8 00 80 81 46 D8 F8 18 00 D0 F8</div>
+        <div id="pat-arm" class="tab-pane">
+          <div class="pat-item"><span class="pat-n">arm #1</span>2D E9 F0 4F 80 46 DE 3C</div>
+          <div class="pat-item"><span class="pat-n">arm #2</span>2D E9 F8 43 04 46 0E 46</div>
+          <div class="pat-item"><span class="pat-n">arm #3</span>2D E9 F0 4F 88 46 D3 F8</div>
         </div>
-        <div id="pat-x86" class="tab-pane" role="tabpanel">
-          <div class="pat-item"><span class="pat-n">[1]</span>55 41 57 41 56 41 55 41 54 53 50 49 89 fe 48 8b 1f 48 8b 43 30 4c 8b b8 d0 01 00 00 4d 85 ff 74 12 4d 8b a7 90 00 00 00 4d 85 e4…</div>
-          <div class="pat-item"><span class="pat-n">[2]</span>55 41 57 41 56 41 55 41 54 53 50 49 89 f. 4c 8b 37 49 8b 46 30 4c 8b a. .. 0. 00 00 4d 85 e. 74 1. 4d 8b</div>
-          <div class="pat-item"><span class="pat-n">[3]</span>55 41 57 41 56 41 55 41 54 53 48 83 EC 18 49 89 FF 48 8B 1F 48 8B 43 30 4C 8B A0 28 02 00 00 4D 85 E4 74</div>
-          <div class="pat-item"><span class="pat-n">[4]</span>55 41 57 41 56 41 55 41 54 53 48 83 EC 18 49 89 FE 4C 8B 27 49 8B 44 24 30 48 8B 98 D0 01 00 00 48 85 DB</div>
-          <div class="pat-item"><span class="pat-n">[5]</span>55 41 57 41 56 41 55 41 54 53 48 83 EC 38 C6 02 50 48 8B AF A. 00 00 00 48 85 ED 74 7. 48 83 7D 00 00 74</div>
-        </div>
-        <div id="pat-ret0" class="tab-pane" role="tabpanel">
-          <div class="g3">
-            <div class="ic" style="border:1px solid var(--b1)">
-              <div class="ici" aria-hidden="true">💪</div><h3>arm64</h3>
-              <code style="font-size:.68rem;font-family:monospace;color:var(--p2);word-break:break-all;display:block;margin-top:.28rem">00 00 80 D2 C0 03 5F D6</code>
-              <p style="margin-top:.35rem">mov x0, #0<br/>ret</p>
-            </div>
-            <div class="ic" style="border:1px solid var(--b1)">
-              <div class="ici" aria-hidden="true">💪</div><h3>arm (32-bit)</h3>
-              <code style="font-size:.68rem;font-family:monospace;color:var(--p2);word-break:break-all;display:block;margin-top:.28rem">00 00 A0 E3 1E FF 2F E1</code>
-              <p style="margin-top:.35rem">mov r0, #0<br/>bx lr</p>
-            </div>
-            <div class="ic" style="border:1px solid var(--b1)">
-              <div class="ici" aria-hidden="true">💪</div><h3>x86 / x86_64</h3>
-              <code style="font-size:.68rem;font-family:monospace;color:var(--p2);word-break:break-all;display:block;margin-top:.28rem">48 31 C0 C3</code>
-              <p style="margin-top:.35rem">xor rax, rax<br/>ret</p>
-            </div>
-          </div>
+        <div id="pat-x86" class="tab-pane">
+          <div class="pat-item"><span class="pat-n">x86 #1</span>55 41 57 41 56 41 55 41 54 53 48 81 EC</div>
+          <div class="pat-item"><span class="pat-n">x86 #2</span>55 41 56 53 48 83 EC 30 48 8B 1D</div>
+          <div class="pat-item"><span class="pat-n">x86 #3</span>55 48 89 E5 41 57 41 56 41 55 41 54</div>
         </div>
       </div>
     </section>
   </div><!-- /mode-flutter -->
 
-  <!-- ══════════════════════════════════════
-       MODE B: APK PATCHER
-  ══════════════════════════════════════ -->
+  <!-- ══ MODE B: APK PATCHER ══ -->
   <div id="mode-apk" class="mode-content" role="tabpanel" aria-labelledby="tab-apk">
     <section class="section">
-      <div class="tool-card">
-        <!-- Status bar -->
-        <div class="stats-bar">
-          <div class="si"><div class="sd" style="background:var(--g2)" aria-hidden="true"></div><span class="sl">Status</span><span class="sv" id="srv-status-a">Memeriksa…</span></div>
-          <div class="si"><div class="sd" style="background:var(--org)" aria-hidden="true"></div><span class="sl">Engine</span><span class="sv">ApkPatcher</span></div>
-          <div class="si"><div class="sd" style="background:var(--blue)" aria-hidden="true"></div><span class="sl">Stack</span><span class="sv">Java 21 · Apktool 2.10</span></div>
-          <div class="si"><div class="sd" style="background:var(--yel)" aria-hidden="true"></div><span class="sl">Max</span><span class="sv">500 MB</span></div>
-        </div>
-
-        <!-- Header -->
-        <div class="tool-header">
-          <span class="th-icon" aria-hidden="true">📦</span>
-          <div>
-            <div class="th-title">APK Patcher — Full Patch Suite</div>
-            <div class="th-sub">Upload APK → Scan → Pilih patch → Decompile → Patch Smali → Recompile → Sign → Download</div>
+      <div class="tool-card float-in">
+        <!-- Stats -->
+        <div class="stats-row">
+          <div class="stat-item">
+            <div class="stat-dot" style="background:var(--green);box-shadow:0 0 6px rgba(34,211,165,.5)" aria-hidden="true"></div>
+            <span class="stat-label">Status</span>
+            <span class="stat-val" id="srv-status-a">Memeriksa…</span>
+          </div>
+          <div class="stat-item">
+            <div class="stat-dot" style="background:var(--orange)" aria-hidden="true"></div>
+            <span class="stat-label">Engine</span>
+            <span class="stat-val">Python + Apktool</span>
+          </div>
+          <div class="stat-item">
+            <div class="stat-dot" style="background:var(--accent2)" aria-hidden="true"></div>
+            <span class="stat-label">Patches</span>
+            <span class="stat-val">11 opsi</span>
+          </div>
+          <div class="stat-item">
+            <div class="stat-dot" style="background:var(--yellow)" aria-hidden="true"></div>
+            <span class="stat-label">Max APK</span>
+            <span class="stat-val">500 MB</span>
           </div>
         </div>
 
-        <div class="tool-body">
-          <div class="step-flow" role="list">
+        <!-- Header -->
+        <div class="card-head" style="background:linear-gradient(90deg,rgba(124,58,237,.06),transparent)">
+          <div class="card-head-icon" style="background:linear-gradient(135deg,rgba(124,58,237,.2),rgba(124,58,237,.05));border-color:rgba(124,58,237,.2)">📦</div>
+          <div>
+            <div class="card-head-title">APK Patcher — Full Patch Suite</div>
+            <div class="card-head-sub">Upload APK → Scan → Pilih patch → Proses real-time → Download APK patched &amp; signed</div>
+          </div>
+        </div>
+
+        <div class="card-body">
+          <div class="step-flow">
 
             <!-- STEP 1: Upload & Scan -->
-            <div class="step-item" role="listitem">
+            <div class="step-item" id="step1-wrap">
               <div class="step-num" id="snum-1" aria-label="Langkah 1">1</div>
               <div class="step-body">
                 <div class="step-title">Upload &amp; Scan APK</div>
                 <div class="step-content open" id="sc-1">
+                  <p class="step-sub">Upload file APK (maks 500 MB). Support .apk, .xapk, .apkm, .apks.</p>
+
                   <!-- Drop Zone APK -->
                   <div class="dropzone" id="dz-a"
                        ondragover="dzOver(this,event)" ondragleave="dzLeave(this)" ondrop="dzDrop(this,event,'a')"
                        role="button" tabindex="0"
-                       aria-label="Upload APK — seret ke sini atau tekan Enter"
+                       aria-label="Upload file APK"
                        onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();document.getElementById('file-a').click()}">
-                    <input type="file" id="file-a" accept=".apk,.xapk,.apkm,.apks" onchange="onPick(this,'a')"
-                           tabindex="-1" aria-hidden="true"/>
-                    <div class="dz-icon" aria-hidden="true">📦</div>
-                    <div class="dz-title">Drop APK di sini</div>
-                    <div class="dz-sub">atau tap untuk memilih file</div>
+                    <input type="file" id="file-a" accept=".apk,.xapk,.apkm,.apks" onchange="onPick(this,'a')" tabindex="-1" aria-hidden="true"/>
+                    <div class="dz-icon" style="background:linear-gradient(135deg,rgba(124,58,237,.2),rgba(124,58,237,.05));border-color:rgba(124,58,237,.2);box-shadow:0 4px 16px rgba(124,58,237,.1)" aria-hidden="true">📦</div>
+                    <div class="dz-title">Drop file APK di sini</div>
+                    <div class="dz-sub">atau klik / tap untuk memilih</div>
                     <div class="dz-hint">📎 .apk / .xapk / .apkm / .apks · maks 500 MB</div>
                   </div>
 
-                  <!-- File preview APK -->
+                  <!-- File preview -->
                   <div class="file-preview" id="fp-a" role="status" aria-live="polite">
                     <div class="fp-icon" aria-hidden="true">📦</div>
                     <div class="fp-info">
                       <div class="fp-name" id="fp-a-name">—</div>
                       <div class="fp-meta" id="fp-a-meta">—</div>
                     </div>
-                    <button class="fp-rm" onclick="clearFile('a')" aria-label="Hapus APK yang dipilih" title="Hapus APK">✕</button>
+                    <button class="fp-rm" onclick="clearFile('a')" aria-label="Hapus file">✕</button>
                   </div>
 
-                  <!-- Upload progress APK -->
-                  <div id="up-prog-a" class="up-prog" role="status" aria-live="polite">
+                  <!-- Upload progress -->
+                  <div id="up-prog-a" class="up-prog">
                     <div class="up-prog-label">
-                      <span>Mengupload APK…</span>
+                      <span>Mengupload &amp; scanning…</span>
                       <span id="up-pct-a">0%</span>
                     </div>
                     <div class="up-prog-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
@@ -1145,125 +1348,126 @@ footer a:hover{text-decoration:underline}
                     </div>
                   </div>
 
-                  <!-- Scan button -->
-                  <button class="btn btn-primary" id="btn-scan" onclick="scanApk()" disabled
-                          aria-label="Scan APK untuk mendeteksi tipe dan fitur">
-                    <div class="spin" aria-hidden="true"></div>
-                    <span class="btn-text">🔍 Scan APK</span>
-                  </button>
-
-                  <!-- Scan result badges -->
+                  <!-- Scan result -->
                   <div class="scan-res" id="scan-res" role="status" aria-live="polite">
-                    <div class="scan-title">📊 Hasil Scan</div>
+                    <div class="scan-title">
+                      <span style="color:var(--primary)">🔍</span>
+                      Hasil Scan APK
+                    </div>
                     <div class="scan-chips" id="scan-chips"></div>
                   </div>
+
+                  <!-- Scan button -->
+                  <button class="btn-scan" id="btn-scan" onclick="scanApk()" disabled>
+                    <div class="spin-g" aria-hidden="true"></div>
+                    <span class="btn-text">🔍 Scan APK</span>
+                  </button>
                 </div>
               </div>
             </div>
 
-            <!-- STEP 2: Select patches (locked until scan done) -->
+            <div class="step-div" aria-hidden="true"></div>
+
+            <!-- STEP 2: Select Patches -->
             <div class="step-item" id="step2-wrap" style="opacity:.35;pointer-events:none" aria-disabled="true">
               <div class="step-num" id="snum-2" aria-label="Langkah 2">2</div>
               <div class="step-body">
                 <div class="step-title">Pilih Patch</div>
                 <div class="step-content" id="sc-2">
-                  <p class="step-sub">Centang patch yang diinginkan. Beberapa patch memerlukan kondisi APK tertentu.</p>
+                  <p class="step-sub">Pilih satu atau lebih patch yang ingin diterapkan pada APK.</p>
 
-                  <div class="patch-grid" role="group" aria-label="Pilihan patch APK">
+                  <div class="patch-grid">
                     <label class="popt" id="popt-flutter">
-                      <input type="checkbox" id="ck-flutter" onchange="syncPopt(this)" aria-describedby="pdesc-flutter"/>
+                      <input type="checkbox" id="ck-flutter" onchange="syncPopt(this)"/>
                       <div class="popt-body">
                         <div class="popt-name">⚡ Flutter SSL Bypass <span class="pf">-f</span></div>
-                        <div class="popt-desc" id="pdesc-flutter">Patch libflutter.so via radare2. Hanya berlaku jika APK Flutter.</div>
+                        <div class="popt-desc">Patch metode SSL di APK Flutter via Smali.</div>
                       </div>
                     </label>
                     <label class="popt" id="popt-pairip">
-                      <input type="checkbox" id="ck-pairip" onchange="syncPopt(this)" aria-describedby="pdesc-pairip"/>
+                      <input type="checkbox" id="ck-pairip" onchange="syncPopt(this)"/>
                       <div class="popt-body">
                         <div class="popt-name">🔓 Pairip Bypass <span class="pf">-p</span></div>
-                        <div class="popt-desc" id="pdesc-pairip">Bypass proteksi Pairip/VM. Install di VM atau Multi-App.</div>
+                        <div class="popt-desc">Bypass proteksi VM / Multi-App Pairip.</div>
                       </div>
                     </label>
                     <label class="popt" id="popt-pairip_corex">
-                      <input type="checkbox" id="ck-pairip_corex" onchange="syncPopt(this)" aria-describedby="pdesc-corex"/>
+                      <input type="checkbox" id="ck-pairip_corex" onchange="syncPopt(this)"/>
                       <div class="popt-body">
-                        <div class="popt-name">🧬 Pairip + CoreX Hook <span class="pf">-p -x</span></div>
-                        <div class="popt-desc" id="pdesc-corex">Hook CoreX arm64. Lebih dalam dari Pairip biasa.</div>
+                        <div class="popt-name">🔴 Pairip + CoreX Hook <span class="pf">-p -x</span></div>
+                        <div class="popt-desc">Pairip bypass dengan injeksi CoreX Hook.</div>
                       </div>
                     </label>
                     <label class="popt" id="popt-spoof_pkg">
-                      <input type="checkbox" id="ck-spoof_pkg" onchange="syncPopt(this)" aria-describedby="pdesc-spoof"/>
+                      <input type="checkbox" id="ck-spoof_pkg" onchange="syncPopt(this)"/>
                       <div class="popt-body">
-                        <div class="popt-name">🎭 Spoof Package <span class="pf">-pkg</span></div>
-                        <div class="popt-desc" id="pdesc-spoof">Spoof deteksi package di Dex, Manifest &amp; Resources.</div>
+                        <div class="popt-name">🎭 Spoof Package Name <span class="pf">-pkg</span></div>
+                        <div class="popt-desc">Samarkan package name aplikasi.</div>
                       </div>
                     </label>
                     <label class="popt" id="popt-remove_ads">
-                      <input type="checkbox" id="ck-remove_ads" onchange="syncPopt(this)" aria-describedby="pdesc-ads"/>
+                      <input type="checkbox" id="ck-remove_ads" onchange="syncPopt(this)"/>
                       <div class="popt-body">
                         <div class="popt-name">🚫 Remove Ads <span class="pf">-rmads</span></div>
-                        <div class="popt-desc" id="pdesc-ads">Scan dan patch kode iklan dari Smali.</div>
+                        <div class="popt-desc">Scan &amp; patch kode iklan dari Smali.</div>
                       </div>
                     </label>
                     <label class="popt" id="popt-remove_ss">
-                      <input type="checkbox" id="ck-remove_ss" onchange="syncPopt(this)" aria-describedby="pdesc-ss"/>
+                      <input type="checkbox" id="ck-remove_ss" onchange="syncPopt(this)"/>
                       <div class="popt-body">
-                        <div class="popt-name">📸 Bypass Screenshot <span class="pf">-rmss</span></div>
-                        <div class="popt-desc" id="pdesc-ss">Hapus FLAG_SECURE — izinkan screenshot &amp; rekaman layar.</div>
+                        <div class="popt-name">📸 Screenshot Bypass <span class="pf">-rmss</span></div>
+                        <div class="popt-desc">Hapus FLAG_SECURE — izinkan screenshot.</div>
                       </div>
                     </label>
                     <label class="popt" id="popt-remove_usb">
-                      <input type="checkbox" id="ck-remove_usb" onchange="syncPopt(this)" aria-describedby="pdesc-usb"/>
+                      <input type="checkbox" id="ck-remove_usb" onchange="syncPopt(this)"/>
                       <div class="popt-body">
-                        <div class="popt-name">🔌 Bypass USB Debug <span class="pf">-rmusb</span></div>
-                        <div class="popt-desc" id="pdesc-usb">Hapus deteksi USB debugging / ADB.</div>
+                        <div class="popt-name">🔌 USB Debug Bypass <span class="pf">-rmusb</span></div>
+                        <div class="popt-desc">Hapus deteksi USB debugging / ADB.</div>
                       </div>
                     </label>
                     <label class="popt" id="popt-random_info">
-                      <input type="checkbox" id="ck-random_info" onchange="syncPopt(this)" aria-describedby="pdesc-rnd"/>
+                      <input type="checkbox" id="ck-random_info" onchange="syncPopt(this)"/>
                       <div class="popt-body">
                         <div class="popt-name">📱 Random Device Info <span class="pf">-r</span></div>
-                        <div class="popt-desc" id="pdesc-rnd">Spoof info device Samsung/Xiaomi/Google secara acak.</div>
+                        <div class="popt-desc">Spoof info device Samsung/Xiaomi/Google.</div>
                       </div>
                     </label>
                     <label class="popt" id="popt-purchase">
-                      <input type="checkbox" id="ck-purchase" onchange="syncPopt(this)" aria-describedby="pdesc-purch"/>
+                      <input type="checkbox" id="ck-purchase" onchange="syncPopt(this)"/>
                       <div class="popt-body">
                         <div class="popt-name">💰 Purchase Bypass <span class="pf">-P</span></div>
-                        <div class="popt-desc" id="pdesc-purch">Patch verifikasi pembelian &amp; license check.</div>
+                        <div class="popt-desc">Patch verifikasi pembelian &amp; license.</div>
                       </div>
                     </label>
                     <label class="popt" id="popt-tg_patch">
-                      <input type="checkbox" id="ck-tg_patch" onchange="syncPopt(this)" aria-describedby="pdesc-tg"/>
+                      <input type="checkbox" id="ck-tg_patch" onchange="syncPopt(this)"/>
                       <div class="popt-body">
                         <div class="popt-name">✈️ Telegram Patch <span class="pf">-t</span></div>
-                        <div class="popt-desc" id="pdesc-tg">Patch khusus untuk aplikasi Telegram.</div>
+                        <div class="popt-desc">Patch khusus untuk aplikasi Telegram.</div>
                       </div>
                     </label>
                   </div>
 
-                  <!-- Android ID (optional) -->
+                  <!-- Android ID -->
                   <div class="mt" style="max-width:360px">
-                    <label class="opt-label" for="aid-inp" style="display:block;font-size:.7rem;font-weight:700;color:var(--mu2);letter-spacing:.05em;text-transform:uppercase;margin-bottom:.34rem">
-                      Android ID Kustom <span style="font-family:monospace;font-size:.6rem;color:var(--p2)">[-D, opsional]</span>
+                    <label class="opt-label" for="aid-inp" style="display:block;font-size:.68rem;font-weight:700;color:var(--text3);letter-spacing:.06em;text-transform:uppercase;margin-bottom:.36rem">
+                      Android ID Kustom <span style="font-family:'JetBrains Mono',monospace;font-size:.6rem;color:var(--primary)">[-D, opsional]</span>
                     </label>
                     <input type="text" id="aid-inp" class="inp"
-                           placeholder="16 digit hex, cth: a1b2c3d4e5f60789"
+                           placeholder="16 digit hex, contoh: a1b2c3d4e5f60789"
                            maxlength="16" pattern="[a-fA-F0-9]{16}"
-                           autocomplete="off" spellcheck="false"
-                           inputmode="text"
-                           aria-describedby="aid-hint"/>
-                    <div class="inp-hint" id="aid-hint">Kosongkan jika tidak perlu hook Android ID tertentu.</div>
+                           autocomplete="off" spellcheck="false"/>
+                    <div class="inp-hint">Kosongkan jika tidak perlu hook Android ID tertentu.</div>
                   </div>
 
                   <div class="alert alert-i mt">
                     <span class="alert-ico" aria-hidden="true">ℹ️</span>
-                    <div>SSL bypass di APK Patcher: <strong>Smali patching</strong> (bypass Java SSL methods) + <strong>Network Security Config</strong> (trust user certs). Berbeda dari Flutter SSL yang patch binary <code>libflutter.so</code> langsung.</div>
+                    <div>SSL bypass di APK Patcher: <strong>Smali patching</strong> (bypass Java SSL) + <strong>Network Security Config</strong> (trust user certs).</div>
                   </div>
 
-                  <!-- Patch APK button -->
-                  <button class="btn btn-primary" id="btn-patch-apk" onclick="runApkPatch()" disabled
-                          aria-label="Mulai patch APK dengan opsi yang dipilih">
+                  <!-- Patch button -->
+                  <button class="btn btn-primary" id="btn-patch-apk" onclick="runApkPatch()" disabled>
                     <div class="spin" aria-hidden="true"></div>
                     <span class="btn-text">🚀 Patch APK Sekarang</span>
                   </button>
@@ -1271,25 +1475,24 @@ footer a:hover{text-decoration:underline}
               </div>
             </div>
 
-            <!-- STEP 3: Processing & results (locked until patch started) -->
+            <div class="step-div" aria-hidden="true"></div>
+
+            <!-- STEP 3: Processing -->
             <div class="step-item" id="step3-wrap" style="opacity:.35;pointer-events:none" aria-disabled="true">
               <div class="step-num" id="snum-3" aria-label="Langkah 3">3</div>
               <div class="step-body">
                 <div class="step-title">Proses Patching</div>
                 <div class="step-content" id="sc-3">
-                  <p class="step-sub">Proses 1–5 menit tergantung ukuran APK &amp; patch dipilih. Jangan tutup browser atau refresh halaman.</p>
+                  <p class="step-sub">Proses 1–5 menit tergantung ukuran APK. Jangan tutup atau refresh halaman.</p>
 
                   <!-- Progress -->
                   <div class="prog-wrap show" id="prog-a" role="status" aria-live="polite">
                     <div class="prog-top">
                       <span class="prog-label" id="prog-a-lbl">Menunggu…</span>
-                      <span id="prog-a-pct" aria-hidden="true"></span>
+                      <span id="prog-a-pct"></span>
                     </div>
                     <div class="prog-bg">
-                      <div class="prog-fill" id="prog-a-fill"
-                           role="progressbar" aria-valuenow="3" aria-valuemin="0" aria-valuemax="100"
-                           aria-labelledby="prog-a-lbl"
-                           style="width:3%"></div>
+                      <div class="prog-fill" id="prog-a-fill" role="progressbar" aria-valuenow="3" aria-valuemin="0" aria-valuemax="100" style="width:3%"></div>
                     </div>
                   </div>
 
@@ -1308,37 +1511,37 @@ footer a:hover{text-decoration:underline}
                     <span class="ps" id="ps-done"><span class="ps-dot"></span>Done</span>
                   </div>
 
-                  <!-- Job status & elapsed timer -->
+                  <!-- Job status -->
                   <div class="job-status-row">
-                    <div class="status-pill sp-run sp-pulse" id="job-pill" role="status">⏳ Menjalankan ApkPatcher…</div>
+                    <div class="status-pill sp-run sp-pulse" id="job-pill" role="status">Menjalankan ApkPatcher…</div>
                     <span class="elapsed" id="job-elapsed" aria-live="polite"></span>
                   </div>
 
                   <!-- Live log APK -->
-                  <div class="log-panel show" id="log-a" style="margin-top:.85rem" role="log" aria-label="Live log APK patching" aria-live="polite">
+                  <div class="log-panel show" id="log-a" style="margin-top:.95rem" role="log" aria-label="Live log APK" aria-live="polite">
                     <div class="log-head">
                       <span class="log-title-txt">
                         <span class="log-live-dot" id="log-a-dot" aria-hidden="true"></span>
-                        📋 Live Log
+                        Live Log
                         <span class="log-count" id="log-a-cnt">0</span>
                       </span>
                       <div class="log-actions">
-                        <button class="log-btn" onclick="scrollLog('a')" aria-label="Scroll ke bawah log">↓ Bawah</button>
-                        <button class="log-btn" onclick="copyLog('a')" aria-label="Salin semua log">📋 Copy</button>
-                        <button class="log-btn" onclick="clearLog('a')" aria-label="Hapus isi log">🗑 Clear</button>
+                        <button class="log-btn" onclick="scrollLog('a')">↓ Bawah</button>
+                        <button class="log-btn" onclick="copyLog('a')">📋 Copy</button>
+                        <button class="log-btn" onclick="clearLog('a')">🗑 Clear</button>
                       </div>
                     </div>
                     <div class="log-wrap">
                       <div class="log-body" id="log-a-body"></div>
-                      <div class="log-scroll-pause" id="log-a-pause" onclick="resumeScroll('a')" title="Klik untuk scroll ke bawah">↓ Scroll ke bawah</div>
+                      <div class="log-scroll-pause" id="log-a-pause" onclick="resumeScroll('a')">↓ Scroll ke bawah</div>
                     </div>
                   </div>
 
                   <!-- APK Result -->
                   <div class="result-panel" id="result-a" role="status" aria-live="polite"></div>
 
-                  <!-- Reset button (shown after done) -->
-                  <div id="apk-reset-row" class="hidden" style="margin-top:.75rem">
+                  <!-- Reset -->
+                  <div id="apk-reset-row" class="hidden" style="margin-top:.85rem">
                     <button class="btn btn-sec" onclick="resetApk()">🔄 Patch APK Lain</button>
                   </div>
                 </div>
@@ -1346,17 +1549,19 @@ footer a:hover{text-decoration:underline}
             </div>
 
           </div><!-- /step-flow -->
-        </div><!-- /tool-body -->
+        </div><!-- /card-body -->
       </div><!-- /tool-card -->
     </section>
 
-    <!-- About ApkPatcher -->
+    <!-- Features & Stack -->
     <section class="section">
-      <div class="section-title">📖 Fitur &amp; Stack ApkPatcher</div>
+      <div class="sec-hd">
+        <div class="sec-title">📊 Fitur &amp; Tech Stack</div>
+      </div>
       <div class="g2">
         <div class="tool-card">
-          <div style="padding:1rem">
-            <div class="section-title" style="font-size:.86rem;margin-bottom:.7rem">🛠️ Patch yang Tersedia</div>
+          <div style="padding:1.1rem">
+            <div class="sec-title" style="font-size:.85rem;margin-bottom:.8rem">🛠️ Patch yang Tersedia</div>
             <table class="feat-table">
               <thead><tr><th>Patch</th><th>Fungsi</th></tr></thead>
               <tbody>
@@ -1375,17 +1580,25 @@ footer a:hover{text-decoration:underline}
           </div>
         </div>
         <div class="tool-card">
-          <div style="padding:1rem">
-            <div class="section-title" style="font-size:.86rem;margin-bottom:.7rem">⚙️ Tech Stack</div>
-            <div class="g2" style="gap:.48rem">
-              <div class="ic" style="border:1px solid var(--b1)"><div class="ici" aria-hidden="true">☕</div><h3>Java 21</h3><p>OpenJDK untuk Apktool</p></div>
-              <div class="ic" style="border:1px solid var(--b1)"><div class="ici" aria-hidden="true">🔧</div><h3>Apktool 2.10</h3><p>Decompile &amp; recompile</p></div>
-              <div class="ic" style="border:1px solid var(--b1)"><div class="ici" aria-hidden="true">🐍</div><h3>Python 3.12</h3><p>Engine ApkPatcher</p></div>
-              <div class="ic" style="border:1px solid var(--b1)"><div class="ici" aria-hidden="true">✒️</div><h3>apksigner</h3><p>Sign APK hasil patch</p></div>
+          <div style="padding:1.1rem">
+            <div class="sec-title" style="font-size:.85rem;margin-bottom:.8rem">⚙️ Tech Stack</div>
+            <div class="g2" style="gap:.52rem">
+              <div class="ic" style="border:1px solid var(--border)">
+                <div class="ici">☕</div><h3>Java 21</h3><p>OpenJDK untuk Apktool &amp; APKEditor</p>
+              </div>
+              <div class="ic" style="border:1px solid var(--border)">
+                <div class="ici">🔧</div><h3>Apktool 2.10</h3><p>Decompile &amp; recompile APK</p>
+              </div>
+              <div class="ic" style="border:1px solid var(--border)">
+                <div class="ici">🐍</div><h3>Python 3.12</h3><p>Engine ApkPatcherX v0.4</p>
+              </div>
+              <div class="ic" style="border:1px solid var(--border)">
+                <div class="ici">✒️</div><h3>apksigner</h3><p>Sign APK hasil patch otomatis</p>
+              </div>
             </div>
             <div class="alert alert-w mt">
-              <span class="alert-ico" aria-hidden="true">⏱️</span>
-              <div>Proses bisa 1–5 menit. Log berjalan real-time. <strong>Jangan tutup atau refresh tab selama proses berlangsung.</strong></div>
+              <span class="alert-ico">⏱️</span>
+              <div>Proses 1–5 menit. Log berjalan real-time. <strong>Jangan tutup atau refresh tab.</strong></div>
             </div>
           </div>
         </div>
@@ -1393,24 +1606,31 @@ footer a:hover{text-decoration:underline}
     </section>
   </div><!-- /mode-apk -->
 
-  <!-- ═══ FAQ ═══ -->
+  <div class="divider"></div>
+
+  <!-- FAQ -->
   <section class="section" id="faq">
-    <div class="section-title">❓ FAQ</div>
+    <div class="sec-hd">
+      <div class="sec-title">❓ FAQ</div>
+    </div>
     <div class="g2">
-      <div class="tool-card" style="padding:1rem">
-        <h3 style="font-size:.84rem;font-weight:800;color:#fff;margin-bottom:.42rem">📁 File apa yang diupload?</h3>
-        <p style="font-size:.76rem;color:var(--mu2);line-height:1.6"><strong>Flutter SSL:</strong> <code style="background:rgba(99,102,241,.15);padding:.04rem .32rem;border-radius:3px">libflutter.so</code> dari dalam APK (extract dulu).<br/><br/><strong>APK Patcher:</strong> Upload file <code>.apk</code> langsung — tidak perlu extract.</p>
+      <div class="tool-card" style="padding:1.1rem">
+        <h3 style="font-size:.84rem;font-weight:800;color:#fff;margin-bottom:.45rem">📁 File apa yang diupload?</h3>
+        <p style="font-size:.75rem;color:var(--text2);line-height:1.65">
+          <strong>Flutter SSL:</strong> <code style="background:rgba(79,142,247,.1);border:1px solid rgba(79,142,247,.15);padding:.03rem .35rem;border-radius:4px;font-family:'JetBrains Mono',monospace;color:var(--primary);font-size:.85em">libflutter.so</code> dari dalam APK (extract dulu).<br/><br/>
+          <strong>APK Patcher:</strong> Upload file <code style="background:rgba(79,142,247,.1);border:1px solid rgba(79,142,247,.15);padding:.03rem .35rem;border-radius:4px;font-family:'JetBrains Mono',monospace;color:var(--primary);font-size:.85em">.apk</code> langsung — tidak perlu extract.
+        </p>
       </div>
-      <div class="tool-card" style="padding:1rem">
-        <h3 style="font-size:.84rem;font-weight:800;color:#fff;margin-bottom:.42rem">🔍 Cara extract libflutter.so?</h3>
+      <div class="tool-card" style="padding:1.1rem">
+        <h3 style="font-size:.84rem;font-weight:800;color:#fff;margin-bottom:.45rem">🔍 Cara extract libflutter.so?</h3>
         <div class="code-blk">
           <div class="code-hd"><span>Terminal</span><button class="cp-btn" onclick="cpCode(this)">Copy</button></div>
           <pre><code>cp app.apk app.zip
 unzip app.zip lib/arm64-v8a/libflutter.so</code></pre>
         </div>
       </div>
-      <div class="tool-card" style="padding:1rem">
-        <h3 style="font-size:.84rem;font-weight:800;color:#fff;margin-bottom:.42rem">📥 Pasang kembali ke APK?</h3>
+      <div class="tool-card" style="padding:1.1rem">
+        <h3 style="font-size:.84rem;font-weight:800;color:#fff;margin-bottom:.45rem">📥 Pasang kembali ke APK?</h3>
         <div class="code-blk">
           <div class="code-hd"><span>Terminal</span><button class="cp-btn" onclick="cpCode(this)">Copy</button></div>
           <pre><code>mv libflutter_patched.so libflutter.so
@@ -1418,9 +1638,9 @@ zip -u app.apk lib/arm64-v8a/libflutter.so
 apksigner sign --ks key.jks app.apk</code></pre>
         </div>
       </div>
-      <div class="tool-card" style="padding:1rem">
-        <h3 style="font-size:.84rem;font-weight:800;color:#fff;margin-bottom:.42rem">⚠️ Pattern tidak ditemukan?</h3>
-        <p style="font-size:.76rem;color:var(--mu2);line-height:1.6">Gunakan mode <strong>APK Patcher</strong> dengan Smali SSL bypass. Pattern tidak cocok biasanya karena Flutter versi sangat baru/lama, atau binary sudah di-obfuscate oleh developer.</p>
+      <div class="tool-card" style="padding:1.1rem">
+        <h3 style="font-size:.84rem;font-weight:800;color:#fff;margin-bottom:.45rem">⚠️ Pattern tidak ditemukan?</h3>
+        <p style="font-size:.75rem;color:var(--text2);line-height:1.65">Gunakan mode <strong>APK Patcher</strong> dengan Smali SSL bypass. Pattern tidak cocok biasanya karena Flutter versi sangat baru/lama, atau binary sudah di-obfuscate oleh developer.</p>
       </div>
     </div>
   </section>
@@ -1430,16 +1650,24 @@ apksigner sign --ks key.jks app.apk</code></pre>
 <!-- ═══ FOOTER ═══ -->
 <footer>
   <div class="fi">
-    <p>🛡️ <strong>APK Patch Suite v3.1</strong> — <a href="https://github.com/AbhiTheModder/termux-scripts" target="_blank" rel="noopener noreferrer">AbhiTheModder</a> · <a href="https://github.com/TechnoIndian/ApkPatcher" target="_blank" rel="noopener noreferrer">TechnoIndian/ApkPatcher</a></p>
-    <p style="margin-top:.28rem">Untuk security research, CTF &amp; edukasi. Hormati Terms of Service setiap aplikasi.</p>
-    <p style="margin-top:.48rem;font-size:.68rem;color:var(--mu)">Node.js v20 · Express 5 · Python 3.12 · Apktool 2.10 · Java 21</p>
+    <div class="footer-logo">🛡️</div>
+    <p><strong style="color:var(--text)">APK Patch Suite v3.1</strong> — Professional Edition</p>
+    <p style="margin-top:.35rem">
+      <a href="https://github.com/AbhiTheModder/termux-scripts" target="_blank" rel="noopener">AbhiTheModder</a> ·
+      <a href="https://github.com/TechnoIndian/ApkPatcher" target="_blank" rel="noopener">TechnoIndian/ApkPatcher</a> ·
+      <a href="https://github.com/pt-zenity/Webpatcher" target="_blank" rel="noopener">pt-zenity/Webpatcher</a>
+    </p>
+    <p style="margin-top:.4rem;font-size:.68rem;color:var(--text4)">Untuk security research, CTF &amp; edukasi. Hormati Terms of Service setiap aplikasi.</p>
+    <p style="margin-top:.75rem;font-size:.66rem;color:var(--text4)">
+      Node.js v20 · Express 5 · Python 3.12 · Apktool 2.10 · Java 21 · ApkPatcherX v0.4
+    </p>
   </div>
 </footer>
 
 <script>
 'use strict';
 /* ═══════════════════════════════════════════════════════════════════════
-   APP STATE
+   STATE
 ═══════════════════════════════════════════════════════════════════════ */
 const S = {
   f: { file: null, logLines: [] },
@@ -1451,11 +1679,8 @@ const S = {
   },
 };
 const MAX_SSE_RETRY = 7;
-const LOG_MAX_LINES = 1500; // cap DOM nodes to prevent memory bloat
-const LOG_ICONS = {
-  info: '·', step: '▶', found: '★', success: '✔', error: '✖', warn: '⚠',
-};
-// Stage keywords for progress tracking
+const LOG_MAX_LINES = 1500;
+const LOG_ICONS = { info: '·', step: '▶', found: '★', success: '✔', error: '✖', warn: '⚠' };
 const STAGE_MAP = [
   { id: 'ps-upload',    re: /upload|start|mulai/i },
   { id: 'ps-decompile', re: /decompil|unpack|extract/i },
@@ -1466,13 +1691,11 @@ const STAGE_MAP = [
 ];
 let _currentStage = -1;
 
-/* ═══════════════════════════════════════════════════════════════════════
-   UTILITIES
-═══════════════════════════════════════════════════════════════════════ */
+/* ═══ UTILS ═══ */
 function esc(s) {
   return String(s ?? '')
-    .replace(/&/g,'&amp;').replace(/</g,'&lt;')
-    .replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
 }
 function fmtSize(bytes) {
   if (!bytes || bytes < 0) return '0 B';
@@ -1483,11 +1706,9 @@ function fmtSize(bytes) {
 function timeStr() {
   return new Date().toLocaleTimeString('id-ID',{hour12:false,hour:'2-digit',minute:'2-digit',second:'2-digit'});
 }
-function clamp(n, min, max) { return Math.min(max, Math.max(min, n)); }
+function clamp(n,min,max){return Math.min(max,Math.max(min,n))}
 
-/* ═══════════════════════════════════════════════════════════════════════
-   A11Y ANNOUNCE
-═══════════════════════════════════════════════════════════════════════ */
+/* ═══ A11Y ═══ */
 function announce(msg) {
   const el = document.getElementById('a11y-announce');
   if (!el) return;
@@ -1495,9 +1716,7 @@ function announce(msg) {
   requestAnimationFrame(() => { el.textContent = msg; });
 }
 
-/* ═══════════════════════════════════════════════════════════════════════
-   TOAST
-═══════════════════════════════════════════════════════════════════════ */
+/* ═══ TOAST ═══ */
 let _toastTimer = null;
 function toast(msg, dur=3200) {
   const el = document.getElementById('toast');
@@ -1508,22 +1727,18 @@ function toast(msg, dur=3200) {
   _toastTimer = setTimeout(() => el.classList.remove('show'), dur);
 }
 
-/* ═══════════════════════════════════════════════════════════════════════
-   CONNECTION STATUS
-═══════════════════════════════════════════════════════════════════════ */
+/* ═══ CONNECTION STATUS ═══ */
 function setConnStatus(state) {
   const el = document.getElementById('conn-status');
   if (!el) return;
   el.className = '';
-  if (state === 'offline')       { el.className='offline'; el.textContent='⚠ Offline'; }
+  if (state === 'offline')      { el.className='offline'; el.textContent='⚠ Offline'; }
   else if (state === 'reconnecting') { el.className='reconnecting'; el.textContent='🔄 Menyambung…'; }
 }
 window.addEventListener('online',  () => { setConnStatus('ok'); toast('✅ Koneksi kembali'); });
 window.addEventListener('offline', () => { setConnStatus('offline'); toast('⚠️ Koneksi terputus!', 5000); });
 
-/* ═══════════════════════════════════════════════════════════════════════
-   MODE & TAB SWITCH
-═══════════════════════════════════════════════════════════════════════ */
+/* ═══ MODE & TAB ═══ */
 function switchMode(mode, btn) {
   document.querySelectorAll('.mode-tab').forEach(t => {
     t.classList.remove('active');
@@ -1534,10 +1749,9 @@ function switchMode(mode, btn) {
   btn.setAttribute('aria-selected','true');
   const panel = document.getElementById('mode-' + mode);
   if (panel) panel.classList.add('active');
-  // Scroll to tool smoothly
   const toolEl = document.getElementById('tool');
   if (toolEl) {
-    const top = toolEl.getBoundingClientRect().top + window.scrollY - 60;
+    const top = toolEl.getBoundingClientRect().top + window.scrollY - 70;
     window.scrollTo({top, behavior:'smooth'});
   }
 }
@@ -1545,10 +1759,7 @@ function switchMode(mode, btn) {
 function switchTab(btn, id) {
   const card = btn.closest('.tool-card');
   if (!card) return;
-  card.querySelectorAll('.tab-btn').forEach(b => {
-    b.classList.remove('active');
-    b.setAttribute('aria-selected','false');
-  });
+  card.querySelectorAll('.tab-btn').forEach(b => { b.classList.remove('active'); b.setAttribute('aria-selected','false'); });
   card.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
   btn.classList.add('active');
   btn.setAttribute('aria-selected','true');
@@ -1556,63 +1767,45 @@ function switchTab(btn, id) {
   if (pane) pane.classList.add('active');
 }
 
-/* ═══════════════════════════════════════════════════════════════════════
-   DRAG & DROP
-═══════════════════════════════════════════════════════════════════════ */
-function dzOver(el, e) {
-  e.preventDefault(); e.stopPropagation();
-  el.classList.add('over');
-}
+/* ═══ DRAG & DROP ═══ */
+function dzOver(el,e) { e.preventDefault(); e.stopPropagation(); el.classList.add('over'); }
 function dzLeave(el) { el.classList.remove('over'); }
-function dzDrop(el, e, mode) {
+function dzDrop(el,e,mode) {
   e.preventDefault(); e.stopPropagation();
   el.classList.remove('over');
   const f = e.dataTransfer?.files?.[0];
   if (f) setFile(mode, f);
 }
 
-/* ═══════════════════════════════════════════════════════════════════════
-   FILE VALIDATION & SELECTION
-═══════════════════════════════════════════════════════════════════════ */
+/* ═══ FILE RULES ═══ */
 const FILE_RULES = {
-  f: { ext: /\.(so|bin)$/i,                     maxMB: 150, label: '.so / .bin' },
-  a: { ext: /\.(apk|xapk|apkm|apks)$/i,         maxMB: 500, label: '.apk / .xapk / .apkm / .apks' },
+  f: { ext: /\.(so|bin)$/i, maxMB: 150, label: '.so / .bin' },
+  a: { ext: /\.(apk|xapk|apkm|apks)$/i, maxMB: 500, label: '.apk / .xapk / .apkm / .apks' },
 };
 
 function onPick(input, mode) {
   if (input.files?.[0]) setFile(mode, input.files[0]);
-  // Reset input so same file can be re-selected after clear
   input.value = '';
 }
 
 function setFile(mode, file) {
   const rule = FILE_RULES[mode];
   if (!rule) return;
-
-  // Validate extension
   if (!rule.ext.test(file.name)) {
     const ext = file.name.includes('.') ? file.name.split('.').pop().toUpperCase() : 'unknown';
     toast(`⚠️ Format .${ext} tidak didukung. Gunakan: ${rule.label}`, 4500);
     return;
   }
-  // Validate size
   if (file.size > rule.maxMB * 1048576) {
-    toast(`⚠️ File terlalu besar! Maksimum ${rule.maxMB} MB (file: ${fmtSize(file.size)})`, 4500);
+    toast(`⚠️ File terlalu besar! Maks ${rule.maxMB} MB (file: ${fmtSize(file.size)})`, 4500);
     return;
   }
-  // Validate not zero-byte
-  if (file.size === 0) {
-    toast('⚠️ File kosong (0 byte). Pilih file yang valid.', 4500);
-    return;
-  }
+  if (file.size === 0) { toast('⚠️ File kosong (0 byte).', 4500); return; }
 
   S[mode].file = file;
-
-  // Update dropzone visual
   const dz = document.getElementById('dz-' + mode);
   if (dz) dz.classList.add('has-file');
 
-  // Show file preview
   const fp   = document.getElementById('fp-' + mode);
   const name = document.getElementById('fp-' + mode + '-name');
   const meta = document.getElementById('fp-' + mode + '-meta');
@@ -1641,7 +1834,6 @@ function clearFile(mode) {
   document.getElementById('fp-' + mode)?.classList.remove('show');
   const dz = document.getElementById('dz-' + mode);
   if (dz) dz.classList.remove('has-file');
-
   if (mode === 'f') {
     const btn = document.getElementById('btn-f');
     if (btn) btn.disabled = true;
@@ -1655,9 +1847,7 @@ function clearFile(mode) {
   }
 }
 
-/* ═══════════════════════════════════════════════════════════════════════
-   RESET FLUTTER RESULT AREA
-═══════════════════════════════════════════════════════════════════════ */
+/* ═══ RESET FLUTTER ═══ */
 function resetFlutterResult() {
   clearLog('f');
   S.f.logLines = [];
@@ -1669,9 +1859,7 @@ function resetFlutterResult() {
   setLiveDot('f', false);
 }
 
-/* ═══════════════════════════════════════════════════════════════════════
-   LIVE DOT INDICATOR
-═══════════════════════════════════════════════════════════════════════ */
+/* ═══ LIVE DOT ═══ */
 function setLiveDot(mode, active) {
   const dot = document.getElementById('log-' + mode + '-dot');
   if (!dot) return;
@@ -1679,22 +1867,15 @@ function setLiveDot(mode, active) {
   else        dot.classList.add('stopped');
 }
 
-/* ═══════════════════════════════════════════════════════════════════════
-   STAGE INDICATOR (APK mode only)
-═══════════════════════════════════════════════════════════════════════ */
+/* ═══ STAGE INDICATOR ═══ */
 function updateStage(text) {
   const stages = document.getElementById('prog-stages');
   if (!stages) return;
   stages.classList.add('show');
-
   const lower = (text || '').toLowerCase();
   for (let i = 0; i < STAGE_MAP.length; i++) {
-    if (STAGE_MAP[i].re.test(lower) && i > _currentStage) {
-      _currentStage = i;
-      break;
-    }
+    if (STAGE_MAP[i].re.test(lower) && i > _currentStage) { _currentStage = i; break; }
   }
-
   STAGE_MAP.forEach((s, i) => {
     const el = document.getElementById(s.id);
     if (!el) return;
@@ -1713,56 +1894,44 @@ function resetStages() {
   document.getElementById('prog-stages')?.classList.remove('show');
 }
 
-/* ═══════════════════════════════════════════════════════════════════════
-   LOG HELPERS — with auto-scroll pause detection
-═══════════════════════════════════════════════════════════════════════ */
-const logState = {
-  f: { count: 0, paused: false },
-  a: { count: 0, paused: false },
-};
+/* ═══ LOG HELPERS ═══ */
+const logState = { f:{count:0,paused:false}, a:{count:0,paused:false} };
 
 function _initLogScroll(mode) {
-  const body = document.getElementById('log-' + mode + '-body');
+  const body  = document.getElementById('log-' + mode + '-body');
   const pause = document.getElementById('log-' + mode + '-pause');
   if (!body || !pause) return;
   body.addEventListener('scroll', () => {
     const nearBottom = body.scrollHeight - body.scrollTop - body.clientHeight < 120;
     logState[mode].paused = !nearBottom;
     pause.classList.toggle('show', logState[mode].paused);
-  }, { passive: true });
+  }, {passive:true});
 }
 
 function resumeScroll(mode) {
   logState[mode].paused = false;
-  const body = document.getElementById('log-' + mode + '-body');
+  const body  = document.getElementById('log-' + mode + '-body');
   const pause = document.getElementById('log-' + mode + '-pause');
-  if (body) body.scrollTo({top: body.scrollHeight, behavior:'smooth'});
+  if (body) body.scrollTo({top:body.scrollHeight,behavior:'smooth'});
   if (pause) pause.classList.remove('show');
 }
 
 function addLog(mode, entry) {
   if (!entry || typeof entry !== 'object' || !entry.text) return;
-
   const body  = document.getElementById('log-' + mode + '-body');
   const panel = document.getElementById('log-' + mode);
   if (!body || !panel) return;
-
   panel.classList.add('show');
   setLiveDot(mode, true);
-
-  // Update stage (APK only)
   if (mode === 'a') updateStage(entry.text);
 
   const validLevels = ['info','step','found','success','error','warn'];
   const lvl = validLevels.includes(entry.level) ? entry.level : 'info';
 
-  // Cap log DOM nodes to prevent memory issues
   if (logState[mode].count >= LOG_MAX_LINES) {
-    const firstChild = body.firstElementChild;
-    if (firstChild) body.removeChild(firstChild);
-  } else {
-    logState[mode].count++;
-  }
+    const first = body.firstElementChild;
+    if (first) body.removeChild(first);
+  } else { logState[mode].count++; }
 
   const line = document.createElement('div');
   line.className = `log-line lv-${lvl} new`;
@@ -1773,40 +1942,27 @@ function addLog(mode, entry) {
     `<span class="log-ico">${ico}</span>` +
     `<span class="log-txt">${esc(String(entry.text))}</span>`;
   body.appendChild(line);
-
-  // Remove animation after play
   line.addEventListener('animationend', () => line.classList.remove('new'), {once:true});
 
   const cntEl = document.getElementById('log-' + mode + '-cnt');
   if (cntEl) cntEl.textContent = logState[mode].count;
-
-  // Cache for copy
   S[mode].logLines = S[mode].logLines || [];
   S[mode].logLines.push(`[${ts}] ${ico} ${entry.text}`);
 
-  // Auto-scroll only if not paused by user
   if (!logState[mode].paused) {
-    requestAnimationFrame(() => {
-      if (!logState[mode].paused) body.scrollTop = body.scrollHeight;
-    });
+    requestAnimationFrame(() => { if (!logState[mode].paused) body.scrollTop = body.scrollHeight; });
   }
 }
 
-function scrollLog(mode) {
-  resumeScroll(mode);
-}
-
+function scrollLog(mode) { resumeScroll(mode); }
 function clearLog(mode) {
-  logState[mode].count = 0;
-  logState[mode].paused = false;
+  logState[mode].count = 0; logState[mode].paused = false;
   const cntEl = document.getElementById('log-' + mode + '-cnt');
   if (cntEl) cntEl.textContent = '0';
   const body = document.getElementById('log-' + mode + '-body');
   if (body) body.innerHTML = '';
-  const pause = document.getElementById('log-' + mode + '-pause');
-  if (pause) pause.classList.remove('show');
-  if (mode === 'a') S.a.logLines = [];
-  else S.f.logLines = [];
+  document.getElementById('log-' + mode + '-pause')?.classList.remove('show');
+  if (mode === 'a') S.a.logLines = []; else S.f.logLines = [];
   setLiveDot(mode, false);
 }
 
@@ -1815,21 +1971,18 @@ function copyLog(mode) {
   const text = lines.join('\n');
   if (!text) { toast('Log masih kosong'); return; }
   navigator.clipboard?.writeText(text)
-    .then(() => toast('✅ Log disalin ke clipboard'))
+    .then(() => toast('✅ Log disalin'))
     .catch(() => {
-      // Fallback for older browsers / no clipboard permission
       const ta = document.createElement('textarea');
-      ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+      ta.value = text; ta.style.position='fixed'; ta.style.opacity='0';
       document.body.appendChild(ta); ta.select();
       try { document.execCommand('copy'); toast('✅ Log disalin'); }
-      catch { toast('❌ Gagal menyalin log'); }
+      catch { toast('❌ Gagal menyalin'); }
       document.body.removeChild(ta);
     });
 }
 
-/* ═══════════════════════════════════════════════════════════════════════
-   PROGRESS BAR
-═══════════════════════════════════════════════════════════════════════ */
+/* ═══ PROGRESS BAR ═══ */
 function setProgress(mode, pct, label, state='') {
   const wrap  = document.getElementById('prog-' + mode);
   const fill  = document.getElementById('prog-' + mode + '-fill');
@@ -1839,15 +1992,13 @@ function setProgress(mode, pct, label, state='') {
   wrap.classList.add('show');
   const pv = clamp(pct, 0, 100);
   fill.style.width = pv + '%';
-  fill.className = 'prog-fill' + (state ? ' ' + state : '');
+  fill.className = 'prog-fill' + (state ? ' '+state : '');
   fill.setAttribute('aria-valuenow', String(pv));
   if (label && lbl) lbl.textContent = label;
   if (pctEl) pctEl.textContent = pct >= 0 ? pct + '%' : '';
 }
 
-/* ═══════════════════════════════════════════════════════════════════════
-   UPLOAD PROGRESS
-═══════════════════════════════════════════════════════════════════════ */
+/* ═══ UPLOAD PROGRESS ═══ */
 function setUploadProgress(mode, pct) {
   const wrap  = document.getElementById('up-prog-' + mode);
   const fill  = document.getElementById('up-fill-' + mode);
@@ -1857,14 +2008,10 @@ function setUploadProgress(mode, pct) {
   const clamped = clamp(pct, 0, 100);
   fill.style.width = clamped + '%';
   if (pctEl) pctEl.textContent = clamped + '%';
-  if (pct >= 100) {
-    setTimeout(() => { wrap.classList.remove('show'); }, 900);
-  }
+  if (pct >= 100) setTimeout(() => { wrap.classList.remove('show'); }, 900);
 }
 
-/* ═══════════════════════════════════════════════════════════════════════
-   XHR WITH UPLOAD PROGRESS
-═══════════════════════════════════════════════════════════════════════ */
+/* ═══ XHR ═══ */
 function xhrPost(url, formData, onProgress, timeoutMs=600000) {
   return new Promise((resolve, reject) => {
     const xhr = new XMLHttpRequest();
@@ -1880,78 +2027,57 @@ function xhrPost(url, formData, onProgress, timeoutMs=600000) {
         catch { reject(new Error(`Respons server tidak valid (HTTP ${xhr.status})`)); }
       } else {
         let errMsg = `Server error HTTP ${xhr.status}`;
-        try {
-          const d = JSON.parse(xhr.responseText);
-          if (d?.error) errMsg = d.error;
-        } catch {}
+        try { const d = JSON.parse(xhr.responseText); if (d?.error) errMsg = d.error; } catch {}
         reject(new Error(errMsg));
       }
     };
-    xhr.onerror   = () => reject(new Error('Network error — tidak dapat terhubung ke server. Periksa koneksi internet.'));
-    xhr.ontimeout = () => reject(new Error('Timeout — koneksi terlalu lambat atau file sangat besar.'));
+    xhr.onerror   = () => reject(new Error('Network error — tidak dapat terhubung ke server.'));
+    xhr.ontimeout = () => reject(new Error('Timeout — koneksi lambat atau file terlalu besar.'));
     xhr.timeout   = timeoutMs;
     xhr.send(formData);
   });
 }
 
-/* ═══════════════════════════════════════════════════════════════════════
-   FLUTTER SSL PATCH
-═══════════════════════════════════════════════════════════════════════ */
+/* ═══ FLUTTER SSL PATCH ═══ */
 async function runFlutterPatch() {
   const file = S.f.file;
   if (!file) { toast('⚠️ Pilih file dulu!'); return; }
-
   const btn = document.getElementById('btn-f');
   if (!btn || btn.disabled) return;
-
-  btn.disabled = true;
-  btn.classList.add('loading');
+  btn.disabled = true; btn.classList.add('loading');
   resetFlutterResult();
-
   addLog('f', {level:'step', text:'Memulai Flutter SSL Patch…'});
   addLog('f', {level:'info', text:`File: ${file.name} (${fmtSize(file.size)})`});
   setProgress('f', 5, 'Mengupload file…');
-
   const fd = new FormData();
   fd.append('file', file);
   fd.append('arch', document.getElementById('arch-f')?.value || 'auto');
   fd.append('printOnly', document.getElementById('print-f')?.checked ? 'true' : 'false');
-
   try {
     setUploadProgress('f', 0);
     const data = await xhrPost('/api/patch', fd, (pct) => {
       setUploadProgress('f', pct);
       setProgress('f', 5 + Math.round(pct * 0.45), `Mengupload… ${pct}%`);
     });
-
     setUploadProgress('f', 100);
     setProgress('f', 65, 'Menganalisis binary…');
-
     if (!data || typeof data !== 'object') throw new Error('Respons server tidak valid');
     if (data.error) throw new Error(data.error);
-
-    // Replay server log entries
     const logEntries = Array.isArray(data.log) ? data.log : [];
-    logEntries.forEach(e => {
-      if (e && e.text) addLog('f', e);
-    });
-
+    logEntries.forEach(e => { if (e && e.text) addLog('f', e); });
     setProgress('f', 100, data.success ? 'Selesai!' : 'Gagal!', data.success ? 'done' : 'error');
     setLiveDot('f', false);
     renderFlutterResult(data);
-    announce(data.success ? 'Flutter SSL Patch berhasil! File siap didownload.' : 'Flutter SSL Patch gagal. Lihat log untuk detail.');
-
+    announce(data.success ? 'Flutter SSL Patch berhasil! File siap didownload.' : 'Flutter SSL Patch gagal.');
   } catch (err) {
-    const msg = err?.message || 'Terjadi kesalahan tidak dikenal';
+    const msg = err?.message || 'Terjadi kesalahan';
     addLog('f', {level:'error', text:`❌ Error: ${msg}`});
     setProgress('f', 100, 'Error!', 'error');
     setLiveDot('f', false);
     renderFlutterResult({success:false, _clientError: msg});
     announce('Flutter SSL Patch gagal: ' + msg);
-    console.error('[runFlutterPatch]', err);
   } finally {
-    btn.disabled = false;
-    btn.classList.remove('loading');
+    btn.disabled = false; btn.classList.remove('loading');
   }
 }
 
@@ -1959,38 +2085,29 @@ function renderFlutterResult(data) {
   const el = document.getElementById('result-f');
   if (!el) return;
   el.classList.add('show');
-
   if (!data.success) {
     const reason = esc(data._clientError || 'ssl_verify_peer_cert tidak ditemukan di binary ini.');
     el.innerHTML = `
       <div class="res-err">
         <div class="res-head">
           <div class="res-ico res-ico-err" aria-hidden="true">❌</div>
-          <div>
-            <div class="res-t">Patch Gagal</div>
-            <div class="res-s">${reason}</div>
-          </div>
+          <div><div class="res-t">Patch Gagal</div><div class="res-s">${reason}</div></div>
         </div>
-        <div class="alert alert-w" style="margin-top:.65rem">
-          <span class="alert-ico" aria-hidden="true">💡</span>
-          <div>Coba mode <strong>APK Patcher</strong> untuk bypass SSL via Smali, atau pastikan file adalah <code>libflutter.so</code> yang valid. Coba pilih architecture secara manual jika auto-detect gagal.</div>
+        <div class="alert alert-w" style="margin-top:.72rem">
+          <span class="alert-ico">💡</span>
+          <div>Coba mode <strong>APK Patcher</strong> untuk bypass SSL via Smali, atau pastikan file adalah <code style="font-family:'JetBrains Mono',monospace;font-size:.85em">libflutter.so</code> yang valid.</div>
         </div>
       </div>`;
     toast('❌ Patch gagal. Lihat log untuk detail.', 4500);
     return;
   }
-
   const m = data.meta || {};
-
   if (data.printOnly) {
     el.innerHTML = `
       <div class="res-ok">
         <div class="res-head">
           <div class="res-ico res-ico-ok" aria-hidden="true">🔍</div>
-          <div>
-            <div class="res-t">Print Only — Offset Ditemukan!</div>
-            <div class="res-s">ssl_verify_peer_cert berhasil diidentifikasi. File tidak diubah.</div>
-          </div>
+          <div><div class="res-t">Print Only — Offset Ditemukan!</div><div class="res-s">ssl_verify_peer_cert berhasil diidentifikasi. File tidak diubah.</div></div>
         </div>
         <div class="meta-grid">
           <div class="mi"><div class="mi-l">Architecture</div><div class="mi-v">${esc(m.arch||'—')}</div></div>
@@ -2006,15 +2123,11 @@ function renderFlutterResult(data) {
     toast('🔍 Offset ditemukan!', 3500);
     return;
   }
-
   el.innerHTML = `
     <div class="res-ok">
       <div class="res-head">
         <div class="res-ico res-ico-ok" aria-hidden="true">✅</div>
-        <div>
-          <div class="res-t">Patch Berhasil!</div>
-          <div class="res-s">ssl_verify_peer_cert di-overwrite dengan ret0. SSL verification dinonaktifkan.</div>
-        </div>
+        <div><div class="res-t">Patch Berhasil!</div><div class="res-s">ssl_verify_peer_cert di-overwrite dengan ret0. SSL verification dinonaktifkan.</div></div>
       </div>
       <div class="meta-grid">
         <div class="mi"><div class="mi-l">Architecture</div><div class="mi-v">${esc(m.arch||'—')}</div></div>
@@ -2022,110 +2135,79 @@ function renderFlutterResult(data) {
         <div class="mi"><div class="mi-l">Found Offset</div><div class="mi-v">${esc(m.foundOffset||'—')}</div></div>
         <div class="mi"><div class="mi-l">Fn Start</div><div class="mi-v">${esc(m.fnOffset||'—')}</div></div>
         <div class="mi"><div class="mi-l">File Size</div><div class="mi-v">${fmtSize(data.sizeBytes||0)}</div></div>
-        <div class="mi"><div class="mi-l">Original Bytes</div><div class="mi-v" style="font-size:.66rem">${esc(m.originalBytes||'—')}</div></div>
-        <div class="mi" style="border-color:rgba(16,185,129,.2)"><div class="mi-l">Patched Bytes</div><div class="mi-v" style="font-size:.66rem;color:var(--g2)">${esc(m.patchedBytes||'—')}</div></div>
+        <div class="mi"><div class="mi-l">Original</div><div class="mi-v" style="font-size:.64rem">${esc(m.originalBytes||'—')}</div></div>
+        <div class="mi" style="border-color:rgba(34,211,165,.2)"><div class="mi-l">Patched</div><div class="mi-v" style="font-size:.64rem;color:var(--green)">${esc(m.patchedBytes||'—')}</div></div>
       </div>
       <div class="res-actions">
-        <a class="btn-dl" href="/api/download/${esc(data.downloadId)}"
-           download="${esc(data.filename||'patched.so')}"
-           aria-label="Download ${esc(data.filename||'patched.so')}">
+        <a class="btn-dl" href="/api/download/${esc(data.downloadId)}" download="${esc(data.filename||'patched.so')}">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
           Download ${esc(data.filename||'patched.so')}
         </a>
         <button class="btn-sec" onclick="clearFile('f')">🔄 Patch File Lain</button>
       </div>
-      <div class="alert alert-i" style="margin-top:.65rem">
-        <span class="alert-ico" aria-hidden="true">📱</span>
-        <div>Ganti <code>libflutter.so</code> di dalam APK, lalu re-sign dan install. Intercept dengan Burp Suite / mitmproxy. <strong>Link download valid 20 menit.</strong></div>
+      <div class="alert alert-i" style="margin-top:.72rem">
+        <span class="alert-ico">📱</span>
+        <div>Ganti <code style="font-family:'JetBrains Mono',monospace;font-size:.85em">libflutter.so</code> di dalam APK, re-sign &amp; install. Intercept dengan Burp Suite / mitmproxy. <strong>Link download valid 20 menit.</strong></div>
       </div>
     </div>`;
   toast('✅ Patch berhasil! Siap didownload.', 5000);
 }
 
-/* ═══════════════════════════════════════════════════════════════════════
-   APK SCAN
-═══════════════════════════════════════════════════════════════════════ */
+/* ═══ APK SCAN ═══ */
 async function scanApk() {
   const file = S.a.file;
   if (!file) { toast('⚠️ Pilih APK dulu!'); return; }
-
   const btn = document.getElementById('btn-scan');
   if (!btn || btn.disabled) return;
-  btn.disabled = true;
-  btn.classList.add('loading');
+  btn.disabled = true; btn.classList.add('loading');
   document.getElementById('scan-res')?.classList.remove('show');
-
   const fd = new FormData();
   fd.append('file', file);
-
   try {
     setUploadProgress('a', 0);
-    const data = await xhrPost('/api/apk/scan', fd, (pct) => {
-      setUploadProgress('a', pct);
-    });
+    const data = await xhrPost('/api/apk/scan', fd, (pct) => { setUploadProgress('a', pct); });
     setUploadProgress('a', 100);
-
-    if (!data?.success) throw new Error(data?.error || 'Scan gagal — respons tidak valid');
-
-    S.a.token    = data.token;
-    S.a.filename = data.filename;
-
-    // Render scan result badges
+    if (!data?.success) throw new Error(data?.error || 'Scan gagal');
+    S.a.token = data.token; S.a.filename = data.filename;
     const chipsEl = document.getElementById('scan-chips');
     if (chipsEl) {
       chipsEl.innerHTML = '';
       const addChip = (txt, cls) => {
         const b = document.createElement('span');
-        b.className = 'chip ' + cls;
+        b.className = 'hchip ' + cls;
         b.textContent = txt;
         chipsEl.appendChild(b);
       };
-      addChip('📄 ' + (data.filename || 'unknown'), 'ch-b');
-      addChip('📦 ' + fmtSize(data.size || 0), 'ch-p');
-      if (data.files != null) addChip(`🗂 ${data.files} file`, 'ch-c');
-      if (data.pkg)           addChip('📛 ' + data.pkg, 'ch-y');
-      addChip(
-        data.flutter ? '✅ Flutter detected' : '❌ No Flutter lib',
-        data.flutter ? 'ch-g' : 'ch-o'
-      );
-      if (data.pairip)  addChip('⚠️ Pairip detected', 'ch-o');
-      if (data.error)   addChip('⚠️ ' + data.error, 'ch-y');
+      addChip('📄 ' + (data.filename || 'unknown'), 'hc-blue');
+      addChip('📦 ' + fmtSize(data.size || 0), 'hc-purple');
+      if (data.files != null) addChip(`🗂 ${data.files} file`, 'hc-cyan');
+      if (data.pkg)           addChip('📛 ' + data.pkg, 'hc-orange');
+      addChip(data.flutter ? '✅ Flutter detected' : '❌ No Flutter lib', data.flutter ? 'hc-green' : 'hc-orange');
+      if (data.pairip) addChip('⚠️ Pairip detected', 'hc-orange');
+      if (data.error)  addChip('⚠️ ' + data.error, 'hc-orange');
     }
-
     document.getElementById('scan-res')?.classList.add('show');
-
-    // Auto-check flutter SSL if detected
     if (data.flutter) {
       const ck = document.getElementById('ck-flutter');
       if (ck && !ck.checked) { ck.checked = true; syncPopt(ck); }
     }
-
-    // Unlock step 2
     lockStep2(false);
     document.getElementById('snum-1')?.classList.add('done-num');
-
-    // Smooth scroll to step 2
     setTimeout(() => {
-      document.getElementById('step2-wrap')?.scrollIntoView({behavior:'smooth', block:'nearest'});
+      document.getElementById('step2-wrap')?.scrollIntoView({behavior:'smooth',block:'nearest'});
     }, 380);
-
-    announce('Scan selesai. Lanjutkan ke langkah 2 untuk memilih patch.');
+    announce('Scan selesai. Lanjutkan ke langkah 2.');
     toast('✅ Scan selesai!');
-
   } catch (err) {
     const msg = err?.message || 'Scan gagal';
     toast('❌ ' + msg, 4800);
     announce('Scan gagal: ' + msg);
-    console.error('[scanApk]', err);
   } finally {
-    btn.disabled = false;
-    btn.classList.remove('loading');
+    btn.disabled = false; btn.classList.remove('loading');
   }
 }
 
-/* ═══════════════════════════════════════════════════════════════════════
-   PATCH OPTION SYNC
-═══════════════════════════════════════════════════════════════════════ */
+/* ═══ PATCH OPTIONS ═══ */
 const PATCH_KEYS = ['flutter','pairip','pairip_corex','spoof_pkg','remove_ads',
                     'remove_ss','remove_usb','random_info','purchase','tg_patch'];
 
@@ -2137,43 +2219,33 @@ function syncPopt(chk) {
   if (btn) btn.disabled = !anyOn;
 }
 
-/* ═══════════════════════════════════════════════════════════════════════
-   STEP LOCK/UNLOCK
-═══════════════════════════════════════════════════════════════════════ */
+/* ═══ STEP LOCK ═══ */
 function lockStep2(locked) {
   const wrap = document.getElementById('step2-wrap');
   const sc   = document.getElementById('sc-2');
   if (!wrap || !sc) return;
-  wrap.style.opacity       = locked ? '.35' : '1';
+  wrap.style.opacity = locked ? '.35' : '1';
   wrap.style.pointerEvents = locked ? 'none' : 'auto';
   wrap.setAttribute('aria-disabled', locked ? 'true' : 'false');
   sc.classList.toggle('open', !locked);
-  if (!locked) {
-    const btn = document.getElementById('btn-patch-apk');
-    if (btn) btn.disabled = true;
-  }
+  if (!locked) { const btn = document.getElementById('btn-patch-apk'); if (btn) btn.disabled = true; }
 }
 
 function lockStep3(locked) {
   const wrap = document.getElementById('step3-wrap');
   const sc   = document.getElementById('sc-3');
   if (!wrap || !sc) return;
-  wrap.style.opacity       = locked ? '.35' : '1';
+  wrap.style.opacity = locked ? '.35' : '1';
   wrap.style.pointerEvents = locked ? 'none' : 'auto';
   wrap.setAttribute('aria-disabled', locked ? 'true' : 'false');
   sc.classList.toggle('open', !locked);
 }
 
-/* ═══════════════════════════════════════════════════════════════════════
-   APK PATCH (start job)
-═══════════════════════════════════════════════════════════════════════ */
+/* ═══ APK PATCH ═══ */
 async function runApkPatch() {
   if (!S.a.token) { toast('⚠️ Scan APK dulu di Step 1!'); return; }
-
   const options = {};
   PATCH_KEYS.forEach(k => { options[k] = document.getElementById('ck-' + k)?.checked || false; });
-
-  // Validate Android ID if provided
   const aid = (document.getElementById('aid-inp')?.value || '').trim();
   if (aid) {
     if (!/^[a-fA-F0-9]{16}$/.test(aid)) {
@@ -2183,91 +2255,58 @@ async function runApkPatch() {
     }
     options.android_id = aid;
   }
-
-  // At least one patch must be selected
-  if (!PATCH_KEYS.some(k => options[k])) {
-    toast('⚠️ Pilih minimal satu patch!', 3500);
-    return;
-  }
-
+  if (!PATCH_KEYS.some(k => options[k])) { toast('⚠️ Pilih minimal satu patch!', 3500); return; }
   const btn = document.getElementById('btn-patch-apk');
   if (!btn || btn.disabled) return;
-  btn.disabled = true;
-  btn.classList.add('loading');
-
-  // Show step 3
+  btn.disabled = true; btn.classList.add('loading');
   lockStep3(false);
   document.getElementById('snum-2')?.classList.add('done-num');
-  clearLog('a');
-  S.a.logLines = [];
-  resetStages();
-
+  clearLog('a'); S.a.logLines = []; resetStages();
   const rA = document.getElementById('result-a');
   if (rA) { rA.innerHTML = ''; rA.classList.remove('show'); }
   document.getElementById('apk-reset-row')?.classList.add('hidden');
-
   const pill = document.getElementById('job-pill');
-  if (pill) { pill.className='status-pill sp-run sp-pulse'; pill.textContent='⏳ Menjalankan ApkPatcher…'; }
+  if (pill) { pill.className='status-pill sp-run sp-pulse'; pill.textContent='Menjalankan ApkPatcher…'; }
   setProgress('a', 3, 'Memulai job…');
-  S.a.done = false;
-  startElapsed();
-
-  // Scroll to step 3
+  S.a.done = false; startElapsed();
   setTimeout(() => {
-    document.getElementById('step3-wrap')?.scrollIntoView({behavior:'smooth', block:'nearest'});
+    document.getElementById('step3-wrap')?.scrollIntoView({behavior:'smooth',block:'nearest'});
   }, 340);
-
   try {
-    const ctrl   = new AbortController();
-    const tId    = setTimeout(() => ctrl.abort(), 30000);
+    const ctrl = new AbortController();
+    const tId  = setTimeout(() => ctrl.abort(), 30000);
     let resp;
     try {
       resp = await fetch('/api/apk/patch', {
-        method: 'POST',
-        headers: {'Content-Type':'application/json'},
-        body: JSON.stringify({token: S.a.token, filename: S.a.filename, options}),
-        signal: ctrl.signal,
+        method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({token:S.a.token,filename:S.a.filename,options}),
+        signal:ctrl.signal,
       });
-    } finally {
-      clearTimeout(tId);
-    }
-
+    } finally { clearTimeout(tId); }
     if (!resp.ok) {
       let errMsg = `Server error HTTP ${resp.status}`;
       try { const d = await resp.json(); if (d?.error) errMsg = d.error; } catch {}
       throw new Error(errMsg);
     }
-
     let data;
     try { data = await resp.json(); } catch { throw new Error('Respons server tidak valid'); }
     if (!data?.success) throw new Error(data?.error || 'Gagal memulai job');
-
     S.a.jobId = data.jobId;
     connectSSE(data.jobId);
-
   } catch (err) {
-    const msg = err?.name === 'AbortError'
-      ? 'Request timeout (30s). Server tidak merespons.'
-      : (err?.message || 'Gagal memulai patch');
+    const msg = err?.name === 'AbortError' ? 'Request timeout (30s).' : (err?.message || 'Gagal memulai patch');
     addLog('a', {level:'error', text:'❌ Gagal memulai: ' + msg});
     setProgress('a', 100, 'Error!', 'error');
-    setLiveDot('a', false);
-    stopElapsed();
+    setLiveDot('a', false); stopElapsed();
     document.getElementById('apk-reset-row')?.classList.remove('hidden');
-    btn.disabled = false;
-    btn.classList.remove('loading');
+    btn.disabled = false; btn.classList.remove('loading');
     toast('❌ ' + msg, 4800);
-    announce('Patch APK gagal: ' + msg);
-    console.error('[runApkPatch]', err);
   }
 }
 
-/* ═══════════════════════════════════════════════════════════════════════
-   ELAPSED TIMER
-═══════════════════════════════════════════════════════════════════════ */
+/* ═══ ELAPSED TIMER ═══ */
 function startElapsed() {
-  stopElapsed();
-  S.a.elapsedSec = 0;
+  stopElapsed(); S.a.elapsedSec = 0;
   S.a.elapsedTimer = setInterval(() => {
     S.a.elapsedSec++;
     const m = Math.floor(S.a.elapsedSec / 60);
@@ -2280,46 +2319,27 @@ function stopElapsed() {
   if (S.a.elapsedTimer) { clearInterval(S.a.elapsedTimer); S.a.elapsedTimer = null; }
 }
 
-/* ═══════════════════════════════════════════════════════════════════════
-   SSE CONNECTION — Real-time live log streaming
-═══════════════════════════════════════════════════════════════════════ */
+/* ═══ SSE CONNECTION ═══ */
 function connectSSE(jobId) {
   if (S.a.sse) { try { S.a.sse.close(); } catch {} S.a.sse = null; }
-  S.a.sseRetry = 0;
-  _openSSE(jobId);
+  S.a.sseRetry = 0; _openSSE(jobId);
 }
 
 function _openSSE(jobId) {
-  if (S.a.done) return; // guard against late retries
+  if (S.a.done) return;
   setConnStatus('ok');
-
   let sse;
-  try {
-    sse = new EventSource(`/api/apk/status/${jobId}`);
-  } catch (e) {
-    console.error('[SSE open error]', e);
-    _startPolling(jobId);
-    return;
-  }
+  try { sse = new EventSource(`/api/apk/status/${jobId}`); }
+  catch (e) { _startPolling(jobId); return; }
   S.a.sse = sse;
-
   let logBuf = 0;
-
   sse.onmessage = (e) => {
     let entry;
     try { entry = JSON.parse(e.data); } catch { return; }
-
     if (!entry || entry.level === '__ping__') return;
-
     if (entry.level === '__done__') {
       try { sse.close(); } catch {}
-      S.a.sse = null;
-      stopElapsed();
-      setConnStatus('ok');
-      setLiveDot('a', false);
-      S.a.done = true;
-
-      // Complete all stages visually
+      S.a.sse = null; stopElapsed(); setConnStatus('ok'); setLiveDot('a', false); S.a.done = true;
       if (entry.success) {
         _currentStage = STAGE_MAP.length - 1;
         STAGE_MAP.forEach((s, i) => {
@@ -2327,26 +2347,18 @@ function _openSSE(jobId) {
           if (el) { el.classList.remove('active'); el.classList.add('done'); }
         });
       }
-
       const pill = document.getElementById('job-pill');
-      if (pill) {
-        pill.className = entry.success ? 'status-pill sp-ok' : 'status-pill sp-err';
-        pill.textContent = entry.success ? '✅ Selesai' : '❌ Gagal';
-      }
+      if (pill) { pill.className = entry.success ? 'status-pill sp-ok' : 'status-pill sp-err'; pill.textContent = entry.success ? '✅ Selesai' : '❌ Gagal'; }
       setProgress('a', 100, entry.success ? 'Selesai!' : 'Gagal!', entry.success ? 'done' : 'error');
       renderApkResult(entry);
       document.getElementById('apk-reset-row')?.classList.remove('hidden');
       const btnPatch = document.getElementById('btn-patch-apk');
       if (btnPatch) btnPatch.classList.remove('loading');
-      announce(entry.success ? 'APK berhasil di-patch! Siap didownload.' : 'Patch APK gagal. Lihat log di atas.');
+      announce(entry.success ? 'APK berhasil di-patch! Siap didownload.' : 'Patch APK gagal.');
       return;
     }
-
     if (entry.level && entry.text) {
-      addLog('a', entry);
-      logBuf++;
-
-      // Smart progress estimation: 5% → 90% from log density + keyword
+      addLog('a', entry); logBuf++;
       const pct = clamp(5 + Math.round(logBuf * 1.5), 5, 90);
       const low = String(entry.text).toLowerCase();
       let lbl = 'Memproses…';
@@ -2359,18 +2371,15 @@ function _openSSE(jobId) {
       setProgress('a', pct, lbl);
     }
   };
-
   sse.onerror = () => {
     try { sse.close(); } catch {}
     S.a.sse = null;
     if (S.a.done) return;
-
     S.a.sseRetry++;
     if (S.a.sseRetry > MAX_SSE_RETRY) {
       setConnStatus('offline');
-      addLog('a', {level:'warn', text:`SSE gagal ${MAX_SSE_RETRY}x. Beralih ke mode polling…`});
-      _startPolling(jobId);
-      return;
+      addLog('a', {level:'warn', text:`SSE gagal ${MAX_SSE_RETRY}x. Beralih ke polling…`});
+      _startPolling(jobId); return;
     }
     setConnStatus('reconnecting');
     const delay = Math.min(1000 * Math.pow(1.5, S.a.sseRetry), 12000);
@@ -2379,52 +2388,38 @@ function _openSSE(jobId) {
   };
 }
 
-/* ═══════════════════════════════════════════════════════════════════════
-   POLLING FALLBACK
-═══════════════════════════════════════════════════════════════════════ */
+/* ═══ POLLING FALLBACK ═══ */
 function _startPolling(jobId) {
   if (S.a.pollTimer) { clearInterval(S.a.pollTimer); S.a.pollTimer = null; }
-  let lastCount = 0;
-  let pollFails = 0;
-  const MAX_POLL_FAIL = 8;
-
+  let lastCount = 0; let pollFails = 0; const MAX_POLL_FAIL = 8;
   const poll = async () => {
     if (S.a.done) { clearInterval(S.a.pollTimer); S.a.pollTimer = null; return; }
     try {
       const ctrl = new AbortController();
       const tId  = setTimeout(() => ctrl.abort(), 9000);
       let r, d;
-      try {
-        r = await fetch(`/api/apk/job/${jobId}`, {signal: ctrl.signal});
-      } finally {
-        clearTimeout(tId);
-      }
+      try { r = await fetch(`/api/apk/job/${jobId}`, {signal:ctrl.signal}); }
+      finally { clearTimeout(tId); }
       if (!r.ok) throw new Error(`HTTP ${r.status}`);
-      d = await r.json();
-      pollFails = 0;
-
+      d = await r.json(); pollFails = 0;
       if (Array.isArray(d.logs) && d.logs.length > lastCount) {
         d.logs.slice(lastCount).forEach(e => { if (e?.level && e?.text) addLog('a', e); });
         lastCount = d.logs.length;
         setProgress('a', clamp(5 + Math.round(lastCount * 1.5), 5, 90), 'Memproses (polling)…');
       }
-
       if (d.done) {
         clearInterval(S.a.pollTimer); S.a.pollTimer = null;
-        stopElapsed(); S.a.done = true;
-        setConnStatus('ok');
-        setLiveDot('a', false);
+        stopElapsed(); S.a.done = true; setConnStatus('ok'); setLiveDot('a', false);
         setProgress('a', 100, d.success ? 'Selesai!' : 'Gagal!', d.success ? 'done' : 'error');
-        renderApkResult({success: d.success, downloadId: d.downloadId, filename: d.filename});
+        renderApkResult({success:d.success,downloadId:d.downloadId,filename:d.filename});
         document.getElementById('apk-reset-row')?.classList.remove('hidden');
         const btnPatch = document.getElementById('btn-patch-apk');
         if (btnPatch) btnPatch.classList.remove('loading');
         announce(d.success ? 'APK berhasil di-patch!' : 'Patch APK gagal.');
       }
     } catch (err) {
-      if (err?.name === 'AbortError') return; // timeout, skip
+      if (err?.name === 'AbortError') return;
       pollFails++;
-      console.warn('[poll]', err.message, `fails:${pollFails}`);
       if (pollFails >= MAX_POLL_FAIL) {
         clearInterval(S.a.pollTimer); S.a.pollTimer = null;
         addLog('a', {level:'error', text:'Koneksi ke server gagal berulang kali. Refresh halaman dan coba lagi.'});
@@ -2432,120 +2427,86 @@ function _startPolling(jobId) {
       }
     }
   };
-
   S.a.pollTimer = setInterval(poll, 3500);
-  poll(); // immediate first poll
+  poll();
 }
 
-/* ═══════════════════════════════════════════════════════════════════════
-   RENDER APK RESULT
-═══════════════════════════════════════════════════════════════════════ */
+/* ═══ RENDER APK RESULT ═══ */
 function renderApkResult(data) {
   const el = document.getElementById('result-a');
   if (!el) return;
   el.classList.add('show');
   document.getElementById('snum-3')?.classList.add('done-num');
-
   if (!data.success) {
     el.innerHTML = `
       <div class="res-err">
         <div class="res-head">
           <div class="res-ico res-ico-err" aria-hidden="true">❌</div>
-          <div>
-            <div class="res-t">Patch Gagal</div>
-            <div class="res-s">Lihat log di atas untuk detail error.</div>
-          </div>
+          <div><div class="res-t">Patch Gagal</div><div class="res-s">Lihat log di atas untuk detail error.</div></div>
         </div>
-        <div class="alert alert-i" style="margin-top:.65rem">
-          <span class="alert-ico" aria-hidden="true">💡</span>
-          <div>Tips: Pastikan APK valid dan tidak terkorupsi. Deselect patch yang tidak kompatibel (misal: Flutter SSL jika APK bukan Flutter). Beberapa APK memerlukan Java yang kompatibel.</div>
+        <div class="alert alert-i" style="margin-top:.72rem">
+          <span class="alert-ico">💡</span>
+          <div>Tips: Pastikan APK valid. Deselect patch yang tidak kompatibel (contoh: Flutter SSL jika APK bukan Flutter).</div>
         </div>
       </div>`;
     toast('❌ Patch gagal. Lihat log untuk detail.', 5000);
     return;
   }
-
   el.innerHTML = `
     <div class="res-ok">
       <div class="res-head">
         <div class="res-ico res-ico-ok" aria-hidden="true">✅</div>
-        <div>
-          <div class="res-t">APK Berhasil Di-Patch!</div>
-          <div class="res-s">APK telah di-patch, di-sign &amp; siap didownload. <strong>Link expired dalam 30 menit.</strong></div>
-        </div>
+        <div><div class="res-t">APK Berhasil Di-Patch!</div><div class="res-s">APK telah di-patch, di-sign &amp; siap didownload. <strong>Link expired dalam 30 menit.</strong></div></div>
       </div>
       <div class="res-actions">
-        <a class="btn-dl" href="/api/apk/download/${esc(data.downloadId)}"
-           download="${esc(data.filename||'patched.apk')}"
-           aria-label="Download ${esc(data.filename||'patched.apk')}">
+        <a class="btn-dl" href="/api/apk/download/${esc(data.downloadId)}" download="${esc(data.filename||'patched.apk')}">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
           Download ${esc(data.filename||'patched.apk')}
         </a>
       </div>
-      <div class="alert alert-w" style="margin-top:.65rem">
-        <span class="alert-ico" aria-hidden="true">📱</span>
-        <div>Install APK di perangkat Android. Jika ada proteksi Pairip: install di VM/Multi-App. Untuk Flutter SSL: intercept traffic dengan Burp Suite / mitmproxy.</div>
+      <div class="alert alert-w" style="margin-top:.72rem">
+        <span class="alert-ico">📱</span>
+        <div>Install APK di perangkat Android. Jika ada proteksi Pairip: install di VM/Multi-App. Untuk Flutter SSL: intercept dengan Burp Suite / mitmproxy.</div>
       </div>
     </div>`;
   toast('✅ APK berhasil di-patch! Segera download sebelum expired.', 6000);
 }
 
-/* ═══════════════════════════════════════════════════════════════════════
-   RESET APK PATCHER
-═══════════════════════════════════════════════════════════════════════ */
+/* ═══ RESET APK PATCHER ═══ */
 function resetApk() {
   if (S.a.sse) { try { S.a.sse.close(); } catch {} S.a.sse = null; }
   if (S.a.pollTimer) { clearInterval(S.a.pollTimer); S.a.pollTimer = null; }
   stopElapsed();
-
-  S.a = {
-    file:null, token:null, filename:null, jobId:null,
-    sse:null, sseRetry:0, pollTimer:null,
-    elapsedTimer:null, elapsedSec:0, done:false, logLines:[],
-  };
-
+  S.a = { file:null,token:null,filename:null,jobId:null,sse:null,sseRetry:0,pollTimer:null,elapsedTimer:null,elapsedSec:0,done:false,logLines:[] };
   clearFile('a');
   document.getElementById('scan-res')?.classList.remove('show');
   lockStep2(true); lockStep3(true);
-  clearLog('a');
-  resetStages();
-
+  clearLog('a'); resetStages();
   const rA = document.getElementById('result-a');
-  if (rA) { rA.innerHTML = ''; rA.classList.remove('show'); }
-
+  if (rA) { rA.innerHTML=''; rA.classList.remove('show'); }
   const prog = document.getElementById('prog-a');
   if (prog) prog.classList.remove('show');
   const progFill = document.getElementById('prog-a-fill');
   if (progFill) { progFill.style.width='3%'; progFill.className='prog-fill'; progFill.setAttribute('aria-valuenow','3'); }
-
   document.getElementById('apk-reset-row')?.classList.add('hidden');
-
   const pill = document.getElementById('job-pill');
-  if (pill) { pill.className='status-pill sp-run sp-pulse'; pill.textContent='⏳ Menjalankan ApkPatcher…'; }
+  if (pill) { pill.className='status-pill sp-run sp-pulse'; pill.textContent='Menjalankan ApkPatcher…'; }
   const elapsed = document.getElementById('job-elapsed');
   if (elapsed) elapsed.textContent = '';
-
-  document.getElementById('snum-1')?.classList.remove('done-num');
-  document.getElementById('snum-2')?.classList.remove('done-num');
-  document.getElementById('snum-3')?.classList.remove('done-num');
-
+  ['snum-1','snum-2','snum-3'].forEach(id => document.getElementById(id)?.classList.remove('done-num'));
   const btnPatch = document.getElementById('btn-patch-apk');
   if (btnPatch) { btnPatch.classList.remove('loading'); btnPatch.disabled = true; }
-
   PATCH_KEYS.forEach(k => {
     const ck = document.getElementById('ck-' + k);
-    if (ck) { ck.checked = false; ck.closest('.popt')?.classList.remove('on'); }
+    if (ck) { ck.checked=false; ck.closest('.popt')?.classList.remove('on'); }
   });
   const aid = document.getElementById('aid-inp');
   if (aid) aid.value = '';
-
   setConnStatus('ok');
-  window.scrollTo({top: Math.max(0, (document.getElementById('tool')?.offsetTop||0) - 64), behavior:'smooth'});
+  window.scrollTo({top:Math.max(0,(document.getElementById('tool')?.offsetTop||0)-70),behavior:'smooth'});
 }
 
-/* ═══════════════════════════════════════════════════════════════════════
-   CLIPBOARD PASTE (Ctrl+V)
-═══════════════════════════════════════════════════════════════════════ */
+/* ═══ CLIPBOARD PASTE ═══ */
 document.addEventListener('paste', (e) => {
   if (['INPUT','TEXTAREA'].includes(e.target?.tagName)) return;
   const files = e.clipboardData?.files;
@@ -2555,105 +2516,85 @@ document.addEventListener('paste', (e) => {
   else if (/\.(apk|xapk|apkm|apks)$/i.test(f.name)) setFile('a', f);
 });
 
-/* ═══════════════════════════════════════════════════════════════════════
-   COPY CODE BLOCKS
-═══════════════════════════════════════════════════════════════════════ */
+/* ═══ COPY CODE BLOCKS ═══ */
 function cpCode(btn) {
   const code = btn.closest('.code-blk')?.querySelector('code');
   if (!code) return;
-  const text = code.textContent.trim();
-  navigator.clipboard?.writeText(text)
+  navigator.clipboard?.writeText(code.textContent.trim())
     .then(() => {
-      btn.textContent = '✓ Copied!';
-      btn.classList.add('ok');
+      btn.textContent = '✓ Copied!'; btn.classList.add('ok');
       setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('ok'); }, 1800);
     })
     .catch(() => toast('❌ Clipboard access denied'));
 }
 
-/* ═══════════════════════════════════════════════════════════════════════
-   KEYBOARD SHORTCUTS
-═══════════════════════════════════════════════════════════════════════ */
+/* ═══ KEYBOARD SHORTCUTS ═══ */
 document.addEventListener('keydown', (e) => {
   if (['INPUT','TEXTAREA','SELECT'].includes(e.target?.tagName)) return;
   if (e.ctrlKey || e.metaKey || e.altKey) return;
-  if (e.key === '1') {
-    switchMode('flutter', document.getElementById('tab-flutter'));
-  } else if (e.key === '2') {
-    switchMode('apk', document.getElementById('tab-apk'));
-  } else if (e.key === 'Escape') {
-    // Close any visible toast
-    document.getElementById('toast')?.classList.remove('show');
-  }
+  if (e.key === '1') switchMode('flutter', document.getElementById('tab-flutter'));
+  else if (e.key === '2') switchMode('apk', document.getElementById('tab-apk'));
+  else if (e.key === 'Escape') document.getElementById('toast')?.classList.remove('show');
 });
 
-/* ═══════════════════════════════════════════════════════════════════════
-   INITIALIZATION
-═══════════════════════════════════════════════════════════════════════ */
+/* ═══ INITIALIZATION ═══ */
 window.addEventListener('DOMContentLoaded', async () => {
-  // Init log scroll listeners
   _initLogScroll('f');
   _initLogScroll('a');
-
-  // Open step 1 content for APK mode
   document.getElementById('sc-1')?.classList.add('open');
 
-  // Health check with retry
   let healthAttempts = 0;
   const MAX_HEALTH_RETRY = 3;
 
   async function doHealthCheck() {
     healthAttempts++;
     try {
-      const ctrl  = new AbortController();
-      const tId   = setTimeout(() => ctrl.abort(), 7000);
+      const ctrl = new AbortController();
+      const tId  = setTimeout(() => ctrl.abort(), 7000);
       let r;
-      try { r = await fetch('/api/health', {signal: ctrl.signal}); }
+      try { r = await fetch('/api/health', {signal:ctrl.signal}); }
       finally { clearTimeout(tId); }
-
       if (!r.ok) throw new Error(`HTTP ${r.status}`);
       const d = await r.json();
 
-      // Update status dots
+      // Update all status elements
       ['srv-status-f','srv-status-a'].forEach(id => {
         const el = document.getElementById(id);
-        if (el) { el.textContent = 'Online'; el.style.color = 'var(--g2)'; }
+        if (el) { el.textContent='Online'; el.style.color='var(--green)'; }
       });
-
-      console.log(`✅ APK Patch Suite ${d.version} | Node ${d.node} | uptime ${d.uptime}s`);
+      const navTxt = document.getElementById('nav-online-txt');
+      if (navTxt) navTxt.textContent = 'Online';
+      const statEl = document.getElementById('stat-status');
+      if (statEl) { statEl.textContent = 'Online'; statEl.style.color = 'var(--green)'; }
 
       if (d.tools && (!d.tools.java || !d.tools.apktool || !d.tools.python3)) {
-        console.warn('⚠️ Some tools missing:', d.tools);
         ['srv-status-a'].forEach(id => {
           const el = document.getElementById(id);
-          if (el) { el.textContent = 'Partial'; el.style.color = 'var(--yel)'; }
+          if (el) { el.textContent='Partial'; el.style.color='var(--yellow)'; }
         });
       }
     } catch (err) {
       if (healthAttempts < MAX_HEALTH_RETRY) {
-        setTimeout(doHealthCheck, 3000 * healthAttempts);
-        return;
+        setTimeout(doHealthCheck, 3000 * healthAttempts); return;
       }
       ['srv-status-f','srv-status-a'].forEach(id => {
         const el = document.getElementById(id);
-        if (el) { el.textContent = 'Offline'; el.style.color = 'var(--r2)'; }
+        if (el) { el.textContent='Offline'; el.style.color='var(--red2)'; }
       });
-      console.warn('Health check failed after retries:', err?.message);
+      const navTxt = document.getElementById('nav-online-txt');
+      if (navTxt) navTxt.textContent = 'Offline';
+      const statEl = document.getElementById('stat-status');
+      if (statEl) { statEl.textContent = 'Offline'; statEl.style.color = 'var(--red2)'; }
     }
   }
-
   doHealthCheck();
 });
 
-/* ═══════════════════════════════════════════════════════════════════════
-   BEFORE UNLOAD — warn if APK job running
-═══════════════════════════════════════════════════════════════════════ */
+/* ═══ BEFORE UNLOAD ═══ */
 window.addEventListener('beforeunload', (e) => {
   if (S.a.jobId && !S.a.done) {
     const msg = 'Proses APK Patcher sedang berjalan. Yakin ingin meninggalkan halaman?';
-    e.preventDefault();
-    e.returnValue = msg;
-    return msg;
+    e.preventDefault(); e.returnValue = msg; return msg;
   }
 });
 </script>
