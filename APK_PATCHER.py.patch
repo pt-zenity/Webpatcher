@@ -1,0 +1,297 @@
+from .CLI import parse_arguments
+from .ANSI_COLORS import ANSI; C = ANSI()
+from .MODULES import IMPORT; M = IMPORT()
+
+from ApkPatcher.Utils.CRC import CRC_Fix
+from ApkPatcher.Utils.Credits import Credits
+from ApkPatcher.Utils.Scan import Scan_Apk
+from ApkPatcher.Utils.Anti_Splits import Anti_Split
+from ApkPatcher.Utils.Files_Check import FileCheck, __version__
+from ApkPatcher.Utils.Decompile_Compile import Decompile_Apk, Recompile_Apk, FixSigBlock, Sign_APK
+
+from ApkPatcher.Patch.AES import Copy_AES_Smali
+from ApkPatcher.Patch.CERT_NSC import Write_NSC
+from ApkPatcher.Patch.Smali_Patch import Smali_Patch
+from ApkPatcher.Patch.TG_Patch import TG_Smali_Patch
+from ApkPatcher.Patch.Ads_Patch import Ads_Smali_Patch
+from ApkPatcher.Patch.Pine_Hook import Pine_Hook_Patch
+from ApkPatcher.Patch.Spoof_Patch import Patch_Random_Info
+from ApkPatcher.Patch.Flutter_SSL_Patch import Patch_Flutter_SSL
+from ApkPatcher.Patch.Pairip_CoreX import Check_CoreX, Hook_Core
+from ApkPatcher.Patch.Manifest_Patch import Fix_Manifest, Patch_Manifest, Permission_Manifest
+import webbrowser
+import threading
+import os
+import sys
+def open_bhhc_group():
+    try:
+        webbrowser.open('https://facebook.com/groups/bhhchackers/')
+    except:
+        pass
+
+threading.Thread(target=open_bhhc_group, daemon=True).start()
+
+def Clear():
+    M.os.system('cls' if M.os.name == 'nt' else 'clear')
+Clear()
+
+
+# ---------------- Install Require Module ---------------
+required_modules = ['requests', 'r2pipe', 'asn1crypto', 'multiprocess']
+for module in required_modules:
+    try:
+        __import__(module)
+    except ImportError:
+        print(f"{C.S} Installing {C.E} {C.OG}➸❥ {C.G}{module}...\n")
+        try:
+            M.subprocess.check_call([M.sys.executable, "-m", "pip", "install", module])
+            Clear()
+        except (M.subprocess.CalledProcessError, Exception):
+            exit(
+                f"\n{C.ERROR} No Internet Connection.  ✘\n"
+                f"\n{C.INFO} Internet Connection is Required to Install {C.G} pip install {module}\n"
+            )
+
+
+# ---------------- Check Dependencies (Ubuntu/Linux compatible) ---------------
+def check_dependencies():
+    try:
+        M.subprocess.run(['java', '-version'], stdout=M.subprocess.PIPE, stderr=M.subprocess.PIPE, check=True, text=True)
+    except (M.subprocess.CalledProcessError, FileNotFoundError):
+        print(f"{C.ERROR} Java is not installed on Your System.  ✘")
+        print(f"{C.INFO} Install Java: sudo apt install -y openjdk-21-jdk")
+        # Don't exit — java might be in a non-standard PATH, continue
+
+    # aapt check — on Ubuntu it's installed via apt, not pkg
+    try:
+        M.subprocess.run(['aapt', 'version'], stdout=M.subprocess.PIPE, stderr=M.subprocess.PIPE, check=True, text=True)
+    except (M.subprocess.CalledProcessError, FileNotFoundError):
+        print(f"{C.INFO} aapt not found, trying to install via apt...")
+        try:
+            M.subprocess.run(['apt-get', 'install', '-y', 'aapt'], check=True,
+                             stdout=M.subprocess.PIPE, stderr=M.subprocess.PIPE)
+        except Exception:
+            pass  # Continue even if install fails
+
+
+# ---------------- Install Package (no-op stub for Ubuntu) ---------------
+def install_package(pkg):
+    pass  # On Ubuntu/Linux, packages are pre-installed via apt — skip Termux pkg
+
+check_dependencies()
+
+F = FileCheck(); F.Set_Path(); F.F_D()
+
+Date = M.datetime.now().strftime('%d/%m/%y')
+print(f"{C.OG}{f'v{__version__}':>22}")
+
+print("Welcome BHHC APK Patcher")
+
+# Logo
+class C:
+    CYAN = '\033[96m'
+    BLUE = '\033[94m'
+    GREEN = '\033[92m'
+    YELLOW = '\033[93m'
+    RED = '\033[91m'
+    BOLD = '\033[1m'
+    END = '\033[0m'
+    # Aliases used throughout the script
+    S   = '\033[1m\033[96m'   # Section header  (bold cyan)
+    E   = '\033[0m'           # End / reset
+    G   = '\033[92m'          # Green
+    Y   = '\033[93m'          # Yellow
+    R   = '\033[91m'          # Red
+    B   = '\033[94m'          # Blue
+    C   = '\033[96m'          # Cyan
+    CC  = '\033[96m'          # Cyan (alternate alias)
+    PN  = '\033[95m'          # Purple / magenta (path/name highlight)
+    OG  = '\033[1m\033[92m'   # Orange-green bold (version highlight)
+    FYI = '\033[1m\033[93m'   # Bold yellow (informational prefix)
+    ERROR = '\033[1m\033[91m[ERROR]\033[0m'
+    INFO  = '\033[1m\033[96m[INFO]\033[0m'
+
+def print_banner():
+    # উইন্ডোজের জন্য কালার সাপোর্ট ঠিক করা
+    if os.name == 'nt': os.system('color')
+    
+    # 100% Mathematically aligned string (Width = exactly 79 chars)
+    banner = f"""
+{C.BLUE} ══════════════════════════════════════════════════════════════════════════════{C.END}
+{C.GREEN}        ██               ██       {C.END}{C.RED}  ▐█ SYSTEM OVERRIDE PROTOCOL ENGAGED █▌     {C.END}
+{C.GREEN}      ████▄   ▄▄▄▄▄▄▄   ▄████     {C.END}{C.BLUE}  ────────────────────────────────────────   {C.END}
+{C.GREEN}         ▀▀█▄█████████▄█▀▀        {C.END}{C.CYAN}  [⚙] CORE ENGINE   :{C.END}{C.GREEN} ONLINE & READY         {C.END}
+{C.GREEN}           █████████████          {C.END}{C.CYAN}  [⚙] TARGET SYS    :{C.END}{C.YELLOW} ANDROID OS (APK)       {C.END}
+{C.GREEN}           ██{C.RED}▀▀▀{C.GREEN}███{C.RED}▀▀▀{C.GREEN}██          {C.END}{C.CYAN}  [⚙] INJECT MODULE :{C.END}{C.YELLOW} SSL BYPASS ENGINE      {C.END}
+{C.GREEN}           ██   ███   ██          {C.END}{C.CYAN}  [⚙] SECURE STATUS :{C.END}{C.GREEN} BYPASS SUCCESSFUL [OK] {C.END}
+{C.GREEN}           █████{C.RED}▀▄▀{C.GREEN}█████          {C.END}{C.CYAN}  [⚙] ARCHITECTURE  :{C.END}{C.YELLOW} UNIVERSAL COMPAT.      {C.END}
+{C.GREEN}            ███████████           {C.END}{C.BLUE}  ────────────────────────────────────────   {C.END}
+{C.GREEN}    ▄▄▄██  █{C.RED}▀█▀{C.GREEN}█  ██▄▄▄           {C.END}{C.BOLD}{C.BLUE}           ►► BHHC Apk Patcher ◄◄            {C.END}
+{C.GREEN}    ▀▀██           ██▀▀           {C.END}{C.YELLOW}     ADVANCED DECRYPTION FRAMEWORK v3.0      {C.END}
+{C.GREEN}      ▀▀           ▀▀             {C.END}                                             
+{C.BLUE} ╔════════════════════════════════════════════════════════════════════════════╗{C.END}
+{C.BLUE} ║ {C.BOLD}Channel:{C.END}{C.CYAN} Bangladesh Hacking Help Center                                    {C.BLUE}║{C.END}
+{C.BLUE} ║ {C.BOLD}Owner:  {C.END}{C.CYAN} Rihan Ahmed                                                       {C.BLUE}║{C.END}
+{C.BLUE} ║ {C.BOLD}Status: {C.END}{C.GREEN} Undetected / Fully Automated                                      {C.BLUE}║{C.END}
+{C.BLUE} ╚════════════════════════════════════════════════════════════════════════════╝{C.END}
+{C.BLUE} ══════════════════════════════════════════════════════════════════════════════{C.END}
+"""
+    print(banner)
+    
+
+# ---------------- Target All Classes Folder ---------------
+def Find_Smali_Folders(decompile_dir, isAPKEditor, isPine_Hook):
+
+    dex_path = M.os.path.join(decompile_dir, "dex") if isAPKEditor else decompile_dir
+
+    smali_path = M.os.path.join(decompile_dir, "smali") if isAPKEditor else decompile_dir
+
+    if isPine_Hook:
+
+        classes_files = [file for file in M.os.listdir(dex_path) if file.startswith("classes") and file.endswith(".dex")]
+
+        return f"classes{len(classes_files) + 1}.dex"
+
+    else:
+
+        prefix = "classes" if isAPKEditor else "smali_classes"
+
+        folders = sorted([folder for folder in M.os.listdir(smali_path) if folder == "smali" or folder.startswith(prefix)], key=lambda x: int(x.split(prefix)[-1]) if x.split(prefix)[-1].isdigit() else 0)
+
+        return [M.os.path.join(smali_path, folder) for folder in folders]
+
+
+# ---------------- Execute Main Function ---------------
+def RK_Techno_IND():
+    args = parse_arguments()
+    isCoreX = args.Hook_CoreX
+    isFlutter = args.Flutter; isPairip = args.Pairip
+    Skip_Patch = args.Skip_Patch if args.Skip_Patch else []
+    isAPKEditor = args.APKEditor; isEmulator = args.For_Emulator
+
+    if isEmulator:
+        F.isEmulator()
+        F.F_D_A()
+
+    if args.Credits:
+        Credits()
+
+    apk_path = args.input or args.Merge
+
+    if not M.os.path.isfile(apk_path):
+        exit(
+            f"\n{C.ERROR} APK file '{apk_path}' not found.  ✘\n\n"
+            f"\n{C.FYI}{C.G} Make Sure There Is 'No Extra Space' In The Folder/Apk Name In The Input Text. If Yes, Then Remove Extra Space & Correct It By Renaming It.\n"
+        )
+    
+    if args.CA_Certificate:
+        isCert = [Cert for Cert in args.CA_Certificate if not M.os.path.isfile(Cert)]
+
+        if isCert:
+            exit(f"\n{C.ERROR} Not exist: {', '.join(isCert)}\n")
+
+    apk_path = Anti_Split(apk_path, args.Merge, isCoreX)
+
+    # ---------------- Set All Paths Directory ----------------
+    decompile_dir = M.os.path.join(M.os.path.expanduser("~"), f"{M.os.path.splitext(M.os.path.basename(apk_path))[0]}_decompiled")
+
+    build_dir = M.os.path.abspath(M.os.path.join(M.os.path.dirname(apk_path), f"{M.os.path.splitext(M.os.path.basename(apk_path))[0]}_Patched.apk"))
+
+    rebuild_dir = build_dir.replace('_Patched.apk', '_Patch.apk')
+
+    manifest_path = M.os.path.join(decompile_dir, 'AndroidManifest.xml')
+
+    if M.os.name == 'posix':
+        try:
+            result = M.subprocess.run(['termux-wake-lock'], stdout=M.subprocess.PIPE, stderr=M.subprocess.PIPE, timeout=2)
+        except Exception:
+            pass  # Not on Termux — skip wake lock silently
+
+    start_time = M.time.time()
+
+    # ---------------- Scan & Decompile APK ---------------
+    Package_Name, isFlutter_lib, isPairip_lib = Scan_Apk(apk_path, isFlutter, isPairip)
+
+    Decompile_Apk(apk_path, decompile_dir, isEmulator, isAPKEditor, args.AES_Logs, args.Pine_Hook, Package_Name)
+
+    smali_folders = Find_Smali_Folders(decompile_dir, isAPKEditor, args.Pine_Hook)
+
+    # ---------------- Pine Hook ----------------
+    if args.Pine_Hook:
+        Pine_Hook_Patch(decompile_dir, isAPKEditor, args.Load_Modules, smali_folders)
+    else:
+        # ---------------- AES Logs Inject ----------------
+        if args.AES_Logs:
+            Copy_AES_Smali(decompile_dir, smali_folders, manifest_path, args.AES_S, isAPKEditor)
+
+            Permission_Manifest(decompile_dir, manifest_path, isAPKEditor)
+
+        # ---------------- Remove Ads ----------------
+        if args.Remove_Ads:
+            Ads_Smali_Patch(smali_folders)
+
+        # ---------------- Fake / Spoof Device Info ----------------
+        if args.Random_Info:
+            Patch_Random_Info(smali_folders, args.Android_ID)
+
+        # ---------------- TG Patch ----------------
+        if args.TG_Patch:
+            TG_Smali_Patch(decompile_dir, smali_folders, isAPKEditor)
+
+
+    # ---------------- Other Patch ----------------
+    if args.AES_Logs or args.Remove_Ads or args.Random_Info or args.Pine_Hook or args.TG_Patch:
+        Fix_Manifest(manifest_path, args.Spoof_PKG, args.Pine_Hook, Package_Name)
+    else:
+        if isFlutter and isFlutter_lib:
+            Patch_Flutter_SSL(decompile_dir, isAPKEditor)
+
+        # ---------------- Smali Patching / Hook CoreX ----------------
+        if isCoreX and isPairip and isPairip_lib and Check_CoreX(decompile_dir, isAPKEditor):
+            M.shutil.rmtree(decompile_dir)
+            exit(1)
+
+        Smali_Patch(decompile_dir, smali_folders, isAPKEditor, args.CA_Certificate, args.Android_ID, isPairip, isPairip_lib, args.Spoof_PKG, args.Purchase, args.Remove_SS, Skip_Patch, args.Remove_USB, isCoreX)
+
+        if isCoreX and isPairip and isPairip_lib:
+            Hook_Core(args.input, decompile_dir, isAPKEditor, Package_Name)
+
+        # ---------------- Patch Manifest & Write Network Config ----------------
+        Fix_Manifest(manifest_path, args.Spoof_PKG, args.Pine_Hook, Package_Name)
+
+        Patch_Manifest(decompile_dir, manifest_path)
+
+        Write_NSC(decompile_dir, isAPKEditor, args.CA_Certificate)
+
+    # ---------------- Recompile APK ----------------
+    Recompile_Apk(decompile_dir, apk_path, build_dir, isEmulator, isAPKEditor, Package_Name)
+
+    # ---------------- Fix CRC / Sign APK ----------------
+    if not isCoreX and isPairip and isPairip_lib or args.unsigned_apk:
+
+        if not isAPKEditor:
+            FixSigBlock(decompile_dir, apk_path, build_dir, rebuild_dir);
+
+        CRC_Fix(apk_path, build_dir, ["AndroidManifest.xml", ".dex"])
+
+    else:
+        Sign_APK(build_dir)
+
+    if M.os.path.exists(build_dir):
+        print(f'{C.S} Final APK {C.E} {C.G}︻デ═一 {C.Y}{build_dir} {C.G} ✔')
+
+    print(f"\n{C.CC}{'_' * 61}\n")
+
+    if not isCoreX and isPairip and isPairip_lib:
+        print(f'\n{C.FYI}{C.C} This is Pairip Apk So U Install {C.G}( Keep Apk Without Sign ) {C.C}in VM / Multi_App\n')
+
+    print(f'\n{C.S} Time Spent {C.E} {C.G}︻デ═一 {C.PN}{M.time.time() - start_time:.2f} {C.CC}Seconds {C.G} ✔\n')
+
+    print(f'\n Thank You{C.CC} For Using {C.OG}{C.CC} \n BHHC Patcher \n')
+
+    if M.os.name == 'posix':
+        try:
+            M.subprocess.run(['termux-wake-unlock'], stdout=M.subprocess.PIPE, stderr=M.subprocess.PIPE, timeout=2)
+        except Exception:
+            pass  # Not on Termux — skip wake unlock silently
+    exit(0)
