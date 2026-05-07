@@ -3,349 +3,173 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Flutter SSL Patch Tool</title>
+<title>APK Patch Suite — Flutter SSL + ApkPatcher</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡️</text></svg>"/>
 <style>
-/* ══════════════════════════════════════════════
-   RESET & ROOT
-══════════════════════════════════════════════ */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:       #080b14;
-  --surface:  #0e1422;
-  --card:     #121929;
-  --card2:    #0d1520;
-  --border:   #1e2d45;
-  --border2:  #253347;
-  --p:        #6366f1;
-  --p2:       #818cf8;
-  --p3:       #4f46e5;
-  --green:    #10b981;
-  --green2:   #34d399;
-  --red:      #ef4444;
-  --yellow:   #f59e0b;
-  --blue:     #3b82f6;
-  --cyan:     #06b6d4;
-  --text:     #e2e8f0;
-  --muted:    #64748b;
-  --muted2:   #94a3b8;
-  --radius:   12px;
-  --radius-sm:8px;
+  --bg:#07090f;--surface:#0c0f1a;--card:#101525;--card2:#0b1020;
+  --border:#1a2540;--border2:#223058;
+  --p:#6366f1;--p2:#818cf8;--p3:#4f46e5;
+  --green:#10b981;--green2:#34d399;
+  --red:#ef4444;--yellow:#f59e0b;--blue:#3b82f6;--cyan:#06b6d4;--orange:#f97316;
+  --text:#e2e8f0;--muted:#64748b;--muted2:#94a3b8;
+  --r:12px;--rs:8px;
 }
-html{scroll-behavior:smooth;font-size:16px}
-body{
-  background:var(--bg);
-  color:var(--text);
-  font-family:'Segoe UI',system-ui,-apple-system,sans-serif;
-  min-height:100vh;
-  line-height:1.6;
-}
-
-/* ══════════════════════════════════════════════
-   SCROLLBAR
-══════════════════════════════════════════════ */
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;min-height:100vh;line-height:1.6}
 ::-webkit-scrollbar{width:5px;height:5px}
 ::-webkit-scrollbar-track{background:var(--bg)}
 ::-webkit-scrollbar-thumb{background:var(--p);border-radius:99px}
 
-/* ══════════════════════════════════════════════
-   NAVBAR
-══════════════════════════════════════════════ */
-nav{
-  position:sticky;top:0;z-index:200;
-  background:rgba(8,11,20,.88);
-  backdrop-filter:blur(16px);
-  border-bottom:1px solid var(--border);
-  padding:0 1.5rem;
-}
-.nav-inner{
-  max-width:1100px;margin:0 auto;
-  height:60px;display:flex;align-items:center;justify-content:space-between;gap:1rem;
-}
-.nav-brand{display:flex;align-items:center;gap:.6rem;font-weight:800;font-size:1.05rem;color:#fff;text-decoration:none}
-.nav-brand span{font-size:1.4rem}
-.nav-links{display:flex;gap:.25rem}
-.nav-links a{
-  font-size:.82rem;font-weight:500;color:var(--muted2);
-  padding:.4rem .85rem;border-radius:6px;text-decoration:none;
-  transition:background .2s,color .2s;
-}
-.nav-links a:hover{background:rgba(255,255,255,.06);color:#fff}
-.nav-gh{
-  display:flex;align-items:center;gap:.5rem;
-  background:rgba(255,255,255,.05);border:1px solid var(--border2);
-  color:var(--muted2);font-size:.82rem;font-weight:600;
-  padding:.4rem 1rem;border-radius:8px;text-decoration:none;
-  transition:all .2s;
-}
-.nav-gh:hover{background:rgba(255,255,255,.1);color:#fff;border-color:var(--border2)}
-.nav-gh svg{width:16px;height:16px;fill:currentColor}
+/* ── NAV ── */
+nav{position:sticky;top:0;z-index:200;background:rgba(7,9,15,.9);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:0 1.5rem}
+.nav-inner{max-width:1200px;margin:0 auto;height:62px;display:flex;align-items:center;justify-content:space-between;gap:1rem}
+.nav-brand{display:flex;align-items:center;gap:.6rem;font-weight:900;font-size:1.05rem;color:#fff;text-decoration:none}
+.nav-brand .logo{font-size:1.4rem}
+.nav-links{display:flex;gap:.2rem}
+.nav-links a{font-size:.82rem;font-weight:500;color:var(--muted2);padding:.4rem .9rem;border-radius:6px;text-decoration:none;transition:.2s}
+.nav-links a:hover,.nav-links a.active{background:rgba(255,255,255,.07);color:#fff}
+.nav-gh{display:flex;align-items:center;gap:.5rem;background:rgba(255,255,255,.05);border:1px solid var(--border2);color:var(--muted2);font-size:.8rem;font-weight:600;padding:.4rem 1rem;border-radius:8px;text-decoration:none;transition:.2s}
+.nav-gh:hover{background:rgba(255,255,255,.1);color:#fff}
+.nav-gh svg{width:15px;height:15px;fill:currentColor}
 
-/* ══════════════════════════════════════════════
-   HERO
-══════════════════════════════════════════════ */
-.hero{
-  position:relative;overflow:hidden;
-  padding:5rem 1.5rem 4rem;
-  text-align:center;
-}
-.hero::before{
-  content:'';position:absolute;inset:0;
-  background:
-    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(99,102,241,.18) 0%, transparent 70%),
-    radial-gradient(ellipse 50% 40% at 80% 80%, rgba(16,185,129,.08) 0%, transparent 60%);
-  pointer-events:none;
-}
-.hero-badge{
-  display:inline-flex;align-items:center;gap:.5rem;
-  background:rgba(99,102,241,.12);border:1px solid rgba(99,102,241,.3);
-  color:var(--p2);font-size:.78rem;font-weight:700;letter-spacing:.05em;
-  padding:.35rem 1rem;border-radius:99px;margin-bottom:1.5rem;
-  text-transform:uppercase;
-}
-.hero h1{
-  font-size:clamp(2rem,5vw,3.4rem);font-weight:900;
-  line-height:1.15;color:#fff;margin-bottom:1rem;
-}
-.hero h1 .grad{
-  background:linear-gradient(135deg,#818cf8 0%,#6366f1 40%,#34d399 100%);
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-}
-.hero p{
-  max-width:580px;margin:0 auto 2rem;
-  color:var(--muted2);font-size:1.05rem;
-}
+/* ── HERO ── */
+.hero{position:relative;overflow:hidden;padding:5rem 1.5rem 3.5rem;text-align:center}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 90% 60% at 50% -10%,rgba(99,102,241,.15) 0%,transparent 70%),radial-gradient(ellipse 50% 40% at 80% 80%,rgba(16,185,129,.07) 0%,transparent 60%);pointer-events:none}
+.hero-badge{display:inline-flex;align-items:center;gap:.5rem;background:rgba(99,102,241,.12);border:1px solid rgba(99,102,241,.28);color:var(--p2);font-size:.76rem;font-weight:700;letter-spacing:.06em;padding:.35rem 1.1rem;border-radius:99px;margin-bottom:1.5rem;text-transform:uppercase}
+.hero h1{font-size:clamp(2rem,5vw,3.2rem);font-weight:900;line-height:1.1;color:#fff;margin-bottom:.9rem}
+.hero h1 .grad{background:linear-gradient(135deg,#818cf8,#6366f1 40%,#34d399);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero p{max-width:600px;margin:0 auto 2rem;color:var(--muted2);font-size:1.05rem}
 .hero-chips{display:flex;flex-wrap:wrap;justify-content:center;gap:.5rem;margin-bottom:2.5rem}
-.chip{
-  display:inline-flex;align-items:center;gap:.4rem;
-  font-size:.76rem;font-weight:600;padding:.3rem .8rem;border-radius:99px;
-}
-.chip-green{background:rgba(16,185,129,.12);color:var(--green2);border:1px solid rgba(16,185,129,.25)}
-.chip-purple{background:rgba(99,102,241,.12);color:var(--p2);border:1px solid rgba(99,102,241,.25)}
-.chip-blue{background:rgba(59,130,246,.12);color:#93c5fd;border:1px solid rgba(59,130,246,.25)}
-.chip-yellow{background:rgba(245,158,11,.12);color:#fcd34d;border:1px solid rgba(245,158,11,.25)}
-.chip-red{background:rgba(239,68,68,.12);color:#fca5a5;border:1px solid rgba(239,68,68,.25)}
-.chip-cyan{background:rgba(6,182,212,.12);color:#67e8f9;border:1px solid rgba(6,182,212,.25)}
+.chip{display:inline-flex;align-items:center;gap:.4rem;font-size:.74rem;font-weight:700;padding:.3rem .85rem;border-radius:99px}
+.chip-green{background:rgba(16,185,129,.1);color:var(--green2);border:1px solid rgba(16,185,129,.22)}
+.chip-purple{background:rgba(99,102,241,.1);color:var(--p2);border:1px solid rgba(99,102,241,.22)}
+.chip-blue{background:rgba(59,130,246,.1);color:#93c5fd;border:1px solid rgba(59,130,246,.22)}
+.chip-yellow{background:rgba(245,158,11,.1);color:#fcd34d;border:1px solid rgba(245,158,11,.22)}
+.chip-orange{background:rgba(249,115,22,.1);color:#fdba74;border:1px solid rgba(249,115,22,.22)}
+.chip-cyan{background:rgba(6,182,212,.1);color:#67e8f9;border:1px solid rgba(6,182,212,.22)}
 
-/* ══════════════════════════════════════════════
-   LAYOUT
-══════════════════════════════════════════════ */
-.main{max-width:1100px;margin:0 auto;padding:0 1.5rem 5rem}
+/* ── LAYOUT ── */
+.main{max-width:1200px;margin:0 auto;padding:0 1.5rem 5rem}
 .section{margin-bottom:3rem}
-.section-title{
-  display:flex;align-items:center;gap:.6rem;
-  font-size:1.2rem;font-weight:800;color:#fff;
-  margin-bottom:1.25rem;
-}
-.section-title .icon{font-size:1.1rem}
+.section-title{display:flex;align-items:center;gap:.6rem;font-size:1.15rem;font-weight:800;color:#fff;margin-bottom:1.25rem}
 
-/* ══════════════════════════════════════════════
-   CARDS
-══════════════════════════════════════════════ */
-.card{
-  background:var(--card);
-  border:1px solid var(--border);
-  border-radius:var(--radius);
-  transition:border-color .25s;
-}
+/* ── MODE SWITCHER ── */
+.mode-tabs{display:flex;gap:.5rem;background:var(--card2);border:1px solid var(--border);border-radius:14px;padding:.4rem;margin-bottom:2.5rem}
+.mode-tab{flex:1;display:flex;align-items:center;justify-content:center;gap:.6rem;padding:.85rem 1.5rem;border-radius:10px;cursor:pointer;font-size:.92rem;font-weight:700;transition:.25s;border:none;background:transparent;color:var(--muted2)}
+.mode-tab:hover{color:#fff;background:rgba(255,255,255,.05)}
+.mode-tab.active{background:linear-gradient(135deg,rgba(99,102,241,.25),rgba(99,102,241,.12));color:#fff;border:1px solid rgba(99,102,241,.3);box-shadow:0 4px 20px rgba(99,102,241,.15)}
+.mode-tab .tab-icon{font-size:1.2rem}
+.mode-tab .tab-label{font-size:.88rem}
+.mode-tab .tab-badge{font-size:.65rem;background:rgba(99,102,241,.25);color:var(--p2);padding:.15rem .55rem;border-radius:99px;border:1px solid rgba(99,102,241,.3)}
+.mode-content{display:none}
+.mode-content.active{display:block}
+
+/* ── CARD ── */
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);transition:border-color .25s}
 .card:hover{border-color:var(--border2)}
-.card-inner{
-  background:var(--card2);
-  border:1px solid var(--border);
-  border-radius:var(--radius-sm);
-}
 
-/* ══════════════════════════════════════════════
-   TOOL PANEL  (main upload + patch card)
-══════════════════════════════════════════════ */
-.tool-card{
-  background:linear-gradient(145deg,#121929,#0d1520);
-  border:1px solid var(--border);
-  border-radius:16px;
-  overflow:hidden;
-  box-shadow:0 0 60px rgba(99,102,241,.08);
-}
-.tool-header{
-  padding:1.5rem 2rem;
-  border-bottom:1px solid var(--border);
-  display:flex;align-items:center;justify-content:space-between;gap:1rem;
-  background:rgba(99,102,241,.04);
-}
-.tool-header-left{display:flex;align-items:center;gap:.75rem}
-.tool-header-left h2{font-size:1.1rem;font-weight:800;color:#fff}
-.tool-header-left p{font-size:.82rem;color:var(--muted);margin-top:.15rem}
-.tool-body{padding:2rem}
+/* ── TOOL CARD ── */
+.tool-card{background:linear-gradient(145deg,#101525,#0b1020);border:1px solid var(--border);border-radius:16px;overflow:hidden;box-shadow:0 0 60px rgba(99,102,241,.07)}
+.tool-header{padding:1.4rem 1.75rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:1rem;background:rgba(99,102,241,.04)}
+.th-left{display:flex;align-items:center;gap:.75rem}
+.th-left h2{font-size:1.05rem;font-weight:800;color:#fff}
+.th-left p{font-size:.8rem;color:var(--muted);margin-top:.1rem}
+.tool-body{padding:1.75rem}
 
-/* ── Drop Zone ── */
-.dropzone{
-  border:2px dashed var(--border2);
-  border-radius:var(--radius);
-  padding:3rem 2rem;
-  text-align:center;
-  cursor:pointer;
-  transition:all .25s;
-  position:relative;
-  background:rgba(99,102,241,.02);
-}
-.dropzone:hover,.dropzone.dragover{
-  border-color:var(--p);
-  background:rgba(99,102,241,.06);
-}
-.dropzone input[type=file]{
-  position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;
-}
-.dz-icon{
-  width:56px;height:56px;margin:0 auto 1rem;
-  background:rgba(99,102,241,.12);border:1px solid rgba(99,102,241,.25);
-  border-radius:14px;display:flex;align-items:center;justify-content:center;
-  font-size:1.5rem;
-  transition:transform .25s,background .25s;
-}
-.dropzone:hover .dz-icon,.dropzone.dragover .dz-icon{
-  transform:scale(1.1);background:rgba(99,102,241,.2);
-}
-.dz-title{font-weight:700;color:#fff;font-size:1rem;margin-bottom:.35rem}
-.dz-sub{color:var(--muted);font-size:.85rem}
-.dz-hint{
-  display:inline-flex;align-items:center;gap:.4rem;
-  margin-top:1rem;font-size:.76rem;color:var(--muted);
-  background:rgba(255,255,255,.03);border:1px solid var(--border);
-  padding:.3rem .75rem;border-radius:99px;
-}
+/* ── DROP ZONE ── */
+.dropzone{border:2px dashed var(--border2);border-radius:var(--r);padding:2.75rem 2rem;text-align:center;cursor:pointer;transition:.25s;position:relative;background:rgba(99,102,241,.02)}
+.dropzone:hover,.dropzone.dragover{border-color:var(--p);background:rgba(99,102,241,.06)}
+.dropzone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.dz-icon{width:54px;height:54px;margin:0 auto 1rem;background:rgba(99,102,241,.12);border:1px solid rgba(99,102,241,.25);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;transition:.25s}
+.dropzone:hover .dz-icon,.dropzone.dragover .dz-icon{transform:scale(1.08);background:rgba(99,102,241,.2)}
+.dz-title{font-weight:700;color:#fff;font-size:1rem;margin-bottom:.3rem}
+.dz-sub{color:var(--muted);font-size:.84rem}
+.dz-hint{display:inline-flex;align-items:center;gap:.4rem;margin-top:.85rem;font-size:.74rem;color:var(--muted);background:rgba(255,255,255,.03);border:1px solid var(--border);padding:.3rem .75rem;border-radius:99px}
 
-/* ── File Preview ── */
-.file-preview{
-  display:none;
-  align-items:center;gap:1rem;
-  background:rgba(16,185,129,.06);
-  border:1px solid rgba(16,185,129,.2);
-  border-radius:var(--radius-sm);
-  padding:1rem 1.2rem;
-  margin-top:1rem;
-}
+/* ── FILE PREVIEW ── */
+.file-preview{display:none;align-items:center;gap:1rem;background:rgba(16,185,129,.05);border:1px solid rgba(16,185,129,.18);border-radius:var(--rs);padding:.9rem 1.1rem;margin-top:.9rem}
 .file-preview.show{display:flex}
-.fp-icon{
-  width:40px;height:40px;min-width:40px;
-  background:rgba(16,185,129,.15);border-radius:10px;
-  display:flex;align-items:center;justify-content:center;font-size:1.1rem;
-}
-.fp-name{font-weight:700;color:#fff;font-size:.9rem;word-break:break-all}
-.fp-meta{font-size:.78rem;color:var(--muted2);margin-top:.15rem}
-.fp-remove{
-  margin-left:auto;cursor:pointer;
-  width:28px;height:28px;min-width:28px;
-  background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.2);
-  border-radius:6px;display:flex;align-items:center;justify-content:center;
-  font-size:.85rem;color:#fca5a5;transition:all .2s;
-}
+.fp-icon{width:38px;height:38px;min-width:38px;background:rgba(16,185,129,.15);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:1rem}
+.fp-name{font-weight:700;color:#fff;font-size:.88rem;word-break:break-all}
+.fp-meta{font-size:.76rem;color:var(--muted2);margin-top:.12rem}
+.fp-remove{margin-left:auto;cursor:pointer;width:26px;height:26px;min-width:26px;background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.2);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:.8rem;color:#fca5a5;transition:.2s}
 .fp-remove:hover{background:rgba(239,68,68,.25)}
 
-/* ── Options Row ── */
-.options-row{
-  display:grid;grid-template-columns:1fr 1fr;gap:1rem;
-  margin-top:1.5rem;
-}
-@media(max-width:600px){.options-row{grid-template-columns:1fr}}
-.opt-group label{
-  display:block;font-size:.78rem;font-weight:700;
-  color:var(--muted2);margin-bottom:.5rem;letter-spacing:.04em;text-transform:uppercase;
-}
-.opt-select,.opt-input{
-  width:100%;background:var(--card2);
-  border:1px solid var(--border2);border-radius:8px;
-  color:var(--text);font-size:.88rem;padding:.6rem .9rem;
-  appearance:none;outline:none;transition:border-color .2s;
-  cursor:pointer;
-}
-.opt-select:focus,.opt-input:focus{border-color:var(--p)}
+/* ── OPTIONS ── */
+.options-section{margin-top:1.5rem}
+.opt-title{font-size:.78rem;font-weight:700;color:var(--muted2);letter-spacing:.05em;text-transform:uppercase;margin-bottom:.75rem}
+.options-grid{display:grid;grid-template-columns:1fr 1fr;gap:.75rem}
+@media(max-width:600px){.options-grid{grid-template-columns:1fr}}
+.opt-row{display:flex;align-items:center;gap:.75rem;padding:.7rem .9rem;background:rgba(255,255,255,.02);border:1px solid var(--border);border-radius:8px;cursor:pointer;transition:.2s}
+.opt-row:hover{border-color:var(--border2);background:rgba(255,255,255,.04)}
+.opt-row.checked{background:rgba(99,102,241,.08);border-color:rgba(99,102,241,.3)}
+.opt-row input[type=checkbox]{width:16px;height:16px;accent-color:var(--p);cursor:pointer;flex-shrink:0}
+.opt-row-info{flex:1}
+.opt-row-name{font-size:.84rem;font-weight:700;color:#fff}
+.opt-row-desc{font-size:.73rem;color:var(--muted);margin-top:.1rem}
+.opt-flag{font-family:monospace;font-size:.7rem;background:rgba(99,102,241,.12);color:var(--p2);padding:.1rem .45rem;border-radius:4px;float:right;margin-top:.1rem}
+
+.opt-select{width:100%;background:var(--card2);border:1px solid var(--border2);border-radius:8px;color:var(--text);font-size:.86rem;padding:.6rem .9rem;outline:none;transition:.2s;cursor:pointer;appearance:none}
+.opt-select:focus{border-color:var(--p)}
 .select-wrap{position:relative}
-.select-wrap::after{
-  content:'▾';position:absolute;right:.9rem;top:50%;transform:translateY(-50%);
-  color:var(--muted);pointer-events:none;font-size:.8rem;
-}
-.toggle-row{display:flex;align-items:center;gap:.75rem;margin-top:.35rem}
-.toggle{
-  position:relative;display:inline-flex;align-items:center;
-  width:44px;height:24px;cursor:pointer;flex-shrink:0;
-}
+.select-wrap::after{content:'▾';position:absolute;right:.9rem;top:50%;transform:translateY(-50%);color:var(--muted);pointer-events:none;font-size:.8rem}
+.opt-input{width:100%;background:var(--card2);border:1px solid var(--border2);border-radius:8px;color:var(--text);font-size:.86rem;padding:.6rem .9rem;outline:none;transition:.2s}
+.opt-input:focus{border-color:var(--p)}
+.opt-group{margin-top:.75rem}
+.opt-group label{display:block;font-size:.75rem;font-weight:700;color:var(--muted2);letter-spacing:.04em;text-transform:uppercase;margin-bottom:.4rem}
+
+/* ── TOGGLE ── */
+.toggle-row{display:flex;align-items:center;gap:.75rem;margin-top:.85rem}
+.toggle{position:relative;display:inline-flex;align-items:center;width:42px;height:22px;cursor:pointer;flex-shrink:0}
 .toggle input{opacity:0;width:0;height:0;position:absolute}
-.toggle-track{
-  width:44px;height:24px;background:var(--border2);border-radius:99px;
-  transition:background .2s;
-}
+.toggle-track{width:42px;height:22px;background:var(--border2);border-radius:99px;transition:.2s}
 .toggle input:checked + .toggle-track{background:var(--p)}
-.toggle-thumb{
-  position:absolute;left:3px;top:3px;
-  width:18px;height:18px;border-radius:99px;background:#fff;
-  transition:transform .2s;box-shadow:0 1px 4px rgba(0,0,0,.3);
-}
+.toggle-thumb{position:absolute;left:3px;top:3px;width:16px;height:16px;border-radius:99px;background:#fff;transition:.2s;box-shadow:0 1px 4px rgba(0,0,0,.3)}
 .toggle input:checked ~ .toggle-thumb{transform:translateX(20px)}
-.toggle-label{font-size:.88rem;color:var(--muted2);cursor:pointer}
+.toggle-label{font-size:.86rem;color:var(--muted2);cursor:pointer}
 
-/* ── Action Button ── */
-.btn-patch{
-  width:100%;margin-top:1.5rem;
-  padding:1rem 2rem;
-  background:linear-gradient(135deg,var(--p3),var(--p));
-  border:none;border-radius:var(--radius-sm);
-  color:#fff;font-size:1rem;font-weight:800;
-  cursor:pointer;transition:all .25s;
-  display:flex;align-items:center;justify-content:center;gap:.6rem;
-  position:relative;overflow:hidden;
-}
-.btn-patch::before{
-  content:'';position:absolute;inset:0;
-  background:linear-gradient(135deg,rgba(255,255,255,.08),transparent);
-  opacity:0;transition:opacity .2s;
-}
-.btn-patch:hover:not(:disabled)::before{opacity:1}
-.btn-patch:hover:not(:disabled){
-  transform:translateY(-1px);
-  box-shadow:0 8px 32px rgba(99,102,241,.35);
-}
-.btn-patch:active:not(:disabled){transform:translateY(0)}
-.btn-patch:disabled{opacity:.5;cursor:not-allowed}
-.btn-patch .spinner{
-  width:18px;height:18px;
-  border:2.5px solid rgba(255,255,255,.3);
-  border-top-color:#fff;
-  border-radius:50%;
-  animation:spin .7s linear infinite;
-  display:none;
-}
-.btn-patch.loading .spinner{display:block}
-.btn-patch.loading .btn-text{display:none}
+/* ── SCAN RESULT ── */
+.scan-result{display:none;margin-top:1rem;padding:1rem 1.2rem;border-radius:var(--rs);background:rgba(59,130,246,.06);border:1px solid rgba(59,130,246,.2)}
+.scan-result.show{display:block}
+.scan-badges{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:.5rem}
+.scan-badge{display:inline-flex;align-items:center;gap:.35rem;font-size:.76rem;font-weight:700;padding:.25rem .7rem;border-radius:99px}
 
-/* ══════════════════════════════════════════════
-   LOG PANEL
-══════════════════════════════════════════════ */
-.log-panel{display:none;margin-top:1.5rem}
+/* ── BUTTONS ── */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.55rem;border:none;border-radius:var(--rs);font-weight:800;cursor:pointer;transition:.25s;position:relative;overflow:hidden;text-decoration:none}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn-primary{background:linear-gradient(135deg,var(--p3),var(--p));color:#fff;font-size:.95rem;padding:.9rem 1.75rem;width:100%;margin-top:1.25rem}
+.btn-primary::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.08),transparent);opacity:0;transition:.2s}
+.btn-primary:hover:not(:disabled)::before{opacity:1}
+.btn-primary:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 8px 28px rgba(99,102,241,.3)}
+.btn-primary:active:not(:disabled){transform:translateY(0)}
+.btn-primary .spinner{width:17px;height:17px;border:2.5px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;display:none}
+.btn-primary.loading .spinner{display:block}
+.btn-primary.loading .btn-text{display:none}
+.btn-dl{display:inline-flex;align-items:center;gap:.55rem;background:linear-gradient(135deg,#065f46,var(--green));border:none;border-radius:var(--rs);color:#fff;font-size:.9rem;font-weight:800;padding:.8rem 1.6rem;cursor:pointer;transition:.25s;text-decoration:none}
+.btn-dl:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(16,185,129,.28)}
+.btn-sec{display:inline-flex;align-items:center;gap:.5rem;background:rgba(255,255,255,.05);border:1px solid var(--border2);color:var(--muted2);font-size:.84rem;font-weight:600;padding:.65rem 1.2rem;border-radius:var(--rs);cursor:pointer;transition:.2s}
+.btn-sec:hover{background:rgba(255,255,255,.09);color:#fff}
+
+/* ── PROGRESS ── */
+.progress-wrap{display:none;margin-top:1.1rem}
+.progress-wrap.show{display:block}
+.progress-label{font-size:.77rem;color:var(--muted2);margin-bottom:.4rem;display:flex;justify-content:space-between}
+.progress-bar-bg{background:var(--border);border-radius:99px;height:6px;overflow:hidden}
+.progress-bar-fill{height:100%;border-radius:99px;width:0%;background:linear-gradient(90deg,var(--p3),var(--p2),var(--green));background-size:200%;transition:width .4s ease;animation:shimmer 1.5s linear infinite}
+@keyframes shimmer{0%{background-position:0% 50%}100%{background-position:200% 50%}}
+
+/* ── LOG PANEL ── */
+.log-panel{display:none;margin-top:1.25rem}
 .log-panel.show{display:block}
-.log-header{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:.7rem 1rem;
-  background:rgba(255,255,255,.03);border:1px solid var(--border);
-  border-radius:var(--radius-sm) var(--radius-sm) 0 0;
-  border-bottom:none;
-}
-.log-title{font-size:.82rem;font-weight:700;color:var(--muted2);display:flex;align-items:center;gap:.5rem}
-.log-clear{
-  font-size:.75rem;color:var(--muted);cursor:pointer;
-  background:none;border:none;padding:.2rem .5rem;border-radius:4px;
-  transition:color .2s;
-}
+.log-header{display:flex;align-items:center;justify-content:space-between;padding:.65rem 1rem;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:var(--rs) var(--rs) 0 0;border-bottom:none}
+.log-title{font-size:.8rem;font-weight:700;color:var(--muted2);display:flex;align-items:center;gap:.5rem}
+.log-clear{font-size:.73rem;color:var(--muted);cursor:pointer;background:none;border:none;padding:.2rem .5rem;border-radius:4px;transition:.2s}
 .log-clear:hover{color:var(--text)}
-.log-body{
-  background:#060a10;
-  border:1px solid var(--border);
-  border-radius:0 0 var(--radius-sm) var(--radius-sm);
-  padding:1rem;
-  font-family:'Cascadia Code','Fira Code','Consolas',monospace;
-  font-size:.78rem;line-height:1.8;
-  max-height:320px;overflow-y:auto;
-}
-.log-line{display:flex;gap:.75rem;align-items:flex-start}
-.log-ts{color:var(--muted);flex-shrink:0;font-size:.72rem;padding-top:.05rem}
+.log-body{background:#050810;border:1px solid var(--border);border-radius:0 0 var(--rs) var(--rs);padding:.9rem 1rem;font-family:'Cascadia Code','Fira Code','Consolas',monospace;font-size:.76rem;line-height:1.85;max-height:340px;overflow-y:auto}
+.log-line{display:flex;gap:.7rem;align-items:flex-start}
+.log-ts{color:var(--muted);flex-shrink:0;font-size:.7rem;padding-top:.05rem}
 .log-text{word-break:break-all}
 .log-line.level-info    .log-text{color:#94a3b8}
 .log-line.level-step    .log-text{color:#93c5fd}
@@ -354,232 +178,135 @@ nav{
 .log-line.level-error   .log-text{color:#fca5a5;font-weight:700}
 .log-line.level-warn    .log-text{color:#fcd34d}
 
-/* ══════════════════════════════════════════════
-   RESULT PANEL
-══════════════════════════════════════════════ */
-.result-panel{display:none;margin-top:1.5rem}
+/* ── RESULT ── */
+.result-panel{display:none;margin-top:1.25rem}
 .result-panel.show{display:block}
-
-.result-success{
-  background:rgba(16,185,129,.06);
-  border:1px solid rgba(16,185,129,.25);
-  border-radius:var(--radius);
-  padding:1.5rem;
-}
-.result-error{
-  background:rgba(239,68,68,.06);
-  border:1px solid rgba(239,68,68,.25);
-  border-radius:var(--radius);
-  padding:1.5rem;
-}
-.res-head{display:flex;align-items:center;gap:.75rem;margin-bottom:1.25rem}
-.res-icon{
-  width:44px;height:44px;min-width:44px;border-radius:12px;
-  display:flex;align-items:center;justify-content:center;font-size:1.3rem;
-}
+.result-success{background:rgba(16,185,129,.06);border:1px solid rgba(16,185,129,.25);border-radius:var(--r);padding:1.4rem}
+.result-error{background:rgba(239,68,68,.06);border:1px solid rgba(239,68,68,.25);border-radius:var(--r);padding:1.4rem}
+.res-head{display:flex;align-items:center;gap:.75rem;margin-bottom:1.1rem}
+.res-icon{width:42px;height:42px;min-width:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.25rem}
 .res-icon-ok{background:rgba(16,185,129,.15)}
 .res-icon-err{background:rgba(239,68,68,.15)}
-.res-title{font-size:1rem;font-weight:800;color:#fff}
-.res-sub{font-size:.82rem;color:var(--muted2);margin-top:.2rem}
+.res-title{font-size:.95rem;font-weight:800;color:#fff}
+.res-sub{font-size:.8rem;color:var(--muted2);margin-top:.15rem}
+.meta-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:.65rem;margin-bottom:1.1rem}
+.meta-item{background:rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.06);border-radius:8px;padding:.65rem .9rem}
+.meta-label{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:.25rem}
+.meta-val{font-size:.85rem;font-weight:700;color:#fff;font-family:monospace;word-break:break-all}
+.result-actions{display:flex;align-items:center;flex-wrap:wrap;gap:.75rem;margin-top:.75rem}
 
-.meta-grid{
-  display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));
-  gap:.75rem;margin-bottom:1.25rem;
-}
-.meta-item{
-  background:rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.06);
-  border-radius:8px;padding:.75rem 1rem;
-}
-.meta-label{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:.3rem}
-.meta-val{font-size:.88rem;font-weight:700;color:#fff;font-family:monospace;word-break:break-all}
-
-.btn-dl{
-  display:inline-flex;align-items:center;gap:.6rem;
-  background:linear-gradient(135deg,#065f46,var(--green));
-  border:none;border-radius:var(--radius-sm);
-  color:#fff;font-size:.92rem;font-weight:800;
-  padding:.85rem 1.75rem;cursor:pointer;
-  transition:all .25s;text-decoration:none;
-}
-.btn-dl:hover{
-  transform:translateY(-2px);
-  box-shadow:0 8px 28px rgba(16,185,129,.3);
-}
-.btn-dl svg{width:18px;height:18px;fill:currentColor}
-
-.btn-reset{
-  display:inline-flex;align-items:center;gap:.5rem;
-  background:rgba(255,255,255,.05);border:1px solid var(--border2);
-  color:var(--muted2);font-size:.85rem;font-weight:600;
-  padding:.65rem 1.25rem;border-radius:var(--radius-sm);
-  cursor:pointer;transition:all .2s;margin-left:.75rem;
-}
-.btn-reset:hover{background:rgba(255,255,255,.09);color:#fff}
-
-/* ══════════════════════════════════════════════
-   PROGRESS BAR
-══════════════════════════════════════════════ */
-.progress-wrap{display:none;margin-top:1.25rem}
-.progress-wrap.show{display:block}
-.progress-label{font-size:.78rem;color:var(--muted2);margin-bottom:.4rem;display:flex;justify-content:space-between}
-.progress-bar-bg{
-  background:var(--border);border-radius:99px;height:6px;overflow:hidden;
-}
-.progress-bar-fill{
-  height:100%;border-radius:99px;width:0%;
-  background:linear-gradient(90deg,var(--p3),var(--p2),var(--green));
-  background-size:200%;
-  transition:width .3s ease;
-  animation:shimmer 1.5s linear infinite;
-}
-@keyframes shimmer{0%{background-position:0% 50%}100%{background-position:200% 50%}}
-
-/* ══════════════════════════════════════════════
-   INFO SECTION (How it works + patterns)
-══════════════════════════════════════════════ */
-.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem}
+/* ── INFO SECTION ── */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem}
 @media(max-width:700px){.grid-2{grid-template-columns:1fr}}
 .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
 @media(max-width:700px){.grid-3{grid-template-columns:1fr}}
+.info-card{padding:1.2rem;border-radius:var(--r)}
+.info-card .ic-icon{font-size:1.4rem;margin-bottom:.55rem}
+.info-card h3{font-size:.9rem;font-weight:800;color:#fff;margin-bottom:.35rem}
+.info-card p{font-size:.8rem;color:var(--muted2);line-height:1.6}
 
-.info-card{padding:1.25rem;border-radius:var(--radius)}
-.info-card .ic-icon{font-size:1.4rem;margin-bottom:.6rem}
-.info-card h3{font-size:.92rem;font-weight:800;color:#fff;margin-bottom:.4rem}
-.info-card p{font-size:.82rem;color:var(--muted2);line-height:1.6}
+/* ── FLOW ── */
+.flow{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:.5rem;padding:1.4rem}
+.flow-node{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:.7rem 1rem;text-align:center;min-width:105px}
+.flow-node .fn-icon{font-size:1.25rem;margin-bottom:.25rem}
+.flow-node .fn-title{font-size:.78rem;font-weight:700;color:#fff}
+.flow-node .fn-sub{font-size:.68rem;color:var(--muted);margin-top:.08rem}
+.flow-arrow{color:var(--p2);font-size:1.15rem}
 
-/* Flow diagram */
-.flow{
-  display:flex;align-items:center;justify-content:center;
-  flex-wrap:wrap;gap:.5rem;padding:1.5rem;
-}
-.flow-node{
-  background:var(--card2);border:1px solid var(--border);
-  border-radius:10px;padding:.75rem 1.1rem;
-  text-align:center;min-width:110px;
-}
-.flow-node .fn-icon{font-size:1.3rem;margin-bottom:.3rem}
-.flow-node .fn-title{font-size:.8rem;font-weight:700;color:#fff}
-.flow-node .fn-sub{font-size:.7rem;color:var(--muted);margin-top:.1rem}
-.flow-arrow{color:var(--p2);font-size:1.2rem;line-height:1}
-
-/* Tabs */
-.tabs{display:flex;gap:.25rem;padding:.75rem 1rem .5rem;border-bottom:1px solid var(--border)}
-.tab-btn{
-  font-size:.82rem;font-weight:700;padding:.45rem .9rem;
-  border-radius:6px;cursor:pointer;border:none;
-  background:transparent;color:var(--muted2);transition:all .2s;
-}
+/* ── TABS ── */
+.tabs{display:flex;gap:.25rem;padding:.7rem 1rem .45rem;border-bottom:1px solid var(--border)}
+.tab-btn{font-size:.8rem;font-weight:700;padding:.4rem .85rem;border-radius:6px;cursor:pointer;border:none;background:transparent;color:var(--muted2);transition:.2s}
 .tab-btn:hover{background:rgba(255,255,255,.05);color:#fff}
-.tab-btn.active{background:rgba(99,102,241,.15);color:var(--p2)}
-.tab-pane{display:none;padding:1.25rem}
+.tab-btn.active{background:rgba(99,102,241,.14);color:var(--p2)}
+.tab-pane{display:none;padding:1.1rem}
 .tab-pane.active{display:block}
 
-/* Pattern chips */
-.pattern-item{
-  background:#070d18;border:1px solid var(--border);
-  border-radius:6px;padding:.6rem .9rem;
-  font-family:monospace;font-size:.75rem;
-  color:#7dd3fc;word-break:break-all;
-  margin-bottom:.5rem;line-height:1.5;
-  transition:border-color .2s;
-}
-.pattern-item:hover{border-color:var(--p)}
-.pattern-num{color:var(--muted);margin-right:.6rem}
+/* ── PATCH OPTION ROWS (APK) ── */
+.patch-opts-grid{display:grid;grid-template-columns:1fr 1fr;gap:.6rem}
+@media(max-width:640px){.patch-opts-grid{grid-template-columns:1fr}}
+.popt{display:flex;align-items:flex-start;gap:.65rem;padding:.75rem .9rem;background:rgba(255,255,255,.025);border:1px solid var(--border);border-radius:8px;cursor:pointer;transition:.2s}
+.popt:hover{border-color:var(--border2);background:rgba(255,255,255,.04)}
+.popt.checked{background:rgba(99,102,241,.08);border-color:rgba(99,102,241,.3)}
+.popt.disabled-opt{opacity:.45;cursor:not-allowed}
+.popt input[type=checkbox]{margin-top:.15rem;width:15px;height:15px;accent-color:var(--p);cursor:pointer;flex-shrink:0}
+.popt-body{flex:1}
+.popt-name{font-size:.83rem;font-weight:700;color:#fff;display:flex;align-items:center;justify-content:space-between;gap:.5rem}
+.popt-flag{font-family:monospace;font-size:.68rem;background:rgba(99,102,241,.14);color:var(--p2);padding:.1rem .45rem;border-radius:4px}
+.popt-desc{font-size:.72rem;color:var(--muted);margin-top:.12rem;line-height:1.45}
 
-/* Code block */
-.code-blk{
-  background:#060a10;border:1px solid var(--border);
-  border-radius:var(--radius-sm);overflow:hidden;
-}
-.code-blk-header{
-  background:rgba(255,255,255,.03);
-  padding:.5rem 1rem;
-  display:flex;align-items:center;justify-content:space-between;
-  border-bottom:1px solid var(--border);
-  font-size:.75rem;color:var(--muted);
-}
-.code-blk pre{padding:1rem;overflow-x:auto;font-size:.8rem;line-height:1.7;margin:0}
+/* ── CODE BLOCK ── */
+.code-blk{background:#050810;border:1px solid var(--border);border-radius:var(--rs);overflow:hidden}
+.code-blk-header{background:rgba(255,255,255,.03);padding:.45rem 1rem;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);font-size:.73rem;color:var(--muted)}
+.code-blk pre{padding:.9rem 1rem;overflow-x:auto;font-size:.78rem;line-height:1.7;margin:0}
 .code-blk code{font-family:'Cascadia Code','Fira Code','Consolas',monospace;color:#e2e8f0}
-.copy-btn{
-  background:rgba(99,102,241,.15);border:1px solid rgba(99,102,241,.25);
-  color:var(--p2);font-size:.72rem;font-weight:600;
-  padding:.2rem .6rem;border-radius:4px;cursor:pointer;
-  transition:all .2s;
-}
-.copy-btn:hover{background:rgba(99,102,241,.3);color:#fff}
-.copy-btn.ok{background:rgba(16,185,129,.15);border-color:rgba(16,185,129,.3);color:var(--green2)}
+.copy-btn{background:rgba(99,102,241,.14);border:1px solid rgba(99,102,241,.25);color:var(--p2);font-size:.7rem;font-weight:600;padding:.18rem .55rem;border-radius:4px;cursor:pointer;transition:.2s}
+.copy-btn:hover{background:rgba(99,102,241,.28);color:#fff}
+.copy-btn.ok{background:rgba(16,185,129,.14);border-color:rgba(16,185,129,.3);color:var(--green2)}
 
-/* Alert */
-.alert{
-  border-radius:var(--radius-sm);padding:.85rem 1rem;
-  display:flex;gap:.75rem;font-size:.83rem;line-height:1.55;
-  align-items:flex-start;
-}
-.alert-warn{background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.25);color:#fcd34d}
-.alert-info{background:rgba(59,130,246,.08);border:1px solid rgba(59,130,246,.25);color:#93c5fd}
-.alert-success{background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.25);color:var(--green2)}
-.alert-danger{background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.25);color:#fca5a5}
+/* ── ALERT ── */
+.alert{border-radius:var(--rs);padding:.8rem 1rem;display:flex;gap:.7rem;font-size:.82rem;line-height:1.55;align-items:flex-start}
+.alert-warn{background:rgba(245,158,11,.07);border:1px solid rgba(245,158,11,.22);color:#fcd34d}
+.alert-info{background:rgba(59,130,246,.07);border:1px solid rgba(59,130,246,.22);color:#93c5fd}
+.alert-success{background:rgba(16,185,129,.07);border:1px solid rgba(16,185,129,.22);color:var(--green2)}
+.alert-danger{background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.22);color:#fca5a5}
 .alert-icon{flex-shrink:0;margin-top:.05rem}
 
-/* Stats bar */
-.stats-bar{
-  display:flex;flex-wrap:wrap;gap:1rem;
-  padding:1rem 1.5rem;
-  background:rgba(99,102,241,.04);
-  border-bottom:1px solid var(--border);
-}
-.stat-item{display:flex;align-items:center;gap:.5rem;font-size:.82rem}
-.stat-dot{width:8px;height:8px;border-radius:50%}
+/* ── STATS ── */
+.stats-bar{display:flex;flex-wrap:wrap;gap:.9rem;padding:.9rem 1.4rem;background:rgba(99,102,241,.04);border-bottom:1px solid var(--border)}
+.stat-item{display:flex;align-items:center;gap:.45rem;font-size:.8rem}
+.stat-dot{width:7px;height:7px;border-radius:50%}
 .stat-label{color:var(--muted)}
 .stat-val{font-weight:700;color:#fff}
 
-/* Compare table */
-.cmp-table{width:100%;border-collapse:collapse;font-size:.85rem}
-.cmp-table th,.cmp-table td{padding:.75rem 1rem;text-align:left;border-bottom:1px solid var(--border)}
-.cmp-table th{color:var(--p2);font-weight:700;background:rgba(99,102,241,.07)}
-.cmp-table td{color:var(--muted2)}
-.cmp-table td:first-child{color:#fff;font-weight:600}
-.cmp-table tr:last-child td{border-bottom:none}
-.cmp-table tr:hover td{background:rgba(99,102,241,.04)}
-.tick{color:var(--green2)}
-.cross{color:#fca5a5}
-.dash{color:var(--muted)}
+/* ── PATTERN ITEM ── */
+.pattern-item{background:#040810;border:1px solid var(--border);border-radius:6px;padding:.55rem .85rem;font-family:monospace;font-size:.73rem;color:#7dd3fc;word-break:break-all;margin-bottom:.45rem;line-height:1.5;transition:.2s}
+.pattern-item:hover{border-color:var(--p)}
+.pattern-num{color:var(--muted);margin-right:.55rem}
 
-/* Footer */
-footer{
-  border-top:1px solid var(--border);
-  padding:2rem 1.5rem;
-  text-align:center;
-  color:var(--muted);font-size:.82rem;
-}
+/* ── FOOTER ── */
+footer{border-top:1px solid var(--border);padding:2rem 1.5rem;text-align:center;color:var(--muted);font-size:.8rem}
 footer a{color:var(--p2);text-decoration:none}
 footer a:hover{text-decoration:underline}
-.footer-inner{max-width:1100px;margin:0 auto}
+.footer-inner{max-width:1200px;margin:0 auto}
 
-/* Animations */
+/* ── ANIMS ── */
 @keyframes spin{to{transform:rotate(360deg)}}
-@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
 .fade-up{animation:fadeUp .45s ease both}
-@keyframes pulse-glow{0%,100%{box-shadow:0 0 0 0 rgba(16,185,129,.3)}50%{box-shadow:0 0 20px 4px rgba(16,185,129,.15)}}
+@media(max-width:768px){.hero{padding:3.5rem 1rem 2.5rem}.tool-body{padding:1.1rem}.nav-links{display:none}}
 
-/* Responsive */
-@media(max-width:768px){
-  .hero{padding:3.5rem 1rem 2.5rem}
-  .tool-body{padding:1.25rem}
-  .nav-links{display:none}
-}
+/* ── REQUIRED FIELD ── */
+.req-note{font-size:.72rem;color:var(--muted);margin-top:.5rem}
+.req-note span{color:var(--yellow)}
+
+/* ── STATUS BADGE ── */
+.status-badge{display:inline-flex;align-items:center;gap:.4rem;font-size:.75rem;font-weight:700;padding:.3rem .8rem;border-radius:99px}
+.sb-flutter{background:rgba(6,182,212,.12);color:#67e8f9;border:1px solid rgba(6,182,212,.25)}
+.sb-pairip{background:rgba(249,115,22,.12);color:#fdba74;border:1px solid rgba(249,115,22,.25)}
+.sb-pkg{font-size:.7rem;color:var(--muted2)}
+
+/* ── APK UPLOAD FLOW ── */
+.upload-flow{display:flex;flex-direction:column;gap:1.25rem}
+.flow-step{display:flex;gap:1rem;align-items:flex-start}
+.flow-step-num{width:28px;height:28px;min-width:28px;border-radius:50%;background:rgba(99,102,241,.2);border:1px solid rgba(99,102,241,.4);display:flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:800;color:var(--p2);margin-top:.1rem}
+.flow-step-body{flex:1}
+.flow-step-title{font-size:.88rem;font-weight:700;color:#fff;margin-bottom:.35rem}
+
+/* ── PATCH JOB STATE ── */
+.apk-step{display:none}
+.apk-step.active{display:block}
 </style>
 </head>
 <body>
 
-<!-- ═══════════════════════════ NAVBAR ═══════════════════════════ -->
+<!-- ═══════ NAVBAR ═══════ -->
 <nav>
   <div class="nav-inner">
     <a class="nav-brand" href="#">
-      <span>🛡️</span> Flutter SSL Patch
+      <span class="logo">🛡️</span> APK Patch Suite
     </a>
     <div class="nav-links">
-      <a href="#tool">Tool</a>
+      <a href="#tool" class="active">Tool</a>
       <a href="#how">Cara Kerja</a>
       <a href="#patterns">Patterns</a>
       <a href="#faq">FAQ</a>
@@ -591,712 +318,941 @@ footer a:hover{text-decoration:underline}
   </div>
 </nav>
 
-<!-- ═══════════════════════════ HERO ═══════════════════════════ -->
+<!-- ═══════ HERO ═══════ -->
 <header class="hero" id="home">
   <div class="fade-up">
-    <div class="hero-badge">🔬 Security Research Tool</div>
-    <h1>Flutter SSL<br/><span class="grad">Patch Tool</span></h1>
-    <p>Upload <code style="background:rgba(99,102,241,.15);padding:.1rem .4rem;border-radius:4px;color:var(--p2)">libflutter.so</code> → Patch otomatis → Download langsung.<br/>Tidak perlu install apapun.</p>
+    <div class="hero-badge">🔬 Android Security Research Tool</div>
+    <h1>APK <span class="grad">Patch Suite</span></h1>
+    <p>Tool lengkap untuk bypass SSL Flutter, patch Smali, bypass Pairip, dan banyak lagi — langsung di browser, tanpa install apapun.</p>
     <div class="hero-chips">
-      <span class="chip chip-green">✓ Pure Node.js</span>
-      <span class="chip chip-purple">✓ arm64 / arm / x86</span>
-      <span class="chip chip-blue">✓ Browser-based</span>
-      <span class="chip chip-yellow">✓ Express v5</span>
-      <span class="chip chip-cyan">✓ Max 150 MB</span>
-      <span class="chip chip-red">✓ Auto Cleanup</span>
+      <span class="chip chip-cyan">🎯 Flutter SSL Bypass</span>
+      <span class="chip chip-orange">🔧 APK Patcher</span>
+      <span class="chip chip-green">✅ No Install</span>
+      <span class="chip chip-purple">🧠 Auto Detect</span>
+      <span class="chip chip-blue">⚡ arm64 / arm / x86</span>
+      <span class="chip chip-yellow">🔓 Pairip Bypass</span>
     </div>
   </div>
 </header>
 
-<!-- ═══════════════════════════ MAIN ═══════════════════════════ -->
-<main class="main">
+<!-- ═══════ MAIN ═══════ -->
+<main class="main" id="tool">
 
-  <!-- ── TOOL CARD ── -->
-  <section class="section" id="tool">
-    <div class="tool-card fade-up">
-
-      <!-- Header -->
-      <div class="tool-header">
-        <div class="tool-header-left">
-          <span style="font-size:1.6rem">⚙️</span>
-          <div>
-            <h2>Patch Engine</h2>
-            <p>Upload libflutter.so dan dapatkan versi yang sudah di-patch</p>
-          </div>
-        </div>
-        <div id="serverStatus" class="chip chip-green" style="font-size:.72rem">
-          ● Server Online
-        </div>
+  <!-- ── Mode Switcher ── -->
+  <div class="mode-tabs">
+    <button class="mode-tab active" onclick="switchMode('flutter', this)">
+      <span class="tab-icon">⚡</span>
+      <div>
+        <div class="tab-label">Flutter SSL Patch</div>
+        <div style="font-size:.7rem;color:var(--muted);font-weight:500;margin-top:.05rem">Patch libflutter.so</div>
       </div>
-
-      <!-- Stats bar -->
-      <div class="stats-bar" id="statsBar">
-        <div class="stat-item">
-          <div class="stat-dot" style="background:var(--p2)"></div>
-          <span class="stat-label">Node.js:</span>
-          <span class="stat-val" id="nodeVer">—</span>
-        </div>
-        <div class="stat-item">
-          <div class="stat-dot" style="background:var(--green2)"></div>
-          <span class="stat-label">Uptime:</span>
-          <span class="stat-val" id="uptime">—</span>
-        </div>
-        <div class="stat-item">
-          <div class="stat-dot" style="background:var(--yellow)"></div>
-          <span class="stat-label">Engine:</span>
-          <span class="stat-val">Flutter SSL Patcher v2</span>
-        </div>
+      <span class="tab-badge">libflutter.so</span>
+    </button>
+    <button class="mode-tab" onclick="switchMode('apk', this)">
+      <span class="tab-icon">📦</span>
+      <div>
+        <div class="tab-label">APK Patcher</div>
+        <div style="font-size:.7rem;color:var(--muted);font-weight:500;margin-top:.05rem">Patch full APK</div>
       </div>
+      <span class="tab-badge">ApkPatcher</span>
+    </button>
+  </div>
 
-      <!-- Body -->
-      <div class="tool-body">
-
-        <!-- Drop Zone -->
-        <div class="dropzone" id="dropzone">
-          <input type="file" id="fileInput" accept=".so,.bin"/>
-          <div class="dz-icon">📦</div>
-          <div class="dz-title">Drop libflutter.so di sini</div>
-          <div class="dz-sub">atau klik untuk pilih file</div>
-          <div class="dz-hint">
-            <span>📁</span> .so · .bin &nbsp;|&nbsp; Max 150 MB
-          </div>
+  <!-- ══════════════════════════════════════════
+       MODE 1: FLUTTER SSL PATCH
+  ══════════════════════════════════════════ -->
+  <div id="mode-flutter" class="mode-content active">
+    <div class="section">
+      <div class="tool-card">
+        <!-- stats bar -->
+        <div class="stats-bar">
+          <div class="stat-item"><div class="stat-dot" style="background:var(--green2)"></div><span class="stat-label">Status</span><span class="stat-val">Online</span></div>
+          <div class="stat-item"><div class="stat-dot" style="background:var(--p2)"></div><span class="stat-label">Engine</span><span class="stat-val">Pure Node.js</span></div>
+          <div class="stat-item"><div class="stat-dot" style="background:var(--cyan)"></div><span class="stat-label">Patterns</span><span class="stat-val">11 total</span></div>
+          <div class="stat-item"><div class="stat-dot" style="background:var(--yellow)"></div><span class="stat-label">Max Size</span><span class="stat-val">150 MB</span></div>
         </div>
 
-        <!-- File Preview -->
-        <div class="file-preview" id="filePreview">
-          <div class="fp-icon">📄</div>
-          <div>
-            <div class="fp-name" id="fpName">—</div>
-            <div class="fp-meta" id="fpMeta">—</div>
-          </div>
-          <div class="fp-remove" id="fpRemove" title="Hapus file">✕</div>
-        </div>
-
-        <!-- Options -->
-        <div class="options-row">
-          <div class="opt-group">
-            <label>Arsitektur</label>
-            <div class="select-wrap">
-              <select class="opt-select" id="archSelect">
-                <option value="auto">🔍 Auto Detect</option>
-                <option value="arm64">arm64 (Android modern)</option>
-                <option value="arm">arm (Android 32-bit)</option>
-                <option value="x86">x86 64-bit (Emulator)</option>
-              </select>
-            </div>
-          </div>
-          <div class="opt-group">
-            <label>Mode</label>
-            <div class="toggle-row" style="margin-top:.55rem">
-              <label class="toggle" for="printToggle">
-                <input type="checkbox" id="printToggle"/>
-                <div class="toggle-track"></div>
-                <div class="toggle-thumb"></div>
-              </label>
-              <span class="toggle-label" for="printToggle">Print Only (tidak patch, hanya analisis)</span>
+        <div class="tool-header">
+          <div class="th-left">
+            <span style="font-size:1.5rem">⚡</span>
+            <div>
+              <h2>Flutter SSL Certificate Bypass</h2>
+              <p>Upload libflutter.so → detect arch → patch ssl_verify_peer_cert → download</p>
             </div>
           </div>
         </div>
 
-        <!-- Progress -->
-        <div class="progress-wrap" id="progressWrap">
-          <div class="progress-label">
-            <span id="progressLabel">Memproses...</span>
-            <span id="progressPct">0%</span>
+        <div class="tool-body">
+          <!-- Drop Zone -->
+          <div class="dropzone" id="dz-flutter" ondragover="dzDrag(this,event)" ondragleave="dzLeave(this)" ondrop="dzDrop(this,event,'flutter')">
+            <input type="file" id="file-flutter" accept=".so,.bin" onchange="onFileSelect(this,'flutter')"/>
+            <div class="dz-icon">📁</div>
+            <div class="dz-title">Drop libflutter.so di sini</div>
+            <div class="dz-sub">atau klik untuk pilih file</div>
+            <div class="dz-hint">📎 .so / .bin &nbsp;|&nbsp; max 150 MB &nbsp;|&nbsp; Ctrl+V paste</div>
           </div>
-          <div class="progress-bar-bg">
-            <div class="progress-bar-fill" id="progressBar"></div>
-          </div>
-        </div>
 
-        <!-- Patch Button -->
-        <button class="btn-patch" id="btnPatch" disabled>
-          <div class="spinner"></div>
-          <span class="btn-text">🚀 Patch Sekarang</span>
-        </button>
-
-        <!-- Log Panel -->
-        <div class="log-panel" id="logPanel">
-          <div class="log-header">
-            <div class="log-title">
-              <span>📟</span> Output Log
+          <!-- File Preview -->
+          <div class="file-preview" id="fp-flutter">
+            <div class="fp-icon">🔧</div>
+            <div>
+              <div class="fp-name" id="fp-flutter-name">—</div>
+              <div class="fp-meta" id="fp-flutter-meta">—</div>
             </div>
-            <button class="log-clear" id="logClear">Bersihkan</button>
+            <div class="fp-remove" onclick="clearFile('flutter')" title="Hapus">✕</div>
           </div>
-          <div class="log-body" id="logBody"></div>
-        </div>
 
-        <!-- Result Panel -->
-        <div class="result-panel" id="resultPanel"></div>
+          <!-- Options -->
+          <div class="options-section">
+            <div class="opt-title">Opsi Patch</div>
+            <div class="options-grid">
+              <div class="opt-group">
+                <label>Architecture</label>
+                <div class="select-wrap">
+                  <select id="arch-flutter" class="opt-select">
+                    <option value="auto">🔍 Auto Detect</option>
+                    <option value="arm64">arm64 (64-bit)</option>
+                    <option value="arm">arm (32-bit)</option>
+                    <option value="x86">x86 / x86_64</option>
+                  </select>
+                </div>
+              </div>
+              <div class="opt-group">
+                <label>Mode</label>
+                <div class="toggle-row">
+                  <label class="toggle">
+                    <input type="checkbox" id="print-only-flutter"/>
+                    <div class="toggle-track"></div>
+                    <div class="toggle-thumb"></div>
+                  </label>
+                  <span class="toggle-label">Print Only (tidak patch, hanya lihat offset)</span>
+                </div>
+              </div>
+            </div>
+          </div>
 
-      </div><!-- /tool-body -->
-    </div>
-  </section>
+          <!-- Action -->
+          <button class="btn btn-primary" id="btn-patch-flutter" onclick="runFlutterPatch()" disabled>
+            <span class="spinner"></span>
+            <span class="btn-text">⚡ Patch SSL Sekarang</span>
+          </button>
 
-  <!-- ── HOW IT WORKS ── -->
-  <section class="section" id="how">
-    <div class="section-title">
-      <span class="icon">🔬</span> Cara Kerja
-    </div>
+          <!-- Progress -->
+          <div class="progress-wrap" id="prog-flutter">
+            <div class="progress-label"><span id="prog-flutter-label">Memproses...</span><span id="prog-flutter-pct">—</span></div>
+            <div class="progress-bar-bg"><div class="progress-bar-fill" id="prog-flutter-fill"></div></div>
+          </div>
 
-    <div class="card" style="overflow:hidden">
-      <!-- Flow -->
-      <div class="flow" style="background:rgba(99,102,241,.03)">
-        <div class="flow-node">
-          <div class="fn-icon">📦</div>
-          <div class="fn-title">libflutter.so</div>
-          <div class="fn-sub">Binary Input</div>
-        </div>
-        <div class="flow-arrow">→</div>
-        <div class="flow-node">
-          <div class="fn-icon">🔎</div>
-          <div class="fn-title">ELF Detection</div>
-          <div class="fn-sub">Arch + Bits</div>
-        </div>
-        <div class="flow-arrow">→</div>
-        <div class="flow-node">
-          <div class="fn-icon">🔍</div>
-          <div class="fn-title">Pattern Search</div>
-          <div class="fn-sub">Byte matching</div>
-        </div>
-        <div class="flow-arrow">→</div>
-        <div class="flow-node">
-          <div class="fn-icon">📍</div>
-          <div class="fn-title">Find Function</div>
-          <div class="fn-sub">ssl_verify_peer_cert</div>
-        </div>
-        <div class="flow-arrow">→</div>
-        <div class="flow-node">
-          <div class="fn-icon">✏️</div>
-          <div class="fn-title">Patch: ret0</div>
-          <div class="fn-sub">return 0 always</div>
-        </div>
-        <div class="flow-arrow">→</div>
-        <div class="flow-node" style="border-color:rgba(16,185,129,.35)">
-          <div class="fn-icon">✅</div>
-          <div class="fn-title" style="color:var(--green2)">SSL Bypassed</div>
-          <div class="fn-sub">Patched binary</div>
-        </div>
-      </div>
+          <!-- Log -->
+          <div class="log-panel" id="log-flutter">
+            <div class="log-header">
+              <div class="log-title">📋 Log Output</div>
+              <button class="log-clear" onclick="clearLog('flutter')">Clear</button>
+            </div>
+            <div class="log-body" id="log-flutter-body"></div>
+          </div>
 
-      <div class="grid-3" style="padding:1.25rem;gap:1rem">
-        <div class="info-card card-inner">
-          <div class="ic-icon">🔒</div>
-          <h3>Target Fungsi</h3>
-          <p>Script mencari dan mem-patch <code style="color:var(--green2)">ssl_verify_peer_cert</code> di dalam binary Flutter agar selalu return 0 (sukses).</p>
-        </div>
-        <div class="info-card card-inner">
-          <div class="ic-icon">📐</div>
-          <h3>Byte Pattern</h3>
-          <p>Menggunakan wildcard byte pattern (<code style="color:var(--p2)">..</code> = any byte) yang sama persis dengan script Python & JS original.</p>
-        </div>
-        <div class="info-card card-inner">
-          <div class="ic-icon">💉</div>
-          <h3>ret0 Patch</h3>
-          <p>Menimpa prologue fungsi dengan instruksi <code style="color:var(--yellow)">mov r0,#0; ret</code> sesuai arsitektur, sehingga SSL check selalu bypass.</p>
-        </div>
-      </div>
-
-      <div style="padding:0 1.25rem 1.25rem">
-        <div class="alert alert-warn">
-          <span class="alert-icon">⚠️</span>
-          <span>Tool ini hanya untuk <strong>security research</strong>, penetration testing, dan analisis aplikasi milik sendiri. Penggunaan pada aplikasi tanpa izin pemilik adalah ilegal.</span>
+          <!-- Result -->
+          <div class="result-panel" id="result-flutter"></div>
         </div>
       </div>
     </div>
-  </section>
 
-  <!-- ── PATTERNS ── -->
-  <section class="section" id="patterns">
-    <div class="section-title">
-      <span class="icon">🧬</span> Byte Patterns
-    </div>
-
-    <div class="card" style="overflow:hidden">
-      <div class="tabs" id="patternTabs">
-        <button class="tab-btn active" onclick="showTab('pattern','arm64',this)">arm64 (5)</button>
-        <button class="tab-btn" onclick="showTab('pattern','arm',this)">arm (1)</button>
-        <button class="tab-btn" onclick="showTab('pattern','x86',this)">x86 (5)</button>
-      </div>
-
-      <div id="pattern-arm64" class="tab-pane active">
-        <p style="font-size:.82rem;color:var(--muted2);margin-bottom:.75rem">5 patterns untuk AArch64 (Android modern). Titik <code>.</code> = wildcard 1 nibble, <code>..</code> = wildcard 1 byte.</p>
-        <div class="pattern-item"><span class="pattern-num">[1]</span>F. 0F 1C F8 F. 5. 01 A9 F. 5. 02 A9 F. .. 03 A9 .. .. .. .. 68 1A 40 F9</div>
-        <div class="pattern-item"><span class="pattern-num">[2]</span>F. 43 01 D1 FE 67 01 A9 F8 5F 02 A9 F6 57 03 A9 F4 4F 04 A9 13 00 40 F9 F4 03 00 AA 68 1A 40 F9</div>
-        <div class="pattern-item"><span class="pattern-num">[3]</span>FF 43 01 D1 FE 67 01 A9 .. .. 06 94 .. 7. 06 94 68 1A 40 F9 15 15 41 F9 B5 00 00 B4 B6 4A 40 F9</div>
-        <div class="pattern-item"><span class="pattern-num">[4]</span>FF .3 01 D1 F. .. 01 A9 .. .. .. 94 .. .. .. 52 48 00 00 39 1A 50 40 F9 DA 02 00 B4 48 03 40 F9</div>
-        <div class="pattern-item"><span class="pattern-num">[5]</span>F. 0F 1C F8 F. .. 0. .. .. .. .. .9 .. .. 0. .. 68 1A 40 F9 15 .. 4. F9 B5 00 00 B4 B6 46 40 F9</div>
-        <div class="alert alert-info" style="margin-top:.75rem">
-          <span class="alert-icon">ℹ️</span>
-          <span>Source patterns: <a href="https://github.com/NVISOsecurity/disable-flutter-tls-verification" target="_blank" style="color:var(--p2)">NVISOsecurity/disable-flutter-tls-verification</a></span>
+    <!-- How it works -->
+    <div class="section" id="how">
+      <div class="section-title"><span class="icon">🔬</span> Cara Kerja Flutter SSL Patch</div>
+      <div class="tool-card">
+        <div class="flow">
+          <div class="flow-node"><div class="fn-icon">📁</div><div class="fn-title">Upload</div><div class="fn-sub">libflutter.so</div></div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-node"><div class="fn-icon">🔍</div><div class="fn-title">Detect ELF</div><div class="fn-sub">arm64/arm/x86</div></div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-node"><div class="fn-icon">🧩</div><div class="fn-title">Match Pattern</div><div class="fn-sub">11 patterns</div></div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-node"><div class="fn-icon">🎯</div><div class="fn-title">Find Function</div><div class="fn-sub">ssl_verify_peer_cert</div></div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-node"><div class="fn-icon">✏️</div><div class="fn-title">Write ret0</div><div class="fn-sub">Overwrite prologue</div></div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-node"><div class="fn-icon">📥</div><div class="fn-title">Download</div><div class="fn-sub">Patched .so</div></div>
         </div>
-      </div>
-
-      <div id="pattern-arm" class="tab-pane">
-        <p style="font-size:.82rem;color:var(--muted2);margin-bottom:.75rem">1 pattern untuk ARM 32-bit (Android lama).</p>
-        <div class="pattern-item"><span class="pattern-num">[1]</span>2D E9 F. 4. D0 F8 00 80 81 46 D8 F8 18 00 D0 F8</div>
-        <div class="alert alert-warn" style="margin-top:.75rem">
-          <span class="alert-icon">⚠️</span>
-          <span>Hanya 1 pattern tersedia. Jika tidak cocok, versi Flutter mungkin berbeda.</span>
-        </div>
-      </div>
-
-      <div id="pattern-x86" class="tab-pane">
-        <p style="font-size:.82rem;color:var(--muted2);margin-bottom:.75rem">5 patterns untuk x86-64 (emulator / PC).</p>
-        <div class="pattern-item"><span class="pattern-num">[1]</span>55 41 57 41 56 41 55 41 54 53 50 49 89 fe 48 8b 1f 48 8b 43 30 4c 8b b8 d0 01 00 00 4d 85 ff 74 12 4d 8b a7 90 00 00 00 4d 85 e4 74 4a 49 8b 04 24 eb 46</div>
-        <div class="pattern-item"><span class="pattern-num">[2]</span>55 41 57 41 56 41 55 41 54 53 50 49 89 f. 4c 8b 37 49 8b 46 30 4c 8b a. .. 0. 00 00 4d 85 e. 74 1. 4d 8b</div>
-        <div class="pattern-item"><span class="pattern-num">[3]</span>55 41 57 41 56 41 55 41 54 53 48 83 EC 18 49 89 FF 48 8B 1F 48 8B 43 30 4C 8B A0 28 02 00 00 4D 85 E4 74</div>
-        <div class="pattern-item"><span class="pattern-num">[4]</span>55 41 57 41 56 41 55 41 54 53 48 83 EC 18 49 89 FE 4C 8B 27 49 8B 44 24 30 48 8B 98 D0 01 00 00 48 85 DB</div>
-        <div class="pattern-item"><span class="pattern-num">[5]</span>55 41 57 41 56 41 55 41 54 53 48 83 EC 38 C6 02 50 48 8B AF A. 00 00 00 48 85 ED 74 7. 48 83 7D 00 00 74 <em style="color:var(--yellow)">(→ session_verify_cert_chain)</em></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ── FAQ / TROUBLESHOOT ── -->
-  <section class="section" id="faq">
-    <div class="section-title">
-      <span class="icon">❓</span> FAQ & Troubleshooting
-    </div>
-    <div style="display:flex;flex-direction:column;gap:.75rem">
-
-      <details class="card" style="padding:1rem 1.25rem;cursor:pointer">
-        <summary style="font-weight:700;color:#fff;list-style:none;display:flex;align-items:center;justify-content:space-between">
-          <span>Cara mendapatkan libflutter.so dari APK?</span>
-          <span style="color:var(--p2)">▾</span>
-        </summary>
-        <div style="margin-top:.75rem;font-size:.85rem;color:var(--muted2)">
-          APK sebenarnya adalah ZIP file. Rename <code>.apk</code> → <code>.zip</code>, lalu extract. File <code>libflutter.so</code> ada di dalam folder <code>lib/arm64-v8a/</code> (atau <code>lib/armeabi-v7a/</code> untuk 32-bit).
-          <div class="code-blk" style="margin-top:.75rem">
-            <div class="code-blk-header"><span>Terminal</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
-            <pre><code>unzip app.apk lib/arm64-v8a/libflutter.so -d extracted/</code></pre>
+        <div style="padding:1rem 1.5rem;border-top:1px solid var(--border)">
+          <div class="grid-2">
+            <div>
+              <div class="alert alert-info"><span class="alert-icon">ℹ️</span><div>Engine murni Node.js — tidak butuh radare2, tidak butuh install apapun di browser kamu.</div></div>
+            </div>
+            <div>
+              <div class="alert alert-warn"><span class="alert-icon">⚠️</span><div>Hanya untuk research & CTF. Jangan gunakan untuk melanggar ToS aplikasi.</div></div>
+            </div>
           </div>
-        </div>
-      </details>
-
-      <details class="card" style="padding:1rem 1.25rem;cursor:pointer">
-        <summary style="font-weight:700;color:#fff;list-style:none;display:flex;align-items:center;justify-content:space-between">
-          <span>"ssl_verify_peer_cert not found" — apa artinya?</span>
-          <span style="color:var(--p2)">▾</span>
-        </summary>
-        <div style="margin-top:.75rem;font-size:.85rem;color:var(--muted2)">
-          Artinya tidak ada byte pattern yang cocok. Kemungkinan penyebab: versi Flutter terbaru mengubah binary, binary sudah diobfuscate, atau arsitektur yang dipilih salah. Coba pilih arsitektur secara manual.
-        </div>
-      </details>
-
-      <details class="card" style="padding:1rem 1.25rem;cursor:pointer">
-        <summary style="font-weight:700;color:#fff;list-style:none;display:flex;align-items:center;justify-content:space-between">
-          <span>Setelah patch, bagaimana cara repack APK?</span>
-          <span style="color:var(--p2)">▾</span>
-        </summary>
-        <div style="margin-top:.75rem;font-size:.85rem;color:var(--muted2)">
-          Ganti file <code>libflutter.so</code> di dalam folder APK yang sudah di-extract, lalu zip ulang dan sign dengan keystore.
-          <div class="code-blk" style="margin-top:.75rem">
-            <div class="code-blk-header"><span>Terminal</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
-            <pre><code># Copy patched lib ke folder APK
-cp libflutter_patched.so apk_out/lib/arm64-v8a/libflutter.so
-
-# Zip ulang
-cd apk_out && zip -r ../patched.apk .
-
-# Sign APK
-apksigner sign --ks keystore.jks patched.apk</code></pre>
-          </div>
-        </div>
-      </details>
-
-      <details class="card" style="padding:1rem 1.25rem;cursor:pointer">
-        <summary style="font-weight:700;color:#fff;list-style:none;display:flex;align-items:center;justify-content:space-between">
-          <span>Apakah file saya aman? Disimpan di mana?</span>
-          <span style="color:var(--p2)">▾</span>
-        </summary>
-        <div style="margin-top:.75rem;font-size:.85rem;color:var(--muted2)">
-          File upload dihapus <strong>segera setelah proses selesai</strong>. File output tersedia untuk download selama 15 menit, lalu otomatis terhapus. Tidak ada file yang disimpan permanen di server.
-          <div class="alert alert-success" style="margin-top:.75rem">
-            <span class="alert-icon">✓</span> Upload → Proses → Hapus → Download → Hapus otomatis setelah 15 menit.
-          </div>
-        </div>
-      </details>
-
-    </div>
-  </section>
-
-  <!-- ── MANUAL USAGE (r2 / CLI) ── -->
-  <section class="section" id="cli">
-    <div class="section-title">
-      <span class="icon">💻</span> Manual Usage (CLI / Termux)
-    </div>
-    <div class="card" style="overflow:hidden">
-      <div class="tabs">
-        <button class="tab-btn active" onclick="showTab('cli','py',this)">Python Script</button>
-        <button class="tab-btn" onclick="showTab('cli','r2',this)">R2.JS Script</button>
-      </div>
-
-      <div id="cli-py" class="tab-pane active">
-        <div style="display:flex;flex-direction:column;gap:.75rem">
-          <div class="code-blk">
-            <div class="code-blk-header"><span>Install &amp; Download</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
-            <pre><code>pkg install radare2 python
-pip install r2pipe
-wget https://raw.githubusercontent.com/AbhiTheModder/termux-scripts/main/flutter_ssl_patch.py</code></pre>
-          </div>
-          <div class="code-blk">
-            <div class="code-blk-header"><span>Basic Usage</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
-            <pre><code>python3 flutter_ssl_patch.py -b libflutter.so</code></pre>
-          </div>
-          <div class="code-blk">
-            <div class="code-blk-header"><span>Dengan Arch Manual + Print Only</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
-            <pre><code>python3 flutter_ssl_patch.py -b libflutter.so --arch arm64 --print</code></pre>
-          </div>
-          <div class="code-blk">
-            <div class="code-blk-header"><span>Di dalam r2 shell</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
-            <pre><code>r2 -w libflutter.so
-[0x0]> #!pipe python3 flutter_ssl_patch.py</code></pre>
-          </div>
-        </div>
-      </div>
-
-      <div id="cli-r2" class="tab-pane">
-        <div style="display:flex;flex-direction:column;gap:.75rem">
-          <div class="code-blk">
-            <div class="code-blk-header"><span>Download Script</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
-            <pre><code>wget https://raw.githubusercontent.com/AbhiTheModder/termux-scripts/main/flutter_ssl_patch.r2.js</code></pre>
-          </div>
-          <div class="code-blk">
-            <div class="code-blk-header"><span>Jalankan langsung</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
-            <pre><code>r2 -w -i flutter_ssl_patch.r2.js libflutter.so</code></pre>
-          </div>
-          <div class="code-blk">
-            <div class="code-blk-header"><span>Patch manual setelah cari offset</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
-            <pre><code>r2 -w libflutter.so
-[0x0]> . flutter_ssl_patch.r2.js
-# → ssl_verify_peer_cert found at: 0xABCD1234
-# → function at: fcn.ABCD1234
-
-[0x0]> s fcn.ABCD1234
-[fcn.ABCD1234]> wao ret0
-[fcn.ABCD1234]> pd 3    # verifikasi
-[fcn.ABCD1234]> q</code></pre>
-          </div>
-        </div>
-        <div class="alert alert-info" style="margin-top:.75rem">
-          <span class="alert-icon">ℹ️</span>
-          <span>Script <code>.r2.js</code> hanya mencari offset, tidak auto-patch. Patch manual dilakukan dengan <code>wao ret0</code>.</span>
         </div>
       </div>
     </div>
-  </section>
+
+    <!-- Patterns -->
+    <div class="section" id="patterns">
+      <div class="section-title"><span class="icon">🧩</span> Byte Patterns ssl_verify_peer_cert</div>
+      <div class="tool-card">
+        <div class="tabs">
+          <button class="tab-btn active" onclick="switchTab(this,'pat-arm64')">arm64 (5)</button>
+          <button class="tab-btn" onclick="switchTab(this,'pat-arm')">arm (1)</button>
+          <button class="tab-btn" onclick="switchTab(this,'pat-x86')">x86 (5)</button>
+          <button class="tab-btn" onclick="switchTab(this,'pat-ret0')">ret0 Patches</button>
+        </div>
+        <div id="pat-arm64" class="tab-pane active">
+          <div class="pattern-item"><span class="pattern-num">[1]</span>F. 0F 1C F8 F. 5. 01 A9 F. 5. 02 A9 F. .. 03 A9 .. .. .. .. 68 1A 40 F9</div>
+          <div class="pattern-item"><span class="pattern-num">[2]</span>F. 43 01 D1 FE 67 01 A9 F8 5F 02 A9 F6 57 03 A9 F4 4F 04 A9 13 00 40 F9 F4 03 00 AA 68 1A 40 F9</div>
+          <div class="pattern-item"><span class="pattern-num">[3]</span>FF 43 01 D1 FE 67 01 A9 .. .. 06 94 .. 7. 06 94 68 1A 40 F9 15 15 41 F9 B5 00 00 B4 B6 4A 40 F9</div>
+          <div class="pattern-item"><span class="pattern-num">[4]</span>FF .3 01 D1 F. .. 01 A9 .. .. .. 94 .. .. .. 52 48 00 00 39 1A 50 40 F9 DA 02 00 B4 48 03 40 F9</div>
+          <div class="pattern-item"><span class="pattern-num">[5]</span>F. 0F 1C F8 F. .. 0. .. .. .. .. .9 .. .. 0. .. 68 1A 40 F9 15 .. 4. F9 B5 00 00 B4 B6 46 40 F9</div>
+        </div>
+        <div id="pat-arm" class="tab-pane">
+          <div class="pattern-item"><span class="pattern-num">[1]</span>2D E9 F. 4. D0 F8 00 80 81 46 D8 F8 18 00 D0 F8</div>
+        </div>
+        <div id="pat-x86" class="tab-pane">
+          <div class="pattern-item"><span class="pattern-num">[1]</span>55 41 57 41 56 41 55 41 54 53 50 49 89 fe 48 8b 1f 48 8b 43 30 4c 8b b8 d0 01 00 00 4d 85 ff 74 12...</div>
+          <div class="pattern-item"><span class="pattern-num">[2]</span>55 41 57 41 56 41 55 41 54 53 50 49 89 f. 4c 8b 37 49 8b 46 30 4c 8b a. .. 0. 00 00 4d 85 e. 74 1. 4d 8b</div>
+          <div class="pattern-item"><span class="pattern-num">[3]</span>55 41 57 41 56 41 55 41 54 53 48 83 EC 18 49 89 FF 48 8B 1F 48 8B 43 30 4C 8B A0 28 02 00 00 4D 85 E4 74</div>
+          <div class="pattern-item"><span class="pattern-num">[4]</span>55 41 57 41 56 41 55 41 54 53 48 83 EC 18 49 89 FE 4C 8B 27 49 8B 44 24 30 48 8B 98 D0 01 00 00 48 85 DB</div>
+          <div class="pattern-item"><span class="pattern-num">[5]</span>55 41 57 41 56 41 55 41 54 53 48 83 EC 38 C6 02 50 48 8B AF A. 00 00 00 48 85 ED 74 7. 48 83 7D 00 00 74</div>
+        </div>
+        <div id="pat-ret0" class="tab-pane">
+          <div class="grid-3">
+            <div class="info-card card">
+              <div class="ic-icon">💪</div>
+              <h3>arm64</h3>
+              <code style="font-size:.78rem;font-family:monospace;color:var(--p2)">00 00 80 D2 C0 03 5F D6</code>
+              <p style="margin-top:.4rem">mov x0, #0<br/>ret</p>
+            </div>
+            <div class="info-card card">
+              <div class="ic-icon">💪</div>
+              <h3>arm (32-bit)</h3>
+              <code style="font-size:.78rem;font-family:monospace;color:var(--p2)">00 00 A0 E3 1E FF 2F E1</code>
+              <p style="margin-top:.4rem">mov r0, #0<br/>bx lr</p>
+            </div>
+            <div class="info-card card">
+              <div class="ic-icon">💪</div>
+              <h3>x86 / x86_64</h3>
+              <code style="font-size:.78rem;font-family:monospace;color:var(--p2)">48 31 C0 C3</code>
+              <p style="margin-top:.4rem">xor rax, rax<br/>ret</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       MODE 2: APK PATCHER
+  ══════════════════════════════════════════ -->
+  <div id="mode-apk" class="mode-content">
+    <div class="section">
+      <div class="tool-card">
+        <div class="stats-bar">
+          <div class="stat-item"><div class="stat-dot" style="background:var(--green2)"></div><span class="stat-label">Status</span><span class="stat-val">Online</span></div>
+          <div class="stat-item"><div class="stat-dot" style="background:var(--orange)"></div><span class="stat-label">Engine</span><span class="stat-val">TechnoIndian/ApkPatcher</span></div>
+          <div class="stat-item"><div class="stat-dot" style="background:var(--blue)"></div><span class="stat-label">Tools</span><span class="stat-val">Java 21 + Apktool 2.10</span></div>
+          <div class="stat-item"><div class="stat-dot" style="background:var(--yellow)"></div><span class="stat-label">Max Size</span><span class="stat-val">500 MB</span></div>
+        </div>
+
+        <div class="tool-header">
+          <div class="th-left">
+            <span style="font-size:1.5rem">📦</span>
+            <div>
+              <h2>APK Patcher — Full Patch Suite</h2>
+              <p>Upload APK → Scan → Pilih patch → Decompile → Patch → Recompile → Download</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="tool-body">
+
+          <!-- STEP 1: Upload APK -->
+          <div id="apk-step1" class="apk-step active">
+            <div class="flow-step" style="margin-bottom:1.25rem">
+              <div class="flow-step-num">1</div>
+              <div class="flow-step-body">
+                <div class="flow-step-title">Upload APK File</div>
+                <div class="dropzone" id="dz-apk" ondragover="dzDrag(this,event)" ondragleave="dzLeave(this)" ondrop="dzDrop(this,event,'apk')">
+                  <input type="file" id="file-apk" accept=".apk,.xapk,.apkm,.apks" onchange="onFileSelect(this,'apk')"/>
+                  <div class="dz-icon">📦</div>
+                  <div class="dz-title">Drop APK di sini</div>
+                  <div class="dz-sub">atau klik untuk pilih file</div>
+                  <div class="dz-hint">📎 .apk / .xapk / .apkm / .apks &nbsp;|&nbsp; max 500 MB</div>
+                </div>
+                <div class="file-preview" id="fp-apk">
+                  <div class="fp-icon">📦</div>
+                  <div>
+                    <div class="fp-name" id="fp-apk-name">—</div>
+                    <div class="fp-meta" id="fp-apk-meta">—</div>
+                  </div>
+                  <div class="fp-remove" onclick="clearFile('apk')" title="Hapus">✕</div>
+                </div>
+              </div>
+            </div>
+
+            <button class="btn btn-primary" id="btn-scan-apk" onclick="scanApk()" disabled>
+              <span class="spinner"></span>
+              <span class="btn-text">🔍 Scan APK</span>
+            </button>
+
+            <!-- Scan result -->
+            <div class="scan-result" id="scan-result">
+              <div style="font-size:.82rem;font-weight:700;color:#fff;margin-bottom:.4rem">📊 Hasil Scan APK:</div>
+              <div class="scan-badges" id="scan-badges"></div>
+            </div>
+          </div>
+
+          <!-- STEP 2: Configure patches -->
+          <div id="apk-step2" class="apk-step" style="margin-top:1.25rem">
+            <div class="flow-step" style="margin-bottom:1.25rem">
+              <div class="flow-step-num">2</div>
+              <div class="flow-step-body">
+                <div class="flow-step-title">Pilih Patch yang Ingin Diterapkan</div>
+                <p style="font-size:.8rem;color:var(--muted);margin-bottom:.85rem">Centang patch yang kamu butuhkan. Beberapa patch memerlukan kondisi APK tertentu.</p>
+
+                <div class="patch-opts-grid">
+
+                  <label class="popt" id="opt-flutter" onclick="toggleOpt(this,'flutter')">
+                    <input type="checkbox" id="chk-flutter"/>
+                    <div class="popt-body">
+                      <div class="popt-name">⚡ Flutter SSL Bypass <span class="popt-flag">-f</span></div>
+                      <div class="popt-desc">Bypass SSL pinning di Flutter app. Patch libflutter.so via radare2.</div>
+                    </div>
+                  </label>
+
+                  <label class="popt" id="opt-pairip" onclick="toggleOpt(this,'pairip')">
+                    <input type="checkbox" id="chk-pairip"/>
+                    <div class="popt-body">
+                      <div class="popt-name">🔓 Pairip Bypass <span class="popt-flag">-p</span></div>
+                      <div class="popt-desc">Bypass proteksi Pairip / VM. Install di VM atau Multi-App.</div>
+                    </div>
+                  </label>
+
+                  <label class="popt" id="opt-pairip_corex" onclick="toggleOpt(this,'pairip_corex')">
+                    <input type="checkbox" id="chk-pairip_corex"/>
+                    <div class="popt-body">
+                      <div class="popt-name">🧬 Pairip + CoreX Hook <span class="popt-flag">-p -x</span></div>
+                      <div class="popt-desc">Hook CoreX untuk arm64. Lebih dalam dari Pairip biasa.</div>
+                    </div>
+                  </label>
+
+                  <label class="popt" id="opt-spoof_pkg" onclick="toggleOpt(this,'spoof_pkg')">
+                    <input type="checkbox" id="chk-spoof_pkg"/>
+                    <div class="popt-body">
+                      <div class="popt-name">🎭 Spoof Package <span class="popt-flag">-pkg</span></div>
+                      <div class="popt-desc">Spoof deteksi package (Dex/Manifest/Resources).</div>
+                    </div>
+                  </label>
+
+                  <label class="popt" id="opt-remove_ads" onclick="toggleOpt(this,'remove_ads')">
+                    <input type="checkbox" id="chk-remove_ads"/>
+                    <div class="popt-body">
+                      <div class="popt-name">🚫 Remove Ads <span class="popt-flag">-rmads</span></div>
+                      <div class="popt-desc">Hapus iklan dari Smali. Scan dan patch kode iklan.</div>
+                    </div>
+                  </label>
+
+                  <label class="popt" id="opt-remove_ss" onclick="toggleOpt(this,'remove_ss')">
+                    <input type="checkbox" id="chk-remove_ss"/>
+                    <div class="popt-body">
+                      <div class="popt-name">📸 Bypass Screenshot <span class="popt-flag">-rmss</span></div>
+                      <div class="popt-desc">Hapus pembatasan screenshot/screen recording.</div>
+                    </div>
+                  </label>
+
+                  <label class="popt" id="opt-remove_usb" onclick="toggleOpt(this,'remove_usb')">
+                    <input type="checkbox" id="chk-remove_usb"/>
+                    <div class="popt-body">
+                      <div class="popt-name">🔌 Bypass USB Debug <span class="popt-flag">-rmusb</span></div>
+                      <div class="popt-desc">Hapus deteksi USB debugging dan ADB.</div>
+                    </div>
+                  </label>
+
+                  <label class="popt" id="opt-random_info" onclick="toggleOpt(this,'random_info')">
+                    <input type="checkbox" id="chk-random_info"/>
+                    <div class="popt-body">
+                      <div class="popt-name">📱 Random Device Info <span class="popt-flag">-r</span></div>
+                      <div class="popt-desc">Spoof info device (Samsung/Xiaomi/Google fake info).</div>
+                    </div>
+                  </label>
+
+                  <label class="popt" id="opt-purchase" onclick="toggleOpt(this,'purchase')">
+                    <input type="checkbox" id="chk-purchase"/>
+                    <div class="popt-body">
+                      <div class="popt-name">💰 Purchase Bypass <span class="popt-flag">-P</span></div>
+                      <div class="popt-desc">Patch verifikasi pembelian / license check.</div>
+                    </div>
+                  </label>
+
+                  <label class="popt" id="opt-tg_patch" onclick="toggleOpt(this,'tg_patch')">
+                    <input type="checkbox" id="chk-tg_patch"/>
+                    <div class="popt-body">
+                      <div class="popt-name">✈️ Telegram Patch <span class="popt-flag">-t</span></div>
+                      <div class="popt-desc">Patch khusus untuk aplikasi Telegram.</div>
+                    </div>
+                  </label>
+
+                </div>
+
+                <!-- Android ID input (optional) -->
+                <div class="opt-group" style="margin-top:1rem;max-width:380px">
+                  <label>Android ID Kustom (opsional) <span style="font-family:monospace;font-size:.72rem;color:var(--p2)">[-D]</span></label>
+                  <input type="text" id="android-id-input" class="opt-input" placeholder="16 digit hex, contoh: a1b2c3d4e5f60789" maxlength="16" pattern="[a-fA-F0-9]{16}"/>
+                  <div class="req-note">Isi jika kamu ingin hook Android ID spesifik. Kosongkan jika tidak perlu.</div>
+                </div>
+
+                <!-- SSL Bypass method note -->
+                <div class="alert alert-info" style="margin-top:1rem">
+                  <span class="alert-icon">ℹ️</span>
+                  <div>SSL bypass di APK Patcher menggunakan <strong>Smali patching</strong> (patch Java SSL methods) + <strong>Network Security Config</strong> (trust user certs). Berbeda dari Flutter SSL mode yang patch binary libflutter.so.</div>
+                </div>
+
+              </div>
+            </div>
+
+            <button class="btn btn-primary" id="btn-patch-apk" onclick="runApkPatch()" disabled>
+              <span class="spinner"></span>
+              <span class="btn-text">🚀 Patch APK Sekarang</span>
+            </button>
+          </div>
+
+          <!-- STEP 3: Processing -->
+          <div id="apk-step3" class="apk-step" style="margin-top:1.25rem">
+            <div class="flow-step">
+              <div class="flow-step-num" style="background:rgba(16,185,129,.2);border-color:rgba(16,185,129,.4);color:var(--green2)">3</div>
+              <div class="flow-step-body">
+                <div class="flow-step-title">Proses Patching APK</div>
+                <p style="font-size:.8rem;color:var(--muted);margin-bottom:.85rem">Proses ini membutuhkan waktu 1–5 menit tergantung ukuran APK dan patch yang dipilih.</p>
+
+                <!-- Progress -->
+                <div class="progress-wrap show" id="prog-apk">
+                  <div class="progress-label"><span id="prog-apk-label">Memproses...</span><span id="prog-apk-pct"></span></div>
+                  <div class="progress-bar-bg"><div class="progress-bar-fill" id="prog-apk-fill" style="width:5%"></div></div>
+                </div>
+
+                <!-- Log -->
+                <div class="log-panel show" id="log-apk" style="margin-top:1rem">
+                  <div class="log-header">
+                    <div class="log-title">📋 Live Log ApkPatcher</div>
+                    <button class="log-clear" onclick="clearLog('apk')">Clear</button>
+                  </div>
+                  <div class="log-body" id="log-apk-body"></div>
+                </div>
+
+                <!-- Result -->
+                <div class="result-panel" id="result-apk"></div>
+
+                <!-- Reset button (shown after done) -->
+                <div id="apk-reset-row" style="display:none;margin-top:1rem">
+                  <button class="btn btn-sec" onclick="resetApkPatcher()">🔄 Patch APK Lain</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- About ApkPatcher -->
+    <div class="section">
+      <div class="section-title"><span class="icon">📖</span> Tentang APK Patcher</div>
+      <div class="grid-2">
+        <div class="tool-card">
+          <div style="padding:1.25rem">
+            <div class="section-title" style="font-size:.95rem">🛠️ Fitur yang Tersedia</div>
+            <table style="width:100%;font-size:.82rem;border-collapse:collapse">
+              <tr><td style="padding:.45rem .5rem;color:var(--green2);width:28px">✅</td><td style="padding:.45rem 0;color:#fff;font-weight:600">Flutter SSL Bypass</td><td style="color:var(--muted)">patch libflutter.so via r2</td></tr>
+              <tr><td style="padding:.45rem .5rem;color:var(--green2)">✅</td><td style="padding:.45rem 0;color:#fff;font-weight:600">Smali SSL Bypass</td><td style="color:var(--muted)">patch Java SSL methods</td></tr>
+              <tr><td style="padding:.45rem .5rem;color:var(--green2)">✅</td><td style="padding:.45rem 0;color:#fff;font-weight:600">Network Security Config</td><td style="color:var(--muted)">trust user certificates</td></tr>
+              <tr><td style="padding:.45rem .5px;color:var(--green2)">✅</td><td style="padding:.45rem 0;color:#fff;font-weight:600">Pairip Bypass</td><td style="color:var(--muted)">VM / Multi-App mode</td></tr>
+              <tr><td style="padding:.45rem .5rem;color:var(--green2)">✅</td><td style="padding:.45rem 0;color:#fff;font-weight:600">Remove Ads</td><td style="color:var(--muted)">scan & patch ad smali</td></tr>
+              <tr><td style="padding:.45rem .5rem;color:var(--green2)">✅</td><td style="padding:.45rem 0;color:#fff;font-weight:600">Screenshot Bypass</td><td style="color:var(--muted)">FLAG_SECURE removal</td></tr>
+              <tr><td style="padding:.45rem .5rem;color:var(--green2)">✅</td><td style="padding:.45rem 0;color:#fff;font-weight:600">VPN/Proxy Bypass</td><td style="color:var(--muted)">otomatis via Smali patch</td></tr>
+              <tr><td style="padding:.45rem .5rem;color:var(--green2)">✅</td><td style="padding:.45rem 0;color:#fff;font-weight:600">Purchase Bypass</td><td style="color:var(--muted)">license verify patch</td></tr>
+            </table>
+          </div>
+        </div>
+        <div class="tool-card">
+          <div style="padding:1.25rem">
+            <div class="section-title" style="font-size:.95rem">⚙️ Stack yang Digunakan</div>
+            <div class="grid-2" style="gap:.6rem">
+              <div class="info-card card"><div class="ic-icon">☕</div><h3>Java 21</h3><p>OpenJDK untuk menjalankan Apktool</p></div>
+              <div class="info-card card"><div class="ic-icon">🔧</div><h3>Apktool 2.10</h3><p>Decompile & recompile APK</p></div>
+              <div class="info-card card"><div class="ic-icon">🐍</div><h3>Python 3.12</h3><p>Engine ApkPatcher TechnoIndian</p></div>
+              <div class="info-card card"><div class="ic-icon">✒️</div><h3>apksigner</h3><p>Sign APK hasil patch</p></div>
+            </div>
+            <div class="alert alert-warn" style="margin-top:.75rem">
+              <span class="alert-icon">⏱️</span>
+              <div>Proses butuh 1–5 menit. Jangan tutup browser. Log akan terus update secara live.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════ FAQ ═══════ -->
+  <div class="section" id="faq">
+    <div class="section-title"><span class="icon">❓</span> FAQ</div>
+    <div class="grid-2">
+      <div class="card" style="padding:1.25rem">
+        <h3 style="font-size:.9rem;font-weight:800;color:#fff;margin-bottom:.5rem">📁 File apa yang perlu diupload?</h3>
+        <p style="font-size:.82rem;color:var(--muted2)"><strong>Flutter SSL:</strong> Upload <code style="background:rgba(99,102,241,.15);padding:.05rem .35rem;border-radius:3px">libflutter.so</code> yang ada di dalam APK (unzip dulu di <code>lib/arm64-v8a/</code>).<br/><br/><strong>APK Patcher:</strong> Upload langsung file <code>.apk</code> utuh.</p>
+      </div>
+      <div class="card" style="padding:1.25rem">
+        <h3 style="font-size:.9rem;font-weight:800;color:#fff;margin-bottom:.5rem">🔍 Cara extract libflutter.so?</h3>
+        <div class="code-blk" style="margin-top:.5rem">
+          <div class="code-blk-header"><span>Terminal</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+          <pre><code>cp app.apk app.zip
+unzip app.zip lib/arm64-v8a/libflutter.so
+# atau gunakan APK Patcher mode untuk APK langsung</code></pre>
+        </div>
+      </div>
+      <div class="card" style="padding:1.25rem">
+        <h3 style="font-size:.9rem;font-weight:800;color:#fff;margin-bottom:.5rem">📥 Cara pasang kembali ke APK?</h3>
+        <div class="code-blk" style="margin-top:.5rem">
+          <div class="code-blk-header"><span>Terminal</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+          <pre><code>zip -u app.apk lib/arm64-v8a/libflutter_patched.so
+# rename jadi libflutter.so, lalu sign APK
+apksigner sign --ks keystore.jks app.apk</code></pre>
+        </div>
+      </div>
+      <div class="card" style="padding:1.25rem">
+        <h3 style="font-size:.9rem;font-weight:800;color:#fff;margin-bottom:.5rem">⚠️ Pattern tidak ditemukan?</h3>
+        <p style="font-size:.82rem;color:var(--muted2)">Coba mode <strong>APK Patcher</strong> yang menggunakan Smali-based SSL bypass. Pattern tidak ditemukan biasanya karena Flutter versi terlalu baru/lama, atau binary sudah di-obfuscate.</p>
+      </div>
+    </div>
+  </div>
 
 </main>
 
-<!-- ═══════════════════════════ FOOTER ═══════════════════════════ -->
+<!-- ═══════ FOOTER ═══════ -->
 <footer>
   <div class="footer-inner">
-    <p>🛡️ <strong>Flutter SSL Patch Tool</strong> — Node.js v2 &nbsp;|&nbsp;
-    Script original oleh <a href="https://github.com/AbhiTheModder" target="_blank">@AbhiTheModder</a> &nbsp;|&nbsp;
-    Patterns dari <a href="https://github.com/NVISOsecurity/disable-flutter-tls-verification" target="_blank">NVISOsecurity</a></p>
-    <p style="margin-top:.4rem;color:var(--muted)">Hanya untuk keperluan security research &amp; penetration testing.</p>
+    <p>🛡️ <strong>APK Patch Suite</strong> — Flutter SSL Patch + ApkPatcher by <a href="https://github.com/AbhiTheModder" target="_blank">AbhiTheModder</a> & <a href="https://github.com/TechnoIndian" target="_blank">TechnoIndian</a></p>
+    <p style="margin-top:.4rem">Untuk tujuan security research, CTF, dan pembelajaran. Hormati ToS setiap aplikasi.</p>
+    <p style="margin-top:.6rem;font-size:.75rem;color:var(--muted)">Node.js v20 · Express 5 · Multer 2 · Python 3.12 · Apktool 2.10 · Java 21</p>
   </div>
 </footer>
 
-<!-- ═══════════════════════════ JAVASCRIPT ═══════════════════════════ -->
 <script>
-/* ════════════════════════════════
-   STATE
-════════════════════════════════ */
-let selectedFile = null;
+// ═══════════════════════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════════════════════
+const state = {
+  flutter: { file: null },
+  apk: { file: null, token: null, filename: null, scanDone: false, jobId: null, sse: null },
+};
 
-/* ════════════════════════════════
-   HEALTH CHECK
-════════════════════════════════ */
-async function checkHealth() {
+// ═══════════════════════════════════════════════════════
+//  MODE SWITCHER
+// ═══════════════════════════════════════════════════════
+function switchMode(mode, btn) {
+  document.querySelectorAll('.mode-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.mode-content').forEach(c => c.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('mode-' + mode).classList.add('active');
+}
+
+// ═══════════════════════════════════════════════════════
+//  TAB SWITCHER
+// ═══════════════════════════════════════════════════════
+function switchTab(btn, targetId) {
+  const parent = btn.closest('.tool-card') || btn.closest('.card') || document.body;
+  parent.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  parent.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById(targetId).classList.add('active');
+}
+
+// ═══════════════════════════════════════════════════════
+//  DRAG & DROP
+// ═══════════════════════════════════════════════════════
+function dzDrag(el, e) { e.preventDefault(); el.classList.add('dragover'); }
+function dzLeave(el)   { el.classList.remove('dragover'); }
+function dzDrop(el, e, mode) {
+  e.preventDefault();
+  el.classList.remove('dragover');
+  const f = e.dataTransfer.files[0];
+  if (f) setFile(mode, f);
+}
+
+// ═══════════════════════════════════════════════════════
+//  FILE SELECT
+// ═══════════════════════════════════════════════════════
+function onFileSelect(input, mode) {
+  if (input.files[0]) setFile(mode, input.files[0]);
+}
+
+function setFile(mode, file) {
+  state[mode].file = file;
+  const fp   = document.getElementById('fp-' + mode);
+  const name = document.getElementById('fp-' + mode + '-name');
+  const meta = document.getElementById('fp-' + mode + '-meta');
+  name.textContent = file.name;
+  meta.textContent = `${(file.size / 1024 / 1024).toFixed(2)} MB · ${file.type || 'binary'}`;
+  fp.classList.add('show');
+  if (mode === 'flutter') {
+    document.getElementById('btn-patch-flutter').disabled = false;
+  } else {
+    document.getElementById('btn-scan-apk').disabled = false;
+    // Reset scan if new file
+    state.apk.token = null;
+    state.apk.scanDone = false;
+    document.getElementById('scan-result').classList.remove('show');
+    document.getElementById('apk-step2').classList.remove('active');
+    document.getElementById('btn-patch-apk').disabled = true;
+  }
+}
+
+function clearFile(mode) {
+  state[mode].file = null;
+  document.getElementById('fp-' + mode).classList.remove('show');
+  document.getElementById('file-' + mode).value = '';
+  if (mode === 'flutter') {
+    document.getElementById('btn-patch-flutter').disabled = true;
+    clearLog('flutter');
+    document.getElementById('result-flutter').innerHTML = '';
+    document.getElementById('result-flutter').classList.remove('show');
+    document.getElementById('log-flutter').classList.remove('show');
+    document.getElementById('prog-flutter').classList.remove('show');
+  } else {
+    document.getElementById('btn-scan-apk').disabled = true;
+    state.apk.token = null; state.apk.scanDone = false;
+    document.getElementById('scan-result').classList.remove('show');
+    document.getElementById('apk-step2').classList.remove('active');
+  }
+}
+
+// ═══════════════════════════════════════════════════════
+//  LOG HELPERS
+// ═══════════════════════════════════════════════════════
+function addLog(mode, entry) {
+  const body = document.getElementById('log-' + mode + '-body');
+  document.getElementById('log-' + mode).classList.add('show');
+  const line = document.createElement('div');
+  line.className = 'log-line level-' + (entry.level || 'info');
+  const ts = new Date().toLocaleTimeString('id-ID', {hour:'2-digit',minute:'2-digit',second:'2-digit'});
+  line.innerHTML = `<span class="log-ts">[${ts}]</span><span class="log-text">${escHtml(entry.text)}</span>`;
+  body.appendChild(line);
+  body.scrollTop = body.scrollHeight;
+}
+function clearLog(mode) {
+  document.getElementById('log-' + mode + '-body').innerHTML = '';
+}
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// ═══════════════════════════════════════════════════════
+//  PROGRESS HELPERS
+// ═══════════════════════════════════════════════════════
+function setProgress(mode, pct, label) {
+  const wrap  = document.getElementById('prog-' + mode);
+  const fill  = document.getElementById('prog-' + mode + '-fill');
+  const lbl   = document.getElementById('prog-' + mode + '-label');
+  const pctEl = document.getElementById('prog-' + mode + '-pct');
+  wrap.classList.add('show');
+  fill.style.width = pct + '%';
+  if (label) lbl.textContent = label;
+  if (pct >= 0) pctEl.textContent = pct + '%';
+}
+
+// ═══════════════════════════════════════════════════════
+//  FLUTTER SSL PATCH
+// ═══════════════════════════════════════════════════════
+async function runFlutterPatch() {
+  const file = state.flutter.file;
+  if (!file) return;
+
+  const btn = document.getElementById('btn-patch-flutter');
+  btn.disabled = true;
+  btn.classList.add('loading');
+  clearLog('flutter');
+  document.getElementById('result-flutter').innerHTML = '';
+  document.getElementById('result-flutter').classList.remove('show');
+  setProgress('flutter', 10, 'Mengupload file...');
+  addLog('flutter', { level: 'step', text: 'Memulai patch Flutter SSL...' });
+
+  const fd = new FormData();
+  fd.append('file', file);
+  fd.append('arch', document.getElementById('arch-flutter').value);
+  fd.append('printOnly', document.getElementById('print-only-flutter').checked ? 'true' : 'false');
+
+  try {
+    setProgress('flutter', 30, 'Menganalisis binary...');
+    const resp = await fetch('/api/patch', { method: 'POST', body: fd });
+    setProgress('flutter', 70, 'Menerapkan patch...');
+    const data = await resp.json();
+
+    (data.log || []).forEach(e => addLog('flutter', e));
+    setProgress('flutter', 100, 'Selesai!');
+
+    showFlutterResult(data);
+  } catch (err) {
+    addLog('flutter', { level: 'error', text: 'Request gagal: ' + err.message });
+    setProgress('flutter', 0, 'Error');
+  } finally {
+    btn.disabled = false;
+    btn.classList.remove('loading');
+  }
+}
+
+function showFlutterResult(data) {
+  const el = document.getElementById('result-flutter');
+  el.classList.add('show');
+  if (!data.success) {
+    el.innerHTML = `<div class="result-error"><div class="res-head"><div class="res-icon res-icon-err">❌</div><div><div class="res-title">Patch Gagal</div><div class="res-sub">ssl_verify_peer_cert tidak ditemukan di binary ini.</div></div></div><div class="alert alert-warn"><span class="alert-icon">💡</span><div>Coba mode APK Patcher untuk bypass SSL via Smali patching, atau cek apakah file yang diupload adalah libflutter.so yang benar.</div></div></div>`;
+    return;
+  }
+  const m = data.meta || {};
+  if (data.printOnly) {
+    el.innerHTML = `<div class="result-success"><div class="res-head"><div class="res-icon res-icon-ok">🔍</div><div><div class="res-title">Print Only — Offset Ditemukan!</div><div class="res-sub">ssl_verify_peer_cert berhasil diidentifikasi (tidak dipatch).</div></div></div><div class="meta-grid"><div class="meta-item"><div class="meta-label">Architecture</div><div class="meta-val">${m.arch||'—'}</div></div><div class="meta-item"><div class="meta-label">Pattern</div><div class="meta-val">#${m.patternIdx||'—'}</div></div><div class="meta-item"><div class="meta-label">Found Offset</div><div class="meta-val">${m.foundOffset||'—'}</div></div><div class="meta-item"><div class="meta-label">Fn Start</div><div class="meta-val">${m.fnOffset||'—'}</div></div></div></div>`;
+    return;
+  }
+  el.innerHTML = `<div class="result-success"><div class="res-head"><div class="res-icon res-icon-ok">✅</div><div><div class="res-title">Patch Berhasil!</div><div class="res-sub">ssl_verify_peer_cert telah di-patch dengan ret0. SSL verification dinonaktifkan.</div></div></div><div class="meta-grid"><div class="meta-item"><div class="meta-label">Architecture</div><div class="meta-val">${m.arch||'—'}</div></div><div class="meta-item"><div class="meta-label">Pattern</div><div class="meta-val">#${m.patternIdx||'—'}</div></div><div class="meta-item"><div class="meta-label">Found Offset</div><div class="meta-val">${m.foundOffset||'—'}</div></div><div class="meta-item"><div class="meta-label">Fn Start</div><div class="meta-val">${m.fnOffset||'—'}</div></div><div class="meta-item"><div class="meta-label">Original Bytes</div><div class="meta-val" style="font-size:.72rem">${m.originalBytes||'—'}</div></div><div class="meta-item"><div class="meta-label">Patched Bytes</div><div class="meta-val" style="font-size:.72rem;color:var(--green2)">${m.patchedBytes||'—'}</div></div></div><div class="result-actions"><a class="btn-dl" href="/api/download/${data.downloadId}" download="${data.filename}"><svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>Download ${escHtml(data.filename||'patched.so')}</a><button class="btn-sec" onclick="clearFile('flutter')">🔄 Patch Lagi</button></div></div>`;
+}
+
+// ═══════════════════════════════════════════════════════
+//  APK SCAN
+// ═══════════════════════════════════════════════════════
+async function scanApk() {
+  const file = state.apk.file;
+  if (!file) return;
+
+  const btn = document.getElementById('btn-scan-apk');
+  btn.disabled = true;
+  btn.classList.add('loading');
+
+  const fd = new FormData();
+  fd.append('file', file);
+
+  try {
+    const resp = await fetch('/api/apk/scan', { method: 'POST', body: fd });
+    const data = await resp.json();
+
+    if (!data.success) throw new Error(data.error || 'Scan gagal');
+
+    state.apk.token    = data.token;
+    state.apk.filename = data.filename;
+    state.apk.scanDone = true;
+
+    // Show scan result
+    const sr = document.getElementById('scan-result');
+    const sb = document.getElementById('scan-badges');
+    sr.classList.add('show');
+    sb.innerHTML = '';
+
+    const add = (text, cls) => {
+      const b = document.createElement('span');
+      b.className = 'scan-badge chip ' + cls;
+      b.textContent = text;
+      sb.appendChild(b);
+    };
+
+    add('📄 ' + (data.filename || ''), 'chip-blue');
+    add('📦 ' + ((data.size||0)/1024/1024).toFixed(2) + ' MB', 'chip-purple');
+    if (data.files) add('🗂️ ' + data.files + ' files', 'chip-cyan');
+    if (data.pkg)   add('📛 ' + data.pkg, 'chip-yellow');
+    if (data.flutter) add('✅ Flutter detected', 'chip-green');
+    else              add('❌ No Flutter', 'chip-red');
+    if (data.pairip)  add('⚠️ Pairip detected', 'chip-orange');
+
+    // Auto-check flutter if detected
+    if (data.flutter) {
+      const chk = document.getElementById('chk-flutter');
+      if (!chk.checked) { chk.checked = true; document.getElementById('opt-flutter').classList.add('checked'); }
+    }
+
+    // Show step 2
+    document.getElementById('apk-step2').style.display = 'block';
+    document.getElementById('apk-step2').classList.add('active');
+    document.getElementById('btn-patch-apk').disabled = false;
+
+    btn.disabled = false;
+    btn.classList.remove('loading');
+
+    // Scroll to options
+    setTimeout(() => document.getElementById('apk-step2').scrollIntoView({ behavior: 'smooth', block: 'start' }), 300);
+
+  } catch (err) {
+    alert('Error: ' + err.message);
+    btn.disabled = false;
+    btn.classList.remove('loading');
+  }
+}
+
+// ═══════════════════════════════════════════════════════
+//  APK PATCH
+// ═══════════════════════════════════════════════════════
+function toggleOpt(el, key) {
+  const chk = el.querySelector('input[type=checkbox]');
+  // Handled by native checkbox; just update visual
+  setTimeout(() => {
+    if (chk.checked) el.classList.add('checked');
+    else el.classList.remove('checked');
+  }, 0);
+}
+
+async function runApkPatch() {
+  if (!state.apk.token) return alert('Scan APK dulu sebelum patch!');
+
+  const options = {
+    flutter:      document.getElementById('chk-flutter').checked,
+    pairip:       document.getElementById('chk-pairip').checked,
+    pairip_corex: document.getElementById('chk-pairip_corex').checked,
+    spoof_pkg:    document.getElementById('chk-spoof_pkg').checked,
+    remove_ads:   document.getElementById('chk-remove_ads').checked,
+    remove_ss:    document.getElementById('chk-remove_ss').checked,
+    remove_usb:   document.getElementById('chk-remove_usb').checked,
+    random_info:  document.getElementById('chk-random_info').checked,
+    purchase:     document.getElementById('chk-purchase').checked,
+    tg_patch:     document.getElementById('chk-tg_patch').checked,
+  };
+
+  const aid = document.getElementById('android-id-input').value.trim();
+  if (aid) options.android_id = aid;
+
+  const anySelected = Object.values(options).some(v => v === true);
+  if (!anySelected) return alert('Pilih minimal satu patch!');
+
+  // Show step 3
+  document.getElementById('btn-patch-apk').disabled = true;
+  document.getElementById('apk-step3').style.display = 'block';
+  document.getElementById('apk-step3').classList.add('active');
+  clearLog('apk');
+  document.getElementById('result-apk').innerHTML = '';
+  document.getElementById('result-apk').classList.remove('show');
+  document.getElementById('apk-reset-row').style.display = 'none';
+  setProgress('apk', 5, 'Memulai patch...');
+
+  try {
+    const resp = await fetch('/api/apk/patch', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token: state.apk.token, filename: state.apk.filename, options }),
+    });
+    const data = await resp.json();
+    if (!data.success) throw new Error(data.error || 'Gagal memulai job');
+
+    state.apk.jobId = data.jobId;
+    listenApkJob(data.jobId);
+
+    setTimeout(() => document.getElementById('apk-step3').scrollIntoView({ behavior: 'smooth', block: 'start' }), 300);
+  } catch (err) {
+    addLog('apk', { level: 'error', text: 'Gagal: ' + err.message });
+    document.getElementById('apk-reset-row').style.display = 'block';
+  }
+}
+
+function listenApkJob(jobId) {
+  if (state.apk.sse) state.apk.sse.close();
+
+  const sse = new EventSource('/api/apk/status/' + jobId);
+  state.apk.sse = sse;
+
+  let logCount = 0;
+
+  sse.onmessage = (e) => {
+    try {
+      const entry = JSON.parse(e.data);
+
+      if (entry.level === '__done__') {
+        sse.close();
+        setProgress('apk', 100, entry.success ? 'Selesai!' : 'Gagal');
+        showApkResult(entry);
+        document.getElementById('apk-reset-row').style.display = 'block';
+        return;
+      }
+
+      if (entry.level && entry.text) {
+        addLog('apk', entry);
+        logCount++;
+        // Estimate progress
+        const pct = Math.min(90, 5 + logCount * 2);
+        setProgress('apk', pct, 'Memproses...');
+      }
+    } catch {}
+  };
+
+  sse.onerror = () => {
+    sse.close();
+    addLog('apk', { level: 'warn', text: 'Koneksi SSE terputus. Menunggu...' });
+  };
+}
+
+function showApkResult(data) {
+  const el = document.getElementById('result-apk');
+  el.classList.add('show');
+
+  if (!data.success) {
+    el.innerHTML = `<div class="result-error" style="margin-top:1rem"><div class="res-head"><div class="res-icon res-icon-err">❌</div><div><div class="res-title">Patch Gagal</div><div class="res-sub">Lihat log di atas untuk detail error.</div></div></div><div class="alert alert-info"><span class="alert-icon">💡</span><div>Pastikan APK valid dan tidak terkorupsi. Coba deselect patch yang mungkin tidak cocok (misal: Flutter SSL jika bukan Flutter app).</div></div></div>`;
+    return;
+  }
+
+  el.innerHTML = `<div class="result-success" style="margin-top:1rem"><div class="res-head"><div class="res-icon res-icon-ok">✅</div><div><div class="res-title">APK Berhasil Di-Patch!</div><div class="res-sub">File APK telah di-patch, di-sign, dan siap didownload.</div></div></div><div class="result-actions"><a class="btn-dl" href="/api/apk/download/${data.downloadId}" download="${escHtml(data.filename||'patched.apk')}"><svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>Download ${escHtml(data.filename||'patched.apk')}</a></div><div class="alert alert-warn" style="margin-top:.75rem"><span class="alert-icon">📱</span><div>Install APK di perangkat Android. Jika Pairip: install di VM/Multi-App. Jika Flutter SSL: intercept traffic dengan Burp/mitmproxy.</div></div></div>`;
+}
+
+function resetApkPatcher() {
+  if (state.apk.sse) state.apk.sse.close();
+  state.apk = { file: null, token: null, filename: null, scanDone: false, jobId: null, sse: null };
+
+  clearFile('apk');
+  document.getElementById('scan-result').classList.remove('show');
+  document.getElementById('apk-step2').classList.remove('active');
+  document.getElementById('apk-step2').style.display = 'none';
+  document.getElementById('apk-step3').classList.remove('active');
+  document.getElementById('apk-step3').style.display = 'none';
+  document.getElementById('result-apk').innerHTML = '';
+  document.getElementById('result-apk').classList.remove('show');
+  clearLog('apk');
+  document.getElementById('prog-apk').classList.remove('show');
+  document.getElementById('apk-reset-row').style.display = 'none';
+
+  // Uncheck all
+  ['flutter','pairip','pairip_corex','spoof_pkg','remove_ads','remove_ss','remove_usb','random_info','purchase','tg_patch'].forEach(k => {
+    const chk = document.getElementById('chk-' + k);
+    if (chk) { chk.checked = false; document.getElementById('opt-' + k).classList.remove('checked'); }
+  });
+  document.getElementById('android-id-input').value = '';
+
+  window.scrollTo({ top: document.getElementById('tool').offsetTop - 80, behavior: 'smooth' });
+}
+
+// ═══════════════════════════════════════════════════════
+//  COPY CODE
+// ═══════════════════════════════════════════════════════
+function copyCode(btn) {
+  const code = btn.closest('.code-blk').querySelector('code');
+  navigator.clipboard.writeText(code.textContent.trim()).then(() => {
+    btn.textContent = '✓ Copied!';
+    btn.classList.add('ok');
+    setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('ok'); }, 1800);
+  });
+}
+
+// ═══════════════════════════════════════════════════════
+//  PASTE SUPPORT (Ctrl+V)
+// ═══════════════════════════════════════════════════════
+document.addEventListener('paste', e => {
+  const files = e.clipboardData?.files;
+  if (files?.length) {
+    const f = files[0];
+    if (/\.(so|bin)$/i.test(f.name)) setFile('flutter', f);
+    else if (/\.(apk|xapk|apkm|apks)$/i.test(f.name)) setFile('apk', f);
+  }
+});
+
+// ═══════════════════════════════════════════════════════
+//  HEALTH CHECK ON LOAD
+// ═══════════════════════════════════════════════════════
+window.addEventListener('DOMContentLoaded', async () => {
   try {
     const r = await fetch('/api/health');
     const d = await r.json();
-    document.getElementById('nodeVer').textContent = d.node || '—';
-    document.getElementById('uptime').textContent = formatUptime(d.uptime || 0);
-    document.getElementById('serverStatus').textContent = '● Server Online';
-    document.getElementById('serverStatus').className = 'chip chip-green';
-  } catch {
-    document.getElementById('serverStatus').textContent = '● Offline';
-    document.getElementById('serverStatus').className = 'chip chip-red';
-  }
-}
-function formatUptime(s) {
-  if (s < 60) return s + 's';
-  if (s < 3600) return Math.floor(s/60) + 'm ' + (s%60) + 's';
-  return Math.floor(s/3600) + 'h ' + Math.floor((s%3600)/60) + 'm';
-}
-checkHealth();
-setInterval(checkHealth, 30000);
-
-/* ════════════════════════════════
-   FILE HANDLING
-════════════════════════════════ */
-const dropzone   = document.getElementById('dropzone');
-const fileInput  = document.getElementById('fileInput');
-const filePreview= document.getElementById('filePreview');
-const btnPatch   = document.getElementById('btnPatch');
-
-function setFile(file) {
-  if (!file) return;
-  selectedFile = file;
-  document.getElementById('fpName').textContent = file.name;
-  document.getElementById('fpMeta').textContent =
-    `${(file.size/1024/1024).toFixed(2)} MB  ·  ${file.type || 'application/octet-stream'}`;
-  filePreview.classList.add('show');
-  btnPatch.disabled = false;
-  dropzone.style.display = 'none';
-  clearResult();
-}
-
-function clearFile() {
-  selectedFile = null;
-  fileInput.value = '';
-  filePreview.classList.remove('show');
-  dropzone.style.display = '';
-  btnPatch.disabled = true;
-  clearResult();
-  hideProgress();
-}
-
-fileInput.addEventListener('change', e => setFile(e.target.files[0]));
-document.getElementById('fpRemove').addEventListener('click', clearFile);
-
-// Drag & drop
-dropzone.addEventListener('dragover', e => { e.preventDefault(); dropzone.classList.add('dragover'); });
-dropzone.addEventListener('dragleave', () => dropzone.classList.remove('dragover'));
-dropzone.addEventListener('drop', e => {
-  e.preventDefault();
-  dropzone.classList.remove('dragover');
-  const file = e.dataTransfer.files[0];
-  if (file) { fileInput.files = e.dataTransfer.files; setFile(file); }
-});
-
-/* ════════════════════════════════
-   LOG
-════════════════════════════════ */
-const logPanel = document.getElementById('logPanel');
-const logBody  = document.getElementById('logBody');
-
-function showLog()    { logPanel.classList.add('show'); }
-function clearLogUI() { logBody.innerHTML = ''; }
-
-function addLog(lines) {
-  showLog();
-  lines.forEach(item => {
-    const ts = new Date().toLocaleTimeString('id-ID', {hour12:false});
-    const div = document.createElement('div');
-    div.className = `log-line level-${item.level || 'info'}`;
-    div.innerHTML = `<span class="log-ts">${ts}</span><span class="log-text">${escHtml(item.text)}</span>`;
-    logBody.appendChild(div);
-  });
-  logBody.scrollTop = logBody.scrollHeight;
-}
-
-document.getElementById('logClear').addEventListener('click', () => {
-  clearLogUI();
-});
-
-function escHtml(s) {
-  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-}
-
-/* ════════════════════════════════
-   PROGRESS
-════════════════════════════════ */
-const progressWrap = document.getElementById('progressWrap');
-const progressBar  = document.getElementById('progressBar');
-const progressLbl  = document.getElementById('progressLabel');
-const progressPct  = document.getElementById('progressPct');
-
-function showProgress(label, pct) {
-  progressWrap.classList.add('show');
-  progressLbl.textContent = label;
-  progressPct.textContent = pct + '%';
-  progressBar.style.width = pct + '%';
-}
-function hideProgress() {
-  progressWrap.classList.remove('show');
-  progressBar.style.width = '0%';
-}
-
-/* ════════════════════════════════
-   RESULT
-════════════════════════════════ */
-const resultPanel = document.getElementById('resultPanel');
-function clearResult() {
-  resultPanel.innerHTML = '';
-  resultPanel.classList.remove('show');
-}
-
-function showSuccess(data) {
-  resultPanel.classList.add('show');
-  const isPrintOnly = data.printOnly;
-  const meta = data.meta || {};
-
-  const dlBtn = isPrintOnly ? '' : `
-    <div style="display:flex;align-items:center;flex-wrap:wrap;gap:.75rem;margin-top:1.25rem">
-      <a class="btn-dl" href="/api/download/${data.downloadId}" download="${escHtml(data.filename)}">
-        <svg viewBox="0 0 24 24"><path d="M12 16l-4-4h3V4h2v8h3l-4 4zm-7 4v-2h14v2H5z"/></svg>
-        Download ${escHtml(data.filename)}
-      </a>
-      <button class="btn-reset" onclick="resetTool()">⟳ Patch File Lain</button>
-    </div>`;
-
-  const metaHtml = Object.keys(meta).length ? `
-    <div class="meta-grid">
-      ${Object.entries(meta).map(([k,v]) => `
-        <div class="meta-item">
-          <div class="meta-label">${escHtml(k)}</div>
-          <div class="meta-val">${escHtml(String(v))}</div>
-        </div>`).join('')}
-    </div>` : '';
-
-  resultPanel.innerHTML = `
-    <div class="result-success fade-up">
-      <div class="res-head">
-        <div class="res-icon res-icon-ok">✅</div>
-        <div>
-          <div class="res-title">${isPrintOnly ? 'Analisis Selesai (Print Only)' : 'Patch Berhasil!'}</div>
-          <div class="res-sub">${isPrintOnly
-            ? 'Informasi offset ditemukan. File tidak dimodifikasi.'
-            : `File siap di-download · ${((data.sizeBytes||0)/1024/1024).toFixed(2)} MB`}</div>
-        </div>
-      </div>
-      ${metaHtml}
-      ${dlBtn}
-      ${isPrintOnly ? `<button class="btn-reset" style="margin-top:.75rem" onclick="resetTool()">⟳ Patch File Lain</button>` : ''}
-    </div>`;
-}
-
-function showError(msg) {
-  resultPanel.classList.add('show');
-  resultPanel.innerHTML = `
-    <div class="result-error fade-up">
-      <div class="res-head">
-        <div class="res-icon res-icon-err">❌</div>
-        <div>
-          <div class="res-title">Gagal</div>
-          <div class="res-sub">${escHtml(msg)}</div>
-        </div>
-      </div>
-      <button class="btn-reset" style="margin-top:.75rem" onclick="resetTool()">⟳ Coba Lagi</button>
-    </div>`;
-}
-
-function resetTool() {
-  clearFile();
-  clearResult();
-  clearLogUI();
-  logPanel.classList.remove('show');
-  hideProgress();
-}
-
-/* ════════════════════════════════
-   PATCH SUBMIT
-════════════════════════════════ */
-btnPatch.addEventListener('click', async () => {
-  if (!selectedFile) return;
-
-  btnPatch.disabled = true;
-  btnPatch.classList.add('loading');
-  clearResult();
-  clearLogUI();
-  showLog();
-
-  const arch      = document.getElementById('archSelect').value;
-  const printOnly = document.getElementById('printToggle').checked;
-
-  // Fake progress steps for UX
-  const steps = [
-    [5,  'Mengunggah file...'],
-    [20, 'Menganalisis ELF binary...'],
-    [40, 'Mendeteksi arsitektur...'],
-    [60, 'Mencari pattern...'],
-    [80, 'Menerapkan patch...'],
-    [95, 'Menyiapkan download...'],
-  ];
-  let stepIdx = 0;
-  const progTimer = setInterval(() => {
-    if (stepIdx < steps.length) {
-      showProgress(steps[stepIdx][1], steps[stepIdx][0]);
-      stepIdx++;
-    }
-  }, 400);
-
-  try {
-    const fd = new FormData();
-    fd.append('file', selectedFile);
-    fd.append('arch', arch);
-    fd.append('printOnly', printOnly ? 'true' : 'false');
-
-    const resp = await fetch('/api/patch', { method: 'POST', body: fd });
-    clearInterval(progTimer);
-    showProgress('Selesai!', 100);
-
-    const data = await resp.json();
-
-    if (data.log) addLog(data.log);
-
-    setTimeout(() => {
-      hideProgress();
-      btnPatch.classList.remove('loading');
-      btnPatch.disabled = false;
-
-      if (data.success) {
-        showSuccess(data);
-      } else {
-        const lastErr = (data.log||[]).filter(l=>l.level==='error').pop();
-        showError(lastErr ? lastErr.text : (data.error || 'Terjadi kesalahan tidak diketahui'));
-      }
-    }, 600);
-
-  } catch (err) {
-    clearInterval(progTimer);
-    hideProgress();
-    btnPatch.classList.remove('loading');
-    btnPatch.disabled = false;
-    showError('Network error: ' + err.message);
-  }
-});
-
-/* ════════════════════════════════
-   TABS
-════════════════════════════════ */
-function showTab(group, id, btn) {
-  // Hide all panes in same group
-  document.querySelectorAll(`[id^="${group}-"]`).forEach(p => p.classList.remove('active'));
-  // Deactivate sibling buttons
-  btn.closest('.tabs').querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-  // Show target
-  const target = document.getElementById(`${group}-${id}`);
-  if (target) target.classList.add('active');
-  btn.classList.add('active');
-}
-
-/* ════════════════════════════════
-   COPY CODE
-════════════════════════════════ */
-function copyCode(btn) {
-  const code = btn.closest('.code-blk').querySelector('code');
-  navigator.clipboard.writeText(code.innerText).then(() => {
-    btn.textContent = '✓ Copied!';
-    btn.classList.add('ok');
-    setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('ok'); }, 2000);
-  });
-}
-
-/* ════════════════════════════════
-   PASTE SUPPORT  (Ctrl+V)
-════════════════════════════════ */
-document.addEventListener('paste', e => {
-  const items = e.clipboardData?.items || [];
-  for (const item of items) {
-    if (item.kind === 'file') {
-      const file = item.getAsFile();
-      if (file) { setFile(file); break; }
-    }
-  }
+    console.log('✅ APK Patch Suite', d.version, '| Node', d.node);
+  } catch {}
 });
 </script>
 </body>
