@@ -164,10 +164,12 @@ def main():
     # Find output APK
     base    = os.path.splitext(os.path.basename(apk_path))[0]
     apk_dir = os.path.dirname(apk_path)
+    home    = os.path.expanduser('~')
     candidates = [
         os.path.join(apk_dir, base + '_Patched.apk'),
         os.path.join(apk_dir, base + '_Patch.apk'),
-        os.path.join(os.path.expanduser('~'), base + '_Patched.apk'),
+        os.path.join(home,    base + '_Patched.apk'),
+        os.path.join(home,    base + '_Patch.apk'),
     ]
     found_apk = next((c for c in candidates if os.path.exists(c)), None)
     ok = False
@@ -178,12 +180,29 @@ def main():
         except Exception as e:
             emit('error', f'Move failed: {e}')
 
-    # Clean up decompile dir
-    for decomp_base in [apk_dir, os.path.expanduser('~')]:
-        decomp = os.path.join(decomp_base, base + '_decompiled')
-        if os.path.exists(decomp):
-            try: shutil.rmtree(decomp, ignore_errors=True)
+    # ── Full cleanup: decompile dir, SigBlock dir, leftover APKs, idsig ──
+    def _rmdir(p):
+        if os.path.isdir(p):
+            try: shutil.rmtree(p, ignore_errors=True)
             except: pass
+
+    def _rmfile(p):
+        if os.path.isfile(p):
+            try: os.unlink(p)
+            except: pass
+
+    for search_base in [apk_dir, home]:
+        _rmdir(os.path.join(search_base, base + '_decompiled'))
+        _rmdir(os.path.join(search_base, base + '_SigBlock'))
+        _rmfile(os.path.join(search_base, base + '_Patched.apk'))
+        _rmfile(os.path.join(search_base, base + '_Patch.apk'))
+        _rmfile(os.path.join(search_base, base + '_Patched.apk.idsig'))
+        _rmfile(os.path.join(search_base, base + '_Patch.apk.idsig'))
+
+    # Also clean up any anti-split merged APK left in uploads dir
+    _rmfile(apk_path)
+
+    emit('info', '🗑️  Temporary files cleaned up.')
 
     sys.stdout.write(json.dumps({'__result__': ok, 'returncode': returncode}) + '\n')
     sys.stdout.flush()

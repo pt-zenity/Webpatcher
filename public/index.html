@@ -2152,7 +2152,7 @@ function renderFlutterResult(data) {
       </div>
       <div class="alert alert-i" style="margin-top:.72rem">
         <span class="alert-ico">📱</span>
-        <div>Ganti <code style="font-family:'JetBrains Mono',monospace;font-size:.85em">libflutter.so</code> di dalam APK, re-sign &amp; install. Intercept dengan Burp Suite / mitmproxy. <strong>Link download valid 20 menit.</strong></div>
+        <div>Ganti <code style="font-family:'JetBrains Mono',monospace;font-size:.85em">libflutter.so</code> di dalam APK, re-sign &amp; install. Intercept dengan Burp Suite / mitmproxy. <strong>Link download valid 10 menit.</strong></div>
       </div>
     </div>`;
   toast('✅ Patch berhasil! Siap didownload.', 5000);
@@ -2461,7 +2461,7 @@ function renderApkResult(data) {
     <div class="res-ok">
       <div class="res-head">
         <div class="res-ico res-ico-ok" aria-hidden="true">✅</div>
-        <div><div class="res-t">APK Berhasil Di-Patch!</div><div class="res-s">APK telah di-patch, di-sign &amp; siap didownload. <strong>Link expired dalam 30 menit.</strong></div></div>
+        <div><div class="res-t">APK Berhasil Di-Patch!</div><div class="res-s">APK telah di-patch, di-sign &amp; siap didownload. <strong>Link expired dalam 10 menit.</strong></div></div>
       </div>
       <div class="res-actions">
         <a class="btn-dl" href="/api/apk/download/${esc(data.downloadId)}" download="${esc(data.filename||'patched.apk')}">

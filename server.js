@@ -82,22 +82,71 @@ setInterval(() => {
 }, 15000);
 
 // ── Auto-cleanup ──────────────────────────────────────────────────────────────
+const FILE_TTL      = 10 * 60 * 1000;  // 10 menit — uploads & outputs
+const DECOMP_TTL    = 10 * 60 * 1000;  // 10 menit — folder decompile/recompile
+const JOB_TTL       = 60 * 60 * 1000;  // 1 jam   — job metadata di memory
+const CLEANUP_INTERVAL = 5 * 60 * 1000; // jalankan setiap 5 menit
+
+// Direktori & pola yang dibersihkan secara berkala
+const DECOMP_ROOTS  = ['/root', '/tmp', process.env.HOME || '/root'];
+const DECOMP_SUFFIX = ['_decompiled', '_SigBlock'];
+const LOOSE_SUFFIX  = ['_Patched.apk', '_Patch.apk', '_Patched.apk.idsig', '_Patch.apk.idsig'];
+
+function rmSafe(fp) {
+  try {
+    const st = fs.statSync(fp);
+    if (st.isDirectory()) fs.rmSync(fp, { recursive: true, force: true });
+    else                  fs.unlinkSync(fp);
+  } catch {}
+}
+
 function cleanup() {
-  const MAX_AGE = 60 * 60 * 1000; // 1 hour
   const now = Date.now();
+
+  // 1) Hapus file uploads & outputs yang lebih dari FILE_TTL
   for (const dir of [UPLOAD_DIR, OUTPUT_DIR]) {
     try {
       for (const f of fs.readdirSync(dir)) {
         const fp = path.join(dir, f);
-        try { if (now - fs.statSync(fp).mtimeMs > MAX_AGE) fs.unlinkSync(fp); } catch {}
+        try {
+          if (now - fs.statSync(fp).mtimeMs > FILE_TTL) rmSafe(fp);
+        } catch {}
       }
     } catch {}
   }
+
+  // 2) Hapus folder decompile / SigBlock & file APK sementara di HOME dan /tmp
+  const checked = new Set();
+  for (const root of DECOMP_ROOTS) {
+    if (checked.has(root)) continue;
+    checked.add(root);
+    let entries;
+    try { entries = fs.readdirSync(root); } catch { continue; }
+    for (const entry of entries) {
+      // folder: *_decompiled, *_SigBlock
+      const matchDir = DECOMP_SUFFIX.some(s => entry.endsWith(s));
+      // file: *_Patched.apk, *_Patch.apk, *.idsig
+      const matchFile = LOOSE_SUFFIX.some(s => entry.endsWith(s));
+      if (!matchDir && !matchFile) continue;
+      const fp = path.join(root, entry);
+      try {
+        if (now - fs.statSync(fp).mtimeMs > DECOMP_TTL) {
+          rmSafe(fp);
+          console.log(`[cleanup] removed: ${fp}`);
+        }
+      } catch {}
+    }
+  }
+
+  // 3) Hapus job metadata lama dari memori
   for (const [id, job] of activeJobs.entries()) {
-    if (job.done && (now - job.createdAt) > MAX_AGE) activeJobs.delete(id);
+    if (job.done && (now - job.createdAt) > JOB_TTL) activeJobs.delete(id);
   }
 }
-setInterval(cleanup, 10 * 60 * 1000);
+
+// Jalankan segera saat startup, lalu setiap CLEANUP_INTERVAL
+cleanup();
+setInterval(cleanup, CLEANUP_INTERVAL);
 
 // ═════════════════════════════════════════════════════════════════════════════
 //  FLUTTER SSL PATCH
@@ -127,7 +176,7 @@ app.post('/api/patch', (req, res) => {
       const outName    = req.file.originalname.replace(/\.so$/i, '_patched.so').replace(/\.bin$/i, '_patched.bin');
       const outputPath = path.join(OUTPUT_DIR, `${jobId}_${outName}`);
       fs.writeFileSync(outputPath, result.patchedBuf);
-      setTimeout(() => { try { fs.unlinkSync(outputPath); } catch {} }, 20 * 60 * 1000);
+      setTimeout(() => { try { fs.unlinkSync(outputPath); } catch {} }, FILE_TTL);
 
       return res.json({ success: true, printOnly: false, log: result.log, meta: result.meta,
         downloadId: jobId, filename: outName, sizeBytes: result.patchedBuf.length });
@@ -165,7 +214,7 @@ app.get('/api/download/:id', (req, res) => {
   let files;
   try { files = fs.readdirSync(OUTPUT_DIR).filter(f => f.startsWith(id + '_')); }
   catch { return res.status(500).json({ error: 'Storage error' }); }
-  if (!files.length) return res.status(404).json({ error: 'File tidak ditemukan atau sudah expired (20 menit).' });
+  if (!files.length) return res.status(404).json({ error: 'File tidak ditemukan atau sudah expired (10 menit).' });
 
   const fullPath = path.join(OUTPUT_DIR, files[0]);
   const outName  = files[0].slice(id.length + 1);
@@ -189,7 +238,7 @@ app.post('/api/apk/scan', (req, res) => {
       const token    = uuidv4();
       const destPath = path.join(UPLOAD_DIR, `${token}_${req.file.originalname.replace(/[^a-zA-Z0-9._-]/g, '_')}`);
       fs.renameSync(req.file.path, destPath);
-      setTimeout(() => { try { fs.unlinkSync(destPath); } catch {} }, 60 * 60 * 1000);
+      setTimeout(() => { try { fs.unlinkSync(destPath); } catch {} }, FILE_TTL);
 
       return res.json({ success: true, token,
         filename: req.file.originalname, size: req.file.size, ...info });
@@ -244,7 +293,7 @@ app.post('/api/apk/patch', (req, res) => {
       job.success = result.success;
       if (result.success && fs.existsSync(outputPath)) {
         job.downloadId = jobId;
-        setTimeout(() => { try { fs.unlinkSync(outputPath); } catch {} }, 30 * 60 * 1000);
+        setTimeout(() => { try { fs.unlinkSync(outputPath); } catch {} }, FILE_TTL);
       }
       try { if (fs.existsSync(apkPath)) fs.unlinkSync(apkPath); } catch {}
       onLog(result.success
@@ -314,7 +363,7 @@ app.get('/api/apk/download/:jobId', (req, res) => {
   let files;
   try { files = fs.readdirSync(OUTPUT_DIR).filter(f => f.startsWith(jobId + '_')); }
   catch { return res.status(500).json({ error: 'Storage error' }); }
-  if (!files.length) return res.status(404).json({ error: 'File tidak ditemukan atau sudah expired (30 menit).' });
+  if (!files.length) return res.status(404).json({ error: 'File tidak ditemukan atau sudah expired (10 menit).' });
 
   const fullPath = path.join(OUTPUT_DIR, files[0]);
   const outName  = files[0].slice(jobId.length + 1);
