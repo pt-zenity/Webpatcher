@@ -10,7 +10,7 @@ const { patchBinary, detectArch } = require('./patcher');
 const { patchApk, detectApkType } = require('./apk_patcher');
 
 const app  = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3001;
 
 // ── Directories ───────────────────────────────────────────────────────────────
 const UPLOAD_DIR = path.join(__dirname, 'uploads');

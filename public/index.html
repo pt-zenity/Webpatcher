@@ -153,15 +153,6 @@ body{
   width:6px;height:6px;border-radius:50%;background:var(--green);
   animation:pulse-dot 2s ease-in-out infinite;flex-shrink:0;
 }
-.nav-gh{
-  display:flex;align-items:center;gap:.38rem;
-  background:rgba(255,255,255,.04);border:1px solid var(--border2);
-  color:var(--text2);font-size:.74rem;font-weight:600;
-  padding:.34rem .75rem;border-radius:8px;text-decoration:none;transition:var(--t);
-  min-height:36px;
-}
-.nav-gh:hover{background:rgba(255,255,255,.08);color:#fff;border-color:var(--border3)}
-.nav-gh svg{width:14px;height:14px;fill:currentColor;flex-shrink:0}
 @media(max-width:720px){.nav-center{display:none}}
 @media(max-width:480px){.nav-version,.nav-status{display:none}}
 
@@ -1015,10 +1006,7 @@ footer a:hover{color:var(--blue)}
         <span class="nav-status-dot" aria-hidden="true"></span>
         <span id="nav-online-txt">Memeriksa…</span>
       </div>
-      <a class="nav-gh" href="https://github.com/TechnoIndian/ApkPatcher" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .3a12 12 0 0 0-3.8 23.38c.6.11.82-.26.82-.58l-.02-2.04c-3.34.73-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.09-.74.08-.73.08-.73 1.21.09 1.85 1.24 1.85 1.24 1.07 1.84 2.81 1.3 3.5 1 .1-.78.42-1.3.76-1.6-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.14-.3-.54-1.52.1-3.18 0 0 1-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.28-1.55 3.29-1.23 3.29-1.23.65 1.66.24 2.88.12 3.18a4.65 4.65 0 0 1 1.23 3.22c0 4.61-2.8 5.63-5.48 5.92.43.37.81 1.1.81 2.22l-.01 3.29c0 .32.21.7.82.58A12 12 0 0 0 12 .3z"/></svg>
-        GitHub
-      </a>
+
     </div>
   </div>
 </nav>
@@ -1659,7 +1647,7 @@ apksigner sign --ks key.jks app.apk</code></pre>
     </p>
     <p style="margin-top:.4rem;font-size:.68rem;color:var(--text4)">Untuk security research, CTF &amp; edukasi. Hormati Terms of Service setiap aplikasi.</p>
     <p style="margin-top:.75rem;font-size:.66rem;color:var(--text4)">
-      Node.js v20 · Express 5 · Python 3.12 · Apktool 2.10 · Java 21 · ApkPatcherX v0.4
+      <span id="footer-versions">Node.js v20 · Express 5 · Python 3.12 · Apktool 2.10 · Java 21 · ApkPatcherX v0.4</span>
     </p>
   </div>
 </footer>
@@ -1732,11 +1720,28 @@ function setConnStatus(state) {
   const el = document.getElementById('conn-status');
   if (!el) return;
   el.className = '';
-  if (state === 'offline')      { el.className='offline'; el.textContent='⚠ Offline'; }
+  if (state === 'offline')           { el.className='offline'; el.textContent='⚠ Offline'; }
   else if (state === 'reconnecting') { el.className='reconnecting'; el.textContent='🔄 Menyambung…'; }
+  // 'ok' state: hide the floating badge (conn-status is only shown for problems)
 }
-window.addEventListener('online',  () => { setConnStatus('ok'); toast('✅ Koneksi kembali'); });
-window.addEventListener('offline', () => { setConnStatus('offline'); toast('⚠️ Koneksi terputus!', 5000); });
+
+function setNavStatus(online) {
+  const navStatus = document.querySelector('.nav-status');
+  const navDot    = document.querySelector('.nav-status-dot');
+  const navTxt    = document.getElementById('nav-online-txt');
+  if (navStatus) {
+    navStatus.style.background = online
+      ? 'rgba(34,211,165,.08)' : 'rgba(245,101,101,.08)';
+    navStatus.style.borderColor = online
+      ? 'rgba(34,211,165,.18)' : 'rgba(245,101,101,.18)';
+    navStatus.style.color = online ? 'var(--green)' : 'var(--red2)';
+  }
+  if (navDot) navDot.style.background = online ? 'var(--green)' : 'var(--red2)';
+  if (navTxt) navTxt.textContent = online ? 'Online' : 'Offline';
+}
+
+window.addEventListener('online',  () => { setConnStatus('ok'); setNavStatus(true);  toast('✅ Koneksi kembali'); });
+window.addEventListener('offline', () => { setConnStatus('offline'); setNavStatus(false); toast('⚠️ Koneksi terputus!', 5000); });
 
 /* ═══ MODE & TAB ═══ */
 function switchMode(mode, btn) {
@@ -2488,6 +2493,10 @@ function resetApk() {
   if (prog) prog.classList.remove('show');
   const progFill = document.getElementById('prog-a-fill');
   if (progFill) { progFill.style.width='3%'; progFill.className='prog-fill'; progFill.setAttribute('aria-valuenow','3'); }
+  const progLbl = document.getElementById('prog-a-lbl');
+  if (progLbl) progLbl.textContent = 'Menunggu…';
+  const progPct = document.getElementById('prog-a-pct');
+  if (progPct) progPct.textContent = '';
   document.getElementById('apk-reset-row')?.classList.add('hidden');
   const pill = document.getElementById('job-pill');
   if (pill) { pill.className='status-pill sp-run sp-pulse'; pill.textContent='Menjalankan ApkPatcher…'; }
@@ -2556,21 +2565,31 @@ window.addEventListener('DOMContentLoaded', async () => {
       finally { clearTimeout(tId); }
       if (!r.ok) throw new Error(`HTTP ${r.status}`);
       const d = await r.json();
+      healthAttempts = 0; // reset retry counter on success
 
-      // Update all status elements
+      // Update all status elements → Online
       ['srv-status-f','srv-status-a'].forEach(id => {
         const el = document.getElementById(id);
         if (el) { el.textContent='Online'; el.style.color='var(--green)'; }
       });
-      const navTxt = document.getElementById('nav-online-txt');
-      if (navTxt) navTxt.textContent = 'Online';
+      setNavStatus(true);
+      setConnStatus('ok');
       const statEl = document.getElementById('stat-status');
       if (statEl) { statEl.textContent = 'Online'; statEl.style.color = 'var(--green)'; }
 
+      // Show version in footer dynamically
+      const footerVer = document.getElementById('footer-versions');
+      if (footerVer && d.node) {
+        footerVer.textContent =
+          `Node.js ${d.node} · Express 5 · Python 3.12 · Apktool 2.10 · Java 21 · v${d.version||'3.1.0'}`;
+      }
+
+      // Warn if APK tools partial
       if (d.tools && (!d.tools.java || !d.tools.apktool || !d.tools.python3)) {
+        const missing = Object.entries(d.tools).filter(([,v])=>!v).map(([k])=>k).join(', ');
         ['srv-status-a'].forEach(id => {
           const el = document.getElementById(id);
-          if (el) { el.textContent='Partial'; el.style.color='var(--yellow)'; }
+          if (el) { el.textContent=`Partial (${missing})`; el.style.color='var(--yellow)'; }
         });
       }
     } catch (err) {
@@ -2581,13 +2600,14 @@ window.addEventListener('DOMContentLoaded', async () => {
         const el = document.getElementById(id);
         if (el) { el.textContent='Offline'; el.style.color='var(--red2)'; }
       });
-      const navTxt = document.getElementById('nav-online-txt');
-      if (navTxt) navTxt.textContent = 'Offline';
+      setNavStatus(false);
       const statEl = document.getElementById('stat-status');
       if (statEl) { statEl.textContent = 'Offline'; statEl.style.color = 'var(--red2)'; }
     }
   }
   doHealthCheck();
+  // Auto-refresh health every 60 seconds
+  setInterval(() => { healthAttempts = 0; doHealthCheck(); }, 60000);
 });
 
 /* ═══ BEFORE UNLOAD ═══ */
