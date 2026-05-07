@@ -29,8 +29,6 @@
   --safe-bot:env(safe-area-inset-bottom,0px);
   --safe-l:env(safe-area-inset-left,0px);
   --safe-r:env(safe-area-inset-right,0px);
-  /* Touch target min sizes */
-  --touch-min:44px;
 }
 
 html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;height:100%}
@@ -49,45 +47,43 @@ body{
 /* ══ NAVBAR ══════════════════════════════════════════════════════════════ */
 .nav{
   position:sticky;top:0;z-index:300;
-  background:rgba(7,9,15,.94);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  background:rgba(7,9,15,.92);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
   border-bottom:1px solid var(--b1);
-  padding-left:max(.875rem,var(--safe-l));
-  padding-right:max(.875rem,var(--safe-r));
+  padding-left:max(1rem,var(--safe-l));padding-right:max(1rem,var(--safe-r));
 }
 .nav-inner{
   max-width:1200px;margin:0 auto;
-  height:52px;display:flex;align-items:center;justify-content:space-between;gap:.5rem;
+  height:56px;display:flex;align-items:center;justify-content:space-between;gap:.5rem;
 }
 .nav-brand{
-  display:flex;align-items:center;gap:.45rem;
-  font-weight:900;font-size:.92rem;color:#fff;text-decoration:none;
-  white-space:nowrap;flex-shrink:0;min-width:0;min-height:var(--touch-min);
+  display:flex;align-items:center;gap:.5rem;
+  font-weight:900;font-size:.95rem;color:#fff;text-decoration:none;
+  white-space:nowrap;flex-shrink:0;min-width:0;
 }
-.nav-brand .logo{font-size:1.25rem;line-height:1;flex-shrink:0}
+.nav-brand .logo{font-size:1.3rem;line-height:1;flex-shrink:0}
 .nav-brand .brand-text{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.nav-links{display:flex;gap:.05rem;flex-shrink:0}
+.nav-links{display:flex;gap:.1rem;flex-shrink:0}
 .nav-links a{
-  font-size:.76rem;font-weight:500;color:var(--mu2);
-  padding:.38rem .58rem;border-radius:6px;text-decoration:none;transition:var(--t);
-  white-space:nowrap;min-height:var(--touch-min);display:flex;align-items:center;
+  font-size:.78rem;font-weight:500;color:var(--mu2);
+  padding:.35rem .65rem;border-radius:6px;text-decoration:none;transition:var(--t);
+  white-space:nowrap;
 }
 .nav-links a:hover{background:rgba(255,255,255,.07);color:#fff}
 .nav-gh{
-  display:flex;align-items:center;gap:.38rem;flex-shrink:0;
+  display:flex;align-items:center;gap:.4rem;flex-shrink:0;
   background:rgba(255,255,255,.05);border:1px solid var(--b2);
-  color:var(--mu2);font-size:.74rem;font-weight:600;
-  padding:.35rem .75rem;border-radius:7px;text-decoration:none;transition:var(--t);
-  min-height:var(--touch-min);
+  color:var(--mu2);font-size:.75rem;font-weight:600;
+  padding:.35rem .8rem;border-radius:7px;text-decoration:none;transition:var(--t);
 }
 .nav-gh:hover{background:rgba(255,255,255,.1);color:#fff;border-color:var(--b3)}
-.nav-gh svg{width:14px;height:14px;fill:currentColor;flex-shrink:0}
-@media(max-width:680px){.nav-links{display:none}}
-@media(max-width:400px){.nav-gh .nav-gh-text{display:none}}
+.nav-gh svg{width:13px;height:13px;fill:currentColor;flex-shrink:0}
+@media(max-width:700px){.nav-links{display:none}}
+@media(max-width:420px){.nav-gh .nav-gh-text{display:none}}
 
 /* ══ HERO ════════════════════════════════════════════════════════════════ */
 .hero{
   position:relative;overflow:hidden;
-  padding:clamp(2rem,6vw,4rem) clamp(.875rem,4vw,1.5rem) clamp(1.5rem,4vw,2.75rem);
+  padding:clamp(2.25rem,7vw,4.5rem) clamp(1rem,4vw,1.5rem) clamp(1.75rem,5vw,3rem);
   text-align:center;
 }
 .hero::before{
@@ -100,25 +96,25 @@ body{
 .hero-badge{
   display:inline-flex;align-items:center;gap:.42rem;
   background:rgba(99,102,241,.12);border:1px solid rgba(99,102,241,.3);
-  color:var(--p2);font-size:.68rem;font-weight:700;letter-spacing:.07em;
-  padding:.28rem .88rem;border-radius:99px;margin-bottom:1rem;text-transform:uppercase;
+  color:var(--p2);font-size:.7rem;font-weight:700;letter-spacing:.07em;
+  padding:.3rem .95rem;border-radius:99px;margin-bottom:1.1rem;text-transform:uppercase;
 }
 .hero h1{
-  font-size:clamp(1.6rem,5vw,2.85rem);font-weight:900;
-  line-height:1.1;color:#fff;margin-bottom:.75rem;
+  font-size:clamp(1.7rem,5.5vw,3rem);font-weight:900;
+  line-height:1.1;color:#fff;margin-bottom:.8rem;
 }
 .grad{
   background:linear-gradient(135deg,#818cf8 0%,#6366f1 45%,#34d399 100%);
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
 }
 .hero-sub{
-  max-width:540px;margin:0 auto 1.4rem;
-  color:var(--mu2);font-size:clamp(.82rem,2.3vw,.97rem);
+  max-width:560px;margin:0 auto 1.5rem;
+  color:var(--mu2);font-size:clamp(.85rem,2.5vw,1rem);
 }
-.chips{display:flex;flex-wrap:wrap;justify-content:center;gap:.38rem;margin-bottom:1.75rem}
+.chips{display:flex;flex-wrap:wrap;justify-content:center;gap:.4rem;margin-bottom:2rem}
 .chip{
-  display:inline-flex;align-items:center;gap:.3rem;
-  font-size:.68rem;font-weight:700;padding:.24rem .7rem;border-radius:99px;white-space:nowrap;
+  display:inline-flex;align-items:center;gap:.32rem;
+  font-size:.7rem;font-weight:700;padding:.26rem .75rem;border-radius:99px;white-space:nowrap;
 }
 .ch-c{background:rgba(6,182,212,.1);color:var(--c2);border:1px solid rgba(6,182,212,.22)}
 .ch-o{background:rgba(249,115,22,.1);color:var(--o2);border:1px solid rgba(249,115,22,.22)}
@@ -129,25 +125,25 @@ body{
 
 /* ══ LAYOUT ══════════════════════════════════════════════════════════════ */
 .main{max-width:1200px;margin:0 auto;padding:0 clamp(.75rem,3vw,1.5rem) 5rem}
-.section{margin-bottom:2.25rem}
+.section{margin-bottom:2.5rem}
 .section-title{
   display:flex;align-items:center;gap:.5rem;
-  font-size:1rem;font-weight:800;color:#fff;margin-bottom:.9rem;
+  font-size:1.05rem;font-weight:800;color:#fff;margin-bottom:1rem;
 }
 
 /* ══ MODE SWITCHER ════════════════════════════════════════════════════════ */
 .mode-tabs{
-  display:grid;grid-template-columns:1fr 1fr;gap:.38rem;
+  display:grid;grid-template-columns:1fr 1fr;gap:.4rem;
   background:var(--card2);border:1px solid var(--b1);
-  border-radius:13px;padding:.35rem;margin-bottom:1.6rem;
+  border-radius:13px;padding:.38rem;margin-bottom:1.75rem;
 }
 .mode-tab{
-  display:flex;align-items:center;justify-content:center;gap:.45rem;
-  padding:.7rem .9rem;border-radius:9px;cursor:pointer;
-  font-size:.85rem;font-weight:700;transition:var(--t);
+  display:flex;align-items:center;justify-content:center;gap:.5rem;
+  padding:.75rem 1rem;border-radius:9px;cursor:pointer;
+  font-size:.86rem;font-weight:700;transition:var(--t);
   border:1px solid transparent;background:transparent;color:var(--mu2);
   -webkit-tap-highlight-color:transparent;font-family:inherit;
-  position:relative;min-height:var(--touch-min);
+  position:relative;
 }
 .mode-tab:hover{color:#fff;background:rgba(255,255,255,.05)}
 .mode-tab.active{
@@ -155,24 +151,23 @@ body{
   color:#fff;border-color:rgba(99,102,241,.35);
   box-shadow:0 4px 20px rgba(99,102,241,.16);
 }
-.mode-tab .ti{font-size:1.05rem;flex-shrink:0}
-.mode-tab .tl{font-size:.82rem;font-weight:700;line-height:1.2;text-align:left}
-.mode-tab .ts{font-size:.63rem;color:var(--mu);font-weight:500;line-height:1;text-align:left}
+.mode-tab .ti{font-size:1.1rem;flex-shrink:0}
+.mode-tab .tl{font-size:.83rem;font-weight:700;line-height:1.2}
+.mode-tab .ts{font-size:.66rem;color:var(--mu);font-weight:500;line-height:1}
 .mode-tab.active .ts{color:var(--mu2)}
 .mode-tab .tb{
-  font-size:.58rem;background:rgba(99,102,241,.18);color:var(--p2);
-  padding:.08rem .42rem;border-radius:99px;border:1px solid rgba(99,102,241,.28);
+  font-size:.6rem;background:rgba(99,102,241,.18);color:var(--p2);
+  padding:.09rem .45rem;border-radius:99px;border:1px solid rgba(99,102,241,.28);
   margin-left:auto;white-space:nowrap;flex-shrink:0;
 }
-@media(max-width:420px){
-  .mode-tab{flex-direction:column;gap:.24rem;padding:.6rem .35rem}
+@media(max-width:400px){
+  .mode-tab{flex-direction:column;gap:.28rem;padding:.65rem .4rem;font-size:.78rem}
   .mode-tab .tb{margin-left:0}
   .mode-tab .ts{display:none}
-  .mode-tab .tl{font-size:.76rem}
 }
 
 .mode-content{display:none}
-.mode-content.active{display:block;animation:fadeUp .28s ease}
+.mode-content.active{display:block;animation:fadeUp .3s ease}
 
 /* ══ TOOL CARD ════════════════════════════════════════════════════════════ */
 .tool-card{
@@ -183,30 +178,30 @@ body{
 .tool-card:hover{border-color:var(--b2)}
 
 .stats-bar{
-  display:flex;flex-wrap:wrap;gap:.5rem .75rem;
-  padding:.65rem 1.15rem;border-bottom:1px solid var(--b1);
+  display:flex;flex-wrap:wrap;gap:.6rem .85rem;
+  padding:.7rem 1.2rem;border-bottom:1px solid var(--b1);
   background:rgba(99,102,241,.04);
 }
-.si{display:flex;align-items:center;gap:.35rem;font-size:.74rem}
+.si{display:flex;align-items:center;gap:.38rem;font-size:.76rem}
 .sd{width:6px;height:6px;border-radius:50%;flex-shrink:0}
 .sl{color:var(--mu)}
 .sv{font-weight:700;color:#fff}
 
 .tool-header{
-  padding:1rem 1.35rem;border-bottom:1px solid var(--b1);
-  display:flex;align-items:flex-start;gap:.75rem;
+  padding:1.1rem 1.4rem;border-bottom:1px solid var(--b1);
+  display:flex;align-items:flex-start;gap:.8rem;
   background:rgba(99,102,241,.03);
 }
-.th-icon{font-size:1.45rem;line-height:1;flex-shrink:0;margin-top:.05rem}
-.th-title{font-size:.94rem;font-weight:800;color:#fff;margin-bottom:.1rem}
-.th-sub{font-size:.74rem;color:var(--mu);line-height:1.45}
+.th-icon{font-size:1.55rem;line-height:1;flex-shrink:0;margin-top:.05rem}
+.th-title{font-size:.97rem;font-weight:800;color:#fff;margin-bottom:.12rem}
+.th-sub{font-size:.76rem;color:var(--mu);line-height:1.45}
 
-.tool-body{padding:clamp(.85rem,2.8vw,1.5rem)}
+.tool-body{padding:clamp(.9rem,3vw,1.6rem)}
 
 /* ══ DROPZONE ════════════════════════════════════════════════════════════ */
 .dropzone{
   border:2px dashed var(--b2);border-radius:var(--r);
-  padding:clamp(1.5rem,5vw,2.5rem) clamp(.85rem,4vw,1.75rem);
+  padding:clamp(1.6rem,5vw,2.75rem) clamp(.9rem,4vw,2rem);
   text-align:center;cursor:pointer;transition:var(--t);
   position:relative;background:rgba(99,102,241,.02);
   -webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none;
@@ -219,48 +214,47 @@ body{
   width:100%;height:100%;font-size:0;
 }
 .dz-icon{
-  width:48px;height:48px;margin:0 auto .75rem;
+  width:50px;height:50px;margin:0 auto .8rem;
   background:rgba(99,102,241,.12);border:1px solid rgba(99,102,241,.25);
   border-radius:12px;display:flex;align-items:center;justify-content:center;
-  font-size:1.35rem;transition:var(--t);
+  font-size:1.4rem;transition:var(--t);
 }
 .dropzone:hover .dz-icon,.dropzone.over .dz-icon{
   transform:scale(1.08) translateY(-2px);background:rgba(99,102,241,.22);
 }
-.dz-title{font-weight:700;color:#fff;font-size:.9rem;margin-bottom:.25rem}
+.dz-title{font-weight:700;color:#fff;font-size:.92rem;margin-bottom:.28rem}
 .dz-title code{
-  background:rgba(99,102,241,.15);padding:.04rem .35rem;
-  border-radius:4px;color:var(--p2);font-size:.87em;
+  background:rgba(99,102,241,.15);padding:.05rem .38rem;
+  border-radius:4px;color:var(--p2);font-size:.88em;
 }
-.dz-sub{color:var(--mu);font-size:.78rem}
+.dz-sub{color:var(--mu);font-size:.8rem}
 .dz-hint{
-  display:inline-flex;align-items:center;gap:.32rem;margin-top:.65rem;
-  font-size:.68rem;color:var(--mu);background:rgba(255,255,255,.03);
-  border:1px solid var(--b1);padding:.24rem .65rem;border-radius:99px;
+  display:inline-flex;align-items:center;gap:.35rem;margin-top:.7rem;
+  font-size:.7rem;color:var(--mu);background:rgba(255,255,255,.03);
+  border:1px solid var(--b1);padding:.26rem .68rem;border-radius:99px;
 }
 @media(hover:none){.dz-hint .drag-only{display:none}}
 
 /* ══ FILE PREVIEW ═════════════════════════════════════════════════════════ */
 .file-preview{
-  display:none;align-items:center;gap:.75rem;
+  display:none;align-items:center;gap:.8rem;
   background:rgba(16,185,129,.05);border:1px solid rgba(16,185,129,.18);
-  border-radius:var(--rs);padding:.72rem .9rem;margin-top:.75rem;
+  border-radius:var(--rs);padding:.78rem .95rem;margin-top:.8rem;
   animation:fadeUp .25s ease;
 }
 .file-preview.show{display:flex}
 .fp-icon{
   width:34px;height:34px;min-width:34px;
   background:rgba(16,185,129,.14);border-radius:8px;
-  display:flex;align-items:center;justify-content:center;font-size:.92rem;
+  display:flex;align-items:center;justify-content:center;font-size:.95rem;
   flex-shrink:0;
 }
 .fp-info{flex:1;min-width:0}
-.fp-name{font-weight:700;color:#fff;font-size:.82rem;word-break:break-all;line-height:1.3}
-.fp-meta{font-size:.7rem;color:var(--mu2);margin-top:.07rem}
+.fp-name{font-weight:700;color:#fff;font-size:.83rem;word-break:break-all;line-height:1.3}
+.fp-meta{font-size:.72rem;color:var(--mu2);margin-top:.08rem}
 .fp-rm{
   margin-left:auto;flex-shrink:0;cursor:pointer;
-  width:28px;height:28px;min-width:28px;min-height:28px;
-  background:rgba(239,68,68,.1);
+  width:24px;height:24px;background:rgba(239,68,68,.1);
   border:1px solid rgba(239,68,68,.2);border-radius:6px;
   display:flex;align-items:center;justify-content:center;
   font-size:.75rem;color:var(--r2);transition:var(--t);
@@ -269,102 +263,98 @@ body{
 .fp-rm:hover{background:rgba(239,68,68,.28)}
 
 /* ══ UPLOAD PROGRESS ══════════════════════════════════════════════════════ */
-.up-prog{display:none;margin-top:.6rem}
+.up-prog{display:none;margin-top:.65rem}
 .up-prog.show{display:block;animation:fadeUp .2s ease}
-.up-prog-label{font-size:.7rem;color:var(--mu2);display:flex;justify-content:space-between;margin-bottom:.26rem}
+.up-prog-label{font-size:.72rem;color:var(--mu2);display:flex;justify-content:space-between;margin-bottom:.28rem}
 .up-prog-bar{height:4px;border-radius:99px;background:var(--b1);overflow:hidden}
-.up-prog-fill{height:100%;background:linear-gradient(90deg,var(--p3),var(--p2));border-radius:99px;transition:width .1s linear;width:0}
+.up-prog-fill{height:100%;background:linear-gradient(90deg,var(--p3),var(--p2));border-radius:99px;transition:width .12s linear;width:0}
 
 /* ══ OPTIONS ══════════════════════════════════════════════════════════════ */
 .opt-row{
-  display:grid;grid-template-columns:1fr 1fr;gap:.75rem;
-  margin-top:1rem;
+  display:grid;grid-template-columns:1fr 1fr;gap:.8rem;
+  margin-top:1.1rem;
 }
-@media(max-width:500px){.opt-row{grid-template-columns:1fr}}
+@media(max-width:520px){.opt-row{grid-template-columns:1fr}}
 
 .opt-group label.opt-label{
-  display:block;font-size:.7rem;font-weight:700;
-  color:var(--mu2);letter-spacing:.05em;text-transform:uppercase;margin-bottom:.36rem;
+  display:block;font-size:.72rem;font-weight:700;
+  color:var(--mu2);letter-spacing:.05em;text-transform:uppercase;margin-bottom:.38rem;
 }
 .sel-wrap{position:relative}
 .sel-wrap select{
   width:100%;background:var(--card2);border:1px solid var(--b2);border-radius:var(--rs);
-  color:var(--txt);font-size:.83rem;padding:.58rem .9rem;padding-right:2rem;
+  color:var(--txt);font-size:.84rem;padding:.55rem .9rem;padding-right:2.1rem;
   outline:none;transition:var(--t);cursor:pointer;appearance:none;-webkit-appearance:none;
-  min-height:var(--touch-min);
 }
 .sel-wrap select:focus{border-color:var(--p);box-shadow:0 0 0 2px rgba(99,102,241,.18)}
 .sel-wrap::after{
-  content:'▾';position:absolute;right:.72rem;top:50%;transform:translateY(-50%);
-  color:var(--mu);pointer-events:none;font-size:.74rem;
+  content:'▾';position:absolute;right:.75rem;top:50%;transform:translateY(-50%);
+  color:var(--mu);pointer-events:none;font-size:.76rem;
 }
 
 /* Toggle switch */
-.tg-row{display:flex;align-items:center;gap:.58rem;margin-top:.3rem}
+.tg-row{display:flex;align-items:center;gap:.6rem;margin-top:.32rem}
 .tg{
   position:relative;display:inline-flex;align-items:center;
-  width:38px;height:22px;cursor:pointer;flex-shrink:0;
-  /* increase touch target */
-  padding:.5rem .25rem;margin:-.5rem -.25rem;
+  width:38px;height:21px;cursor:pointer;flex-shrink:0;
 }
 .tg input{opacity:0;width:0;height:0;position:absolute}
-.tg-track{width:38px;height:22px;background:var(--b2);border-radius:99px;transition:var(--t);pointer-events:none}
+.tg-track{width:38px;height:21px;background:var(--b2);border-radius:99px;transition:var(--t)}
 .tg input:checked+.tg-track{background:var(--p)}
 .tg-thumb{
-  position:absolute;left:calc(.25rem + 3px);top:calc(.5rem + 3px);width:16px;height:16px;
+  position:absolute;left:3px;top:2.5px;width:16px;height:16px;
   border-radius:99px;background:#fff;transition:var(--t);
-  box-shadow:0 1px 4px rgba(0,0,0,.3);pointer-events:none;
+  box-shadow:0 1px 4px rgba(0,0,0,.3);
 }
-.tg input:checked~.tg-thumb{transform:translateX(16px)}
-.tg-label{font-size:.8rem;color:var(--mu2);cursor:pointer;line-height:1.35;user-select:none}
+.tg input:checked~.tg-thumb{transform:translateX(17px)}
+.tg-label{font-size:.82rem;color:var(--mu2);cursor:pointer;line-height:1.35;user-select:none}
 
 /* Patch option cards */
 .patch-grid{
   display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(min(100%,240px),1fr));
-  gap:.5rem;margin-top:.65rem;
+  grid-template-columns:repeat(auto-fill,minmax(min(100%,250px),1fr));
+  gap:.55rem;margin-top:.7rem;
 }
 @media(max-width:420px){.patch-grid{grid-template-columns:1fr}}
 
 .popt{
-  display:flex;align-items:flex-start;gap:.55rem;
-  padding:.72rem .82rem;background:rgba(255,255,255,.025);
+  display:flex;align-items:flex-start;gap:.58rem;
+  padding:.7rem .85rem;background:rgba(255,255,255,.025);
   border:1px solid var(--b1);border-radius:var(--rs);
   cursor:pointer;transition:var(--t);-webkit-tap-highlight-color:transparent;
-  user-select:none;-webkit-user-select:none;min-height:var(--touch-min);
+  user-select:none;-webkit-user-select:none;
 }
 .popt:hover{border-color:var(--b2);background:rgba(255,255,255,.04)}
 .popt.on{background:rgba(99,102,241,.08);border-color:rgba(99,102,241,.32)}
 .popt input[type=checkbox]{
-  margin-top:.16rem;width:16px;height:16px;min-width:16px;
+  margin-top:.16rem;width:15px;height:15px;min-width:15px;
   accent-color:var(--p);cursor:pointer;flex-shrink:0;
 }
 .popt-body{flex:1;min-width:0}
 .popt-name{
-  font-size:.79rem;font-weight:700;color:#fff;
-  display:flex;align-items:center;justify-content:space-between;gap:.35rem;flex-wrap:wrap;
+  font-size:.8rem;font-weight:700;color:#fff;
+  display:flex;align-items:center;justify-content:space-between;gap:.38rem;flex-wrap:wrap;
 }
 .pf{
   font-family:'Cascadia Code','Fira Code','Consolas',monospace;
-  font-size:.62rem;background:rgba(99,102,241,.14);
-  color:var(--p2);padding:.07rem .36rem;border-radius:4px;flex-shrink:0;white-space:nowrap;
+  font-size:.63rem;background:rgba(99,102,241,.14);
+  color:var(--p2);padding:.07rem .38rem;border-radius:4px;flex-shrink:0;white-space:nowrap;
 }
-.popt-desc{font-size:.67rem;color:var(--mu);margin-top:.07rem;line-height:1.4}
+.popt-desc{font-size:.68rem;color:var(--mu);margin-top:.08rem;line-height:1.4}
 
 /* ══ INPUT ════════════════════════════════════════════════════════════════ */
 .inp{
   width:100%;background:var(--card2);border:1px solid var(--b2);
-  border-radius:var(--rs);color:var(--txt);font-size:.83rem;
-  padding:.58rem .86rem;outline:none;transition:var(--t);font-family:inherit;
-  min-height:var(--touch-min);
+  border-radius:var(--rs);color:var(--txt);font-size:.84rem;
+  padding:.55rem .88rem;outline:none;transition:var(--t);font-family:inherit;
 }
 .inp:focus{border-color:var(--p);box-shadow:0 0 0 2px rgba(99,102,241,.18)}
 .inp::placeholder{color:var(--mu)}
-.inp-hint{font-size:.67rem;color:var(--mu);margin-top:.3rem}
+.inp-hint{font-size:.68rem;color:var(--mu);margin-top:.32rem}
 
 /* ══ BUTTONS ══════════════════════════════════════════════════════════════ */
 .btn{
-  display:inline-flex;align-items:center;justify-content:center;gap:.46rem;
+  display:inline-flex;align-items:center;justify-content:center;gap:.48rem;
   border:none;border-radius:var(--rs);font-weight:800;cursor:pointer;
   transition:var(--t);position:relative;overflow:hidden;
   text-decoration:none;-webkit-tap-highlight-color:transparent;font-family:inherit;
@@ -373,8 +363,8 @@ body{
 
 .btn-primary{
   background:linear-gradient(135deg,var(--p3),var(--p));color:#fff;
-  font-size:.9rem;padding:.85rem 1.35rem;width:100%;margin-top:.95rem;
-  box-shadow:0 4px 20px rgba(99,102,241,.22);min-height:var(--touch-min);
+  font-size:.92rem;padding:.84rem 1.4rem;width:100%;margin-top:1rem;
+  box-shadow:0 4px 20px rgba(99,102,241,.22);
 }
 .btn-primary::after{
   content:'';position:absolute;inset:0;
@@ -396,12 +386,11 @@ body{
 
 /* Download button */
 .btn-dl{
-  display:inline-flex;align-items:center;gap:.46rem;
+  display:inline-flex;align-items:center;gap:.48rem;
   background:linear-gradient(135deg,#065f46,var(--green));
-  border:none;border-radius:var(--rs);color:#fff;font-size:.87rem;font-weight:800;
-  padding:.76rem 1.35rem;cursor:pointer;transition:var(--t);text-decoration:none;
+  border:none;border-radius:var(--rs);color:#fff;font-size:.88rem;font-weight:800;
+  padding:.74rem 1.4rem;cursor:pointer;transition:var(--t);text-decoration:none;
   font-family:inherit;box-shadow:0 4px 18px rgba(16,185,129,.22);
-  min-height:var(--touch-min);
 }
 .btn-dl:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(16,185,129,.32)}
 .btn-dl:active{transform:translateY(0)}
@@ -409,98 +398,78 @@ body{
 
 /* Secondary button */
 .btn-sec{
-  display:inline-flex;align-items:center;gap:.4rem;
+  display:inline-flex;align-items:center;gap:.42rem;
   background:rgba(255,255,255,.05);border:1px solid var(--b2);
-  color:var(--mu2);font-size:.79rem;font-weight:600;
-  padding:.58rem 1rem;border-radius:var(--rs);
+  color:var(--mu2);font-size:.8rem;font-weight:600;
+  padding:.56rem 1.05rem;border-radius:var(--rs);
   cursor:pointer;transition:var(--t);font-family:inherit;
-  -webkit-tap-highlight-color:transparent;min-height:var(--touch-min);
+  -webkit-tap-highlight-color:transparent;
 }
 .btn-sec:hover{background:rgba(255,255,255,.09);color:#fff;border-color:var(--b3)}
 
 /* ══ PROGRESS BAR ═════════════════════════════════════════════════════════ */
-.prog-wrap{display:none;margin-top:.85rem}
+.prog-wrap{display:none;margin-top:.9rem}
 .prog-wrap.show{display:block;animation:fadeUp .25s ease}
 .prog-top{
   display:flex;align-items:center;justify-content:space-between;
-  font-size:.72rem;color:var(--mu2);margin-bottom:.32rem;
+  font-size:.74rem;color:var(--mu2);margin-bottom:.35rem;
 }
 .prog-label{font-weight:600}
 .prog-bg{background:var(--b1);border-radius:99px;height:6px;overflow:hidden}
 .prog-fill{
   height:100%;border-radius:99px;width:0%;
   background:linear-gradient(90deg,var(--p3),var(--p2),var(--g2));
-  background-size:200%;transition:width .4s ease;
+  background-size:200%;transition:width .45s ease;
   animation:shimmer 1.8s linear infinite;
 }
 .prog-fill.done{animation:none;background:var(--g2);width:100%!important}
 .prog-fill.error{animation:none;background:var(--red);width:100%!important}
 @keyframes shimmer{0%{background-position:0% 50%}100%{background-position:200% 50%}}
 
-/* Stage indicator — shown below progress bar during APK patch */
-.prog-stages{
-  display:none;align-items:center;gap:0;margin-top:.55rem;overflow-x:auto;
-  scrollbar-width:none;-webkit-overflow-scrolling:touch;
-}
-.prog-stages::-webkit-scrollbar{height:0}
-.prog-stages.show{display:flex}
-.ps{
-  display:flex;align-items:center;gap:.28rem;flex-shrink:0;
-  font-size:.63rem;font-weight:600;color:var(--mu);padding:.22rem .55rem;
-  border-radius:99px;transition:var(--t);white-space:nowrap;
-}
-.ps.done{color:var(--g2)}
-.ps.active{color:var(--p2);background:rgba(99,102,241,.12);border:1px solid rgba(99,102,241,.25)}
-.ps-dot{width:5px;height:5px;border-radius:50%;background:currentColor;flex-shrink:0}
-.ps-arr{color:var(--b2);font-size:.6rem;flex-shrink:0;margin:0 .1rem}
-
 /* ══ LIVE LOG PANEL ═══════════════════════════════════════════════════════ */
-.log-panel{display:none;margin-top:.85rem}
+.log-panel{display:none;margin-top:.9rem}
 .log-panel.show{display:block;animation:fadeUp .25s ease}
 .log-head{
   display:flex;align-items:center;justify-content:space-between;
-  padding:.52rem .88rem;background:rgba(255,255,255,.03);
+  padding:.55rem .9rem;background:rgba(255,255,255,.03);
   border:1px solid var(--b1);border-radius:var(--rs) var(--rs) 0 0;
   border-bottom:none;
 }
-.log-title-txt{font-size:.74rem;font-weight:700;color:var(--mu2);display:flex;align-items:center;gap:.35rem}
+.log-title-txt{font-size:.76rem;font-weight:700;color:var(--mu2);display:flex;align-items:center;gap:.38rem}
 .log-live-dot{
   width:6px;height:6px;border-radius:50%;background:var(--green);
   animation:pulse-dot 1.2s ease-in-out infinite;flex-shrink:0;
 }
 .log-live-dot.stopped{animation:none;background:var(--mu)}
-.log-actions{display:flex;align-items:center;gap:.38rem}
+.log-actions{display:flex;align-items:center;gap:.42rem}
 .log-count{
-  font-size:.64rem;background:rgba(99,102,241,.15);color:var(--p2);
-  padding:.08rem .4rem;border-radius:99px;font-weight:700;
+  font-size:.66rem;background:rgba(99,102,241,.15);color:var(--p2);
+  padding:.09rem .42rem;border-radius:99px;font-weight:700;
 }
 .log-btn{
-  font-size:.67rem;color:var(--mu);cursor:pointer;background:none;border:none;
-  padding:.2rem .42rem;border-radius:4px;transition:var(--t);font-family:inherit;
-  -webkit-tap-highlight-color:transparent;min-height:32px;
+  font-size:.68rem;color:var(--mu);cursor:pointer;background:none;border:none;
+  padding:.16rem .42rem;border-radius:4px;transition:var(--t);font-family:inherit;
+  -webkit-tap-highlight-color:transparent;
 }
 .log-btn:hover{color:var(--txt);background:rgba(255,255,255,.06)}
 
 .log-body{
   background:#040710;border:1px solid var(--b1);
   border-radius:0 0 var(--rs) var(--rs);
-  padding:.72rem .85rem;
+  padding:.78rem .88rem;
   font-family:'Cascadia Code','Fira Code','Consolas',monospace;
-  font-size:.72rem;line-height:1.8;
-  max-height:min(340px,50vh);
+  font-size:.73rem;line-height:1.85;
+  max-height:min(320px,48vh);
   min-height:80px;
   overflow-y:auto;overflow-x:hidden;
   overscroll-behavior:contain;
   scroll-behavior:smooth;
-  /* Hardware accelerated scrolling on iOS */
-  -webkit-overflow-scrolling:touch;
 }
-
 /* Log line styles */
-.log-line{display:flex;gap:.52rem;align-items:baseline;word-break:break-word;padding:.04rem 0}
-.log-line+.log-line{border-top:1px solid rgba(255,255,255,.022)}
-.log-ts{color:var(--mu);flex-shrink:0;font-size:.64rem;opacity:.6;min-width:58px;font-family:monospace}
-.log-ico{flex-shrink:0;font-size:.7rem;min-width:14px;text-align:center;line-height:1.8}
+.log-line{display:flex;gap:.55rem;align-items:baseline;word-break:break-word;padding:.05rem 0}
+.log-line+.log-line{border-top:1px solid rgba(255,255,255,.025)}
+.log-ts{color:var(--mu);flex-shrink:0;font-size:.66rem;opacity:.65;min-width:60px;font-family:monospace}
+.log-ico{flex-shrink:0;font-size:.72rem;min-width:16px;text-align:center}
 .log-txt{flex:1;word-break:break-word}
 .log-line.lv-info    .log-txt{color:#94a3b8}
 .log-line.lv-step    .log-txt{color:#93c5fd;font-weight:600}
@@ -510,95 +479,84 @@ body{
 .log-line.lv-warn    .log-txt{color:var(--y2)}
 
 /* New log entry animation */
-.log-line.new{animation:logSlide .18s ease}
-@keyframes logSlide{from{opacity:0;transform:translateX(-5px)}to{opacity:1;transform:translateX(0)}}
-
-/* Auto-scroll pause indicator */
-.log-scroll-pause{
-  display:none;position:absolute;bottom:.5rem;right:.5rem;
-  background:rgba(99,102,241,.85);color:#fff;font-size:.64rem;font-weight:700;
-  padding:.18rem .55rem;border-radius:99px;cursor:pointer;
-  -webkit-tap-highlight-color:transparent;
-  animation:fadeUp .2s ease;
-}
-.log-scroll-pause.show{display:block}
-.log-wrap{position:relative}
+.log-line.new{animation:logSlide .2s ease}
+@keyframes logSlide{from{opacity:0;transform:translateX(-4px)}to{opacity:1;transform:translateX(0)}}
 
 /* ══ RESULT PANEL ═════════════════════════════════════════════════════════ */
-.result-panel{display:none;margin-top:.85rem}
+.result-panel{display:none;margin-top:.9rem}
 .result-panel.show{display:block;animation:fadeUp .3s ease}
 
 .res-ok{
   background:rgba(16,185,129,.06);border:1px solid rgba(16,185,129,.26);
-  border-radius:var(--r);padding:1.15rem;
+  border-radius:var(--r);padding:1.2rem;
 }
 .res-err{
   background:rgba(239,68,68,.06);border:1px solid rgba(239,68,68,.26);
-  border-radius:var(--r);padding:1.15rem;
+  border-radius:var(--r);padding:1.2rem;
 }
-.res-head{display:flex;align-items:flex-start;gap:.62rem;margin-bottom:.85rem}
+.res-head{display:flex;align-items:flex-start;gap:.65rem;margin-bottom:.9rem}
 .res-ico{
-  width:36px;height:36px;min-width:36px;border-radius:10px;
-  display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;
+  width:38px;height:38px;min-width:38px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;font-size:1.15rem;flex-shrink:0;
 }
 .res-ico-ok{background:rgba(16,185,129,.15)}
 .res-ico-err{background:rgba(239,68,68,.15)}
-.res-t{font-size:.9rem;font-weight:800;color:#fff;margin-bottom:.1rem}
-.res-s{font-size:.74rem;color:var(--mu2);line-height:1.45}
+.res-t{font-size:.92rem;font-weight:800;color:#fff;margin-bottom:.12rem}
+.res-s{font-size:.76rem;color:var(--mu2);line-height:1.45}
 
 .meta-grid{
-  display:grid;grid-template-columns:repeat(auto-fill,minmax(128px,1fr));
-  gap:.48rem;margin-bottom:.85rem;
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));
+  gap:.5rem;margin-bottom:.9rem;
 }
-.mi{background:rgba(0,0,0,.22);border:1px solid rgba(255,255,255,.06);border-radius:7px;padding:.52rem .78rem}
-.mi-l{font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--mu);margin-bottom:.18rem}
-.mi-v{font-size:.79rem;font-weight:700;color:#fff;font-family:monospace;word-break:break-all}
+.mi{background:rgba(0,0,0,.22);border:1px solid rgba(255,255,255,.06);border-radius:7px;padding:.55rem .8rem}
+.mi-l{font-size:.63rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--mu);margin-bottom:.2rem}
+.mi-v{font-size:.8rem;font-weight:700;color:#fff;font-family:monospace;word-break:break-all}
 
-.res-actions{display:flex;align-items:center;flex-wrap:wrap;gap:.55rem;margin-top:.75rem}
-@media(max-width:460px){
+.res-actions{display:flex;align-items:center;flex-wrap:wrap;gap:.6rem;margin-top:.8rem}
+@media(max-width:480px){
   .res-actions{flex-direction:column;align-items:stretch}
   .res-actions .btn-dl,.res-actions .btn-sec{width:100%;justify-content:center}
 }
 
 /* ══ SCAN RESULT ══════════════════════════════════════════════════════════ */
 .scan-res{
-  display:none;margin-top:.75rem;
-  padding:.82rem 1rem;border-radius:var(--rs);
+  display:none;margin-top:.8rem;
+  padding:.85rem 1.05rem;border-radius:var(--rs);
   background:rgba(59,130,246,.06);border:1px solid rgba(59,130,246,.2);
   animation:fadeUp .25s ease;
 }
 .scan-res.show{display:block}
-.scan-title{font-size:.76rem;font-weight:700;color:#fff;margin-bottom:.42rem}
-.scan-chips{display:flex;flex-wrap:wrap;gap:.36rem}
+.scan-title{font-size:.78rem;font-weight:700;color:#fff;margin-bottom:.45rem}
+.scan-chips{display:flex;flex-wrap:wrap;gap:.38rem}
 
 /* ══ STEP FLOW ════════════════════════════════════════════════════════════ */
-.step-flow{display:flex;flex-direction:column;gap:.95rem}
+.step-flow{display:flex;flex-direction:column;gap:1rem}
 .step-item{
-  display:flex;gap:.82rem;align-items:flex-start;
+  display:flex;gap:.85rem;align-items:flex-start;
   transition:opacity var(--t);
 }
 .step-num{
   width:26px;height:26px;min-width:26px;border-radius:50%;
   background:rgba(99,102,241,.16);border:1px solid rgba(99,102,241,.35);
   display:flex;align-items:center;justify-content:center;
-  font-size:.7rem;font-weight:800;color:var(--p2);margin-top:.06rem;
+  font-size:.72rem;font-weight:800;color:var(--p2);margin-top:.06rem;
   transition:var(--t);flex-shrink:0;
 }
 .step-num.done-num{background:rgba(16,185,129,.18);border-color:rgba(16,185,129,.4);color:var(--g2)}
 .step-body{flex:1;min-width:0}
-.step-title{font-size:.85rem;font-weight:700;color:#fff;margin-bottom:.35rem}
-.step-sub{font-size:.73rem;color:var(--mu);margin-bottom:.62rem;line-height:1.5}
+.step-title{font-size:.86rem;font-weight:700;color:#fff;margin-bottom:.38rem}
+.step-sub{font-size:.74rem;color:var(--mu);margin-bottom:.65rem;line-height:1.5}
 .step-content{display:none}
 .step-content.open{display:block;animation:fadeUp .28s ease}
 
 /* ══ JOB STATUS ═══════════════════════════════════════════════════════════ */
 .job-status-row{
-  display:flex;align-items:center;gap:.58rem;flex-wrap:wrap;
-  margin-top:.58rem;font-size:.7rem;
+  display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;
+  margin-top:.62rem;font-size:.72rem;
 }
 .status-pill{
-  display:inline-flex;align-items:center;gap:.32rem;
-  font-size:.7rem;font-weight:700;padding:.24rem .7rem;border-radius:99px;
+  display:inline-flex;align-items:center;gap:.35rem;
+  font-size:.72rem;font-weight:700;padding:.24rem .72rem;border-radius:99px;
 }
 .sp-ok{background:rgba(16,185,129,.12);color:var(--g2);border:1px solid rgba(16,185,129,.26)}
 .sp-err{background:rgba(239,68,68,.12);color:var(--r2);border:1px solid rgba(239,68,68,.26)}
@@ -607,123 +565,117 @@ body{
   content:'';display:inline-block;width:5px;height:5px;border-radius:50%;
   background:currentColor;animation:pulse-dot 1.1s ease-in-out infinite;
 }
-.elapsed{color:var(--mu);font-size:.68rem}
+.elapsed{color:var(--mu);font-size:.7rem}
 
 /* ══ ALERTS ══════════════════════════════════════════════════════════════ */
 .alert{
-  border-radius:var(--rs);padding:.7rem .88rem;
-  display:flex;gap:.58rem;font-size:.77rem;line-height:1.55;align-items:flex-start;
+  border-radius:var(--rs);padding:.72rem .9rem;
+  display:flex;gap:.6rem;font-size:.78rem;line-height:1.55;align-items:flex-start;
 }
 .alert-w{background:rgba(245,158,11,.07);border:1px solid rgba(245,158,11,.24);color:var(--y2)}
 .alert-i{background:rgba(59,130,246,.07);border:1px solid rgba(59,130,246,.24);color:var(--b2c)}
 .alert-s{background:rgba(16,185,129,.07);border:1px solid rgba(16,185,129,.24);color:var(--g2)}
 .alert-e{background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.24);color:var(--r2)}
-.alert-ico{flex-shrink:0;margin-top:.05rem}
+.alert-ico{flex-shrink:0;margin-top:.06rem}
 
 /* ══ GRIDS ════════════════════════════════════════════════════════════════ */
-.g2{display:grid;grid-template-columns:1fr 1fr;gap:.95rem}
-.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:.75rem}
-@media(max-width:620px){.g2,.g3{grid-template-columns:1fr}}
-@media(min-width:621px) and (max-width:860px){.g3{grid-template-columns:1fr 1fr}}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:.8rem}
+@media(max-width:640px){.g2,.g3{grid-template-columns:1fr}}
+@media(min-width:641px) and (max-width:880px){.g3{grid-template-columns:1fr 1fr}}
 
 /* ══ INFO CARDS ══════════════════════════════════════════════════════════ */
-.ic{padding:1rem;border-radius:var(--r)}
-.ic .ici{font-size:1.25rem;margin-bottom:.42rem}
-.ic h3{font-size:.84rem;font-weight:800;color:#fff;margin-bottom:.25rem}
-.ic p{font-size:.74rem;color:var(--mu2);line-height:1.55}
+.ic{padding:1.05rem;border-radius:var(--r)}
+.ic .ici{font-size:1.3rem;margin-bottom:.45rem}
+.ic h3{font-size:.86rem;font-weight:800;color:#fff;margin-bottom:.28rem}
+.ic p{font-size:.76rem;color:var(--mu2);line-height:1.55}
 
 /* Flow diagram */
 .flow-row{
   display:flex;align-items:center;justify-content:center;
-  flex-wrap:wrap;gap:.38rem;padding:1rem .88rem;
+  flex-wrap:wrap;gap:.4rem;padding:1.1rem .9rem;
 }
 .fn{
   background:var(--card2);border:1px solid var(--b1);
-  border-radius:9px;padding:.55rem .82rem;text-align:center;min-width:82px;
+  border-radius:9px;padding:.58rem .85rem;text-align:center;min-width:85px;
 }
-.fn-ico{font-size:1.1rem;margin-bottom:.18rem}
-.fn-t{font-size:.7rem;font-weight:700;color:#fff}
-.fn-s{font-size:.6rem;color:var(--mu);margin-top:.04rem}
-.arr{color:var(--p2);font-size:.95rem;flex-shrink:0}
-@media(max-width:460px){
-  .flow-row{gap:.24rem}
-  .fn{min-width:62px;padding:.42rem .5rem}
-  .fn-t{font-size:.63rem}
-  .fn-s{display:none}
-  .arr{font-size:.8rem}
+.fn-ico{font-size:1.15rem;margin-bottom:.2rem}
+.fn-t{font-size:.73rem;font-weight:700;color:#fff}
+.fn-s{font-size:.63rem;color:var(--mu);margin-top:.05rem}
+.arr{color:var(--p2);font-size:1rem;flex-shrink:0}
+@media(max-width:480px){
+  .flow-row{gap:.28rem}
+  .fn{min-width:68px;padding:.46rem .55rem}
+  .fn-t{font-size:.66rem}
+  .arr{font-size:.85rem}
 }
 
 /* ══ TABS ════════════════════════════════════════════════════════════════ */
 .tabs{
-  display:flex;gap:.15rem;padding:.58rem .88rem .35rem;
+  display:flex;gap:.18rem;padding:.6rem .9rem .38rem;
   border-bottom:1px solid var(--b1);overflow-x:auto;
   -webkit-overflow-scrolling:touch;scrollbar-width:none;
 }
 .tabs::-webkit-scrollbar{height:0}
 .tab-btn{
-  font-size:.74rem;font-weight:700;padding:.38rem .72rem;border-radius:5px;
+  font-size:.76rem;font-weight:700;padding:.35rem .75rem;border-radius:5px;
   cursor:pointer;border:none;background:transparent;color:var(--mu2);
   transition:var(--t);white-space:nowrap;font-family:inherit;
-  -webkit-tap-highlight-color:transparent;min-height:36px;
+  -webkit-tap-highlight-color:transparent;
 }
 .tab-btn:hover{background:rgba(255,255,255,.05);color:#fff}
 .tab-btn.active{background:rgba(99,102,241,.14);color:var(--p2)}
-.tab-pane{display:none;padding:1rem}
+.tab-pane{display:none;padding:1.05rem}
 .tab-pane.active{display:block;animation:fadeUp .22s ease}
 
 /* Pattern items */
 .pat-item{
   background:#030810;border:1px solid var(--b1);border-radius:5px;
-  padding:.48rem .75rem;font-family:monospace;font-size:.66rem;
-  color:#7dd3fc;word-break:break-all;margin-bottom:.36rem;line-height:1.55;
+  padding:.5rem .78rem;font-family:monospace;font-size:.68rem;
+  color:#7dd3fc;word-break:break-all;margin-bottom:.38rem;line-height:1.55;
   transition:border-color var(--t);
 }
 .pat-item:hover{border-color:var(--p)}
-.pat-n{color:var(--mu);margin-right:.45rem}
+.pat-n{color:var(--mu);margin-right:.48rem}
 
 /* Code blocks */
 .code-blk{background:#030810;border:1px solid var(--b1);border-radius:var(--rs);overflow:hidden}
 .code-hd{
-  background:rgba(255,255,255,.03);padding:.38rem .88rem;
+  background:rgba(255,255,255,.03);padding:.4rem .9rem;
   display:flex;align-items:center;justify-content:space-between;
-  border-bottom:1px solid var(--b1);font-size:.68rem;color:var(--mu);
+  border-bottom:1px solid var(--b1);font-size:.7rem;color:var(--mu);
 }
-.code-blk pre{padding:.78rem .88rem;overflow-x:auto;font-size:.72rem;line-height:1.7;margin:0}
+.code-blk pre{padding:.8rem .9rem;overflow-x:auto;font-size:.74rem;line-height:1.7;margin:0}
 .code-blk code{font-family:'Cascadia Code','Fira Code','Consolas',monospace;color:#e2e8f0}
 .cp-btn{
   background:rgba(99,102,241,.12);border:1px solid rgba(99,102,241,.24);
-  color:var(--p2);font-size:.64rem;font-weight:600;
-  padding:.14rem .46rem;border-radius:4px;cursor:pointer;
+  color:var(--p2);font-size:.66rem;font-weight:600;
+  padding:.13rem .48rem;border-radius:4px;cursor:pointer;
   transition:var(--t);font-family:inherit;-webkit-tap-highlight-color:transparent;
-  min-height:28px;
 }
 .cp-btn:hover{background:rgba(99,102,241,.26);color:#fff}
 .cp-btn.ok{background:rgba(16,185,129,.12);border-color:rgba(16,185,129,.3);color:var(--g2)}
 
 /* ══ TABLE ════════════════════════════════════════════════════════════════ */
-.feat-table{width:100%;border-collapse:collapse;font-size:.79rem}
-.feat-table th,.feat-table td{padding:.52rem .7rem;text-align:left;border-bottom:1px solid var(--b1)}
+.feat-table{width:100%;border-collapse:collapse;font-size:.8rem}
+.feat-table th,.feat-table td{padding:.54rem .72rem;text-align:left;border-bottom:1px solid var(--b1)}
 .feat-table th{color:var(--p2);font-weight:700;background:rgba(99,102,241,.07)}
 .feat-table td{color:var(--mu2)}
 .feat-table td:first-child{color:#fff;font-weight:600}
 .feat-table tr:last-child td{border-bottom:none}
 .feat-table tr:hover td{background:rgba(99,102,241,.04)}
 .tick{color:var(--g2)}
-/* Responsive table on mobile */
-@media(max-width:460px){
-  .feat-table th,.feat-table td{padding:.42rem .55rem;font-size:.73rem}
-}
 
 /* ══ TOAST ════════════════════════════════════════════════════════════════ */
 #toast{
   position:fixed;
-  bottom:max(1.2rem,calc(var(--safe-bot) + .4rem));
+  bottom:max(1.4rem,var(--safe-bot));
   left:50%;transform:translateX(-50%) translateY(6px);
-  background:rgba(14,20,38,.97);border:1px solid var(--b2);
-  color:#fff;font-size:.8rem;font-weight:600;
-  padding:.6rem 1.15rem;border-radius:99px;
-  box-shadow:0 8px 32px rgba(0,0,0,.55);
-  opacity:0;transition:opacity .2s,transform .22s;
+  background:rgba(18,26,46,.97);border:1px solid var(--b2);
+  color:#fff;font-size:.82rem;font-weight:600;
+  padding:.62rem 1.2rem;border-radius:99px;
+  box-shadow:0 8px 32px rgba(0,0,0,.5);
+  opacity:0;transition:opacity .2s,transform .2s;
   pointer-events:none;white-space:nowrap;z-index:9999;
   backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
   max-width:calc(100vw - 2rem);text-overflow:ellipsis;overflow:hidden;
@@ -732,25 +684,25 @@ body{
 
 /* ══ CONNECTION INDICATOR ═════════════════════════════════════════════════ */
 #conn-status{
-  position:fixed;top:60px;right:max(.875rem,var(--safe-r));z-index:200;
-  font-size:.67rem;font-weight:700;padding:.2rem .6rem;border-radius:99px;
+  position:fixed;top:64px;right:max(1rem,var(--safe-r));z-index:200;
+  font-size:.68rem;font-weight:700;padding:.2rem .62rem;border-radius:99px;
   display:none;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
   transition:var(--t);
 }
 #conn-status.offline{
-  display:flex;align-items:center;gap:.28rem;
+  display:flex;align-items:center;gap:.3rem;
   background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.3);color:var(--r2);
 }
 #conn-status.reconnecting{
-  display:flex;align-items:center;gap:.28rem;
+  display:flex;align-items:center;gap:.3rem;
   background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.3);color:var(--y2);
 }
 
 /* ══ FOOTER ══════════════════════════════════════════════════════════════ */
 footer{
   border-top:1px solid var(--b1);
-  padding:1.5rem 1rem max(1.5rem,calc(var(--safe-bot) + .5rem));
-  text-align:center;color:var(--mu);font-size:.74rem;
+  padding:1.6rem 1rem max(1.6rem,var(--safe-bot));
+  text-align:center;color:var(--mu);font-size:.76rem;
 }
 footer a{color:var(--p2);text-decoration:none}
 footer a:hover{text-decoration:underline}
@@ -758,54 +710,40 @@ footer a:hover{text-decoration:underline}
 
 /* ══ KEYFRAMES ════════════════════════════════════════════════════════════ */
 @keyframes spin{to{transform:rotate(360deg)}}
-@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-@keyframes pulse-dot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.35;transform:scale(.78)}}
-.fade-up{animation:fadeUp .38s ease both}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulse-dot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.35;transform:scale(.8)}}
+.fade-up{animation:fadeUp .4s ease both}
 
 /* ══ UTILITY ══════════════════════════════════════════════════════════════ */
 .hidden{display:none!important}
-.mt{margin-top:.75rem}
-.sep{height:1px;background:var(--b1);margin:.85rem 0}
-.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap}
+.mt{margin-top:.8rem}
+.sep{height:1px;background:var(--b1);margin:.9rem 0}
 
 /* ══ MOBILE FINE-TUNING ═══════════════════════════════════════════════════ */
 @media(max-width:480px){
-  .hero{padding:1.75rem .8rem 1.5rem}
-  .tool-header{padding:.88rem .95rem}
-  .tool-body{padding:.85rem}
-  .log-body{font-size:.69rem;max-height:min(220px,42vh);min-height:60px}
+  .hero{padding:2rem .85rem 1.6rem}
+  .tool-header{padding:.9rem 1rem}
+  .tool-body{padding:.88rem}
+  .log-body{font-size:.7rem;max-height:200px;min-height:60px}
   .meta-grid{grid-template-columns:1fr 1fr}
-  .btn-primary{font-size:.84rem;padding:.8rem 1rem}
-  .stats-bar{padding:.58rem .95rem}
-  .fn{min-width:60px}
+  .btn-primary{font-size:.85rem;padding:.78rem 1.1rem}
+  .stats-bar{padding:.6rem 1rem}
+  .fn{min-width:62px}
 }
 @media(max-width:360px){
   .chips .chip:nth-child(n+5){display:none}
-  .hero h1{font-size:1.48rem}
-  .mode-tab .tl{font-size:.72rem}
+  .hero h1{font-size:1.55rem}
 }
-/* Tablet: 2-col layout for some grids */
-@media(min-width:641px) and (max-width:900px){
-  .patch-grid{grid-template-columns:repeat(2,1fr)}
-}
-/* Touch devices: suppress persisted hover states */
+/* Touch devices: no hover states that persist */
 @media(hover:none) and (pointer:coarse){
   .dropzone:hover{border-color:var(--b2);background:rgba(99,102,241,.02)}
   .dropzone:hover .dz-icon{transform:none;background:rgba(99,102,241,.12)}
   .tool-card:hover{border-color:var(--b1)}
-  .btn-primary:hover:not(:disabled){transform:none}
-  .btn-dl:hover{transform:none}
-}
-/* Dark mode preference already satisfied (app is always dark) */
-@media(prefers-reduced-motion:reduce){
-  *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}
 }
 </style>
 </head>
 <body>
 
-<!-- Visually hidden live region for critical announcements -->
-<div id="a11y-announce" aria-live="assertive" aria-atomic="true" class="sr-only"></div>
 <!-- Connection status indicator -->
 <div id="conn-status" role="status" aria-live="polite"></div>
 <!-- Toast notification -->
@@ -814,7 +752,7 @@ footer a:hover{text-decoration:underline}
 <!-- ═══ NAVBAR ═══ -->
 <nav class="nav" role="navigation" aria-label="Main navigation">
   <div class="nav-inner">
-    <a class="nav-brand" href="#" aria-label="APK Patch Suite — halaman utama">
+    <a class="nav-brand" href="#" aria-label="APK Patch Suite home">
       <span class="logo" aria-hidden="true">🛡️</span>
       <span class="brand-text">APK Patch Suite</span>
     </a>
@@ -824,7 +762,7 @@ footer a:hover{text-decoration:underline}
       <a href="#patterns" role="listitem">Patterns</a>
       <a href="#faq" role="listitem">FAQ</a>
     </div>
-    <a class="nav-gh" href="https://github.com/TechnoIndian/ApkPatcher" target="_blank" rel="noopener noreferrer" aria-label="Buka GitHub repository di tab baru">
+    <a class="nav-gh" href="https://github.com/TechnoIndian/ApkPatcher" target="_blank" rel="noopener noreferrer" aria-label="GitHub repository">
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .3a12 12 0 0 0-3.8 23.38c.6.11.82-.26.82-.58l-.02-2.04c-3.34.73-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.09-.74.08-.73.08-.73 1.21.09 1.85 1.24 1.85 1.24 1.07 1.84 2.81 1.3 3.5 1 .1-.78.42-1.3.76-1.6-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.14-.3-.54-1.52.1-3.18 0 0 1-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.28-1.55 3.29-1.23 3.29-1.23.65 1.66.24 2.88.12 3.18a4.65 4.65 0 0 1 1.23 3.22c0 4.61-2.8 5.63-5.48 5.92.43.37.81 1.1.81 2.22l-.01 3.29c0 .32.21.7.82.58A12 12 0 0 0 12 .3z"/></svg>
       <span class="nav-gh-text">GitHub</span>
     </a>
@@ -835,8 +773,8 @@ footer a:hover{text-decoration:underline}
 <header class="hero fade-up" id="home">
   <div class="hero-badge" aria-label="Android Security Research Tool">🔬 Android Security Research Tool</div>
   <h1>APK <span class="grad">Patch Suite</span></h1>
-  <p class="hero-sub">Bypass SSL Flutter, patch Smali, bypass Pairip &amp; lebih — langsung di browser, tanpa install apapun.</p>
-  <div class="chips" aria-label="Fitur unggulan">
+  <p class="hero-sub">Bypass SSL Flutter, patch Smali, bypass Pairip & lebih — langsung di browser, tanpa install apapun.</p>
+  <div class="chips" aria-label="Features">
     <span class="chip ch-c">⚡ Flutter SSL</span>
     <span class="chip ch-o">📦 APK Patcher</span>
     <span class="chip ch-g">✅ No Install</span>
@@ -850,7 +788,7 @@ footer a:hover{text-decoration:underline}
 <main class="main" id="tool">
 
   <!-- Mode Switcher -->
-  <div class="mode-tabs" role="tablist" aria-label="Pilih mode tool">
+  <div class="mode-tabs" role="tablist" aria-label="Tool mode selector">
     <button class="mode-tab active" id="tab-flutter" role="tab" aria-selected="true" aria-controls="mode-flutter"
             onclick="switchMode('flutter',this)">
       <span class="ti" aria-hidden="true">⚡</span>
@@ -878,8 +816,8 @@ footer a:hover{text-decoration:underline}
     <section class="section">
       <div class="tool-card">
         <!-- Status bar -->
-        <div class="stats-bar" aria-label="Status tool">
-          <div class="si"><div class="sd" style="background:var(--g2)" aria-hidden="true"></div><span class="sl">Status</span><span class="sv" id="srv-status-f">Memeriksa…</span></div>
+        <div class="stats-bar" aria-label="Tool status">
+          <div class="si"><div class="sd" style="background:var(--g2)" aria-hidden="true"></div><span class="sl">Status</span><span class="sv" id="srv-status-f">Online</span></div>
           <div class="si"><div class="sd" style="background:var(--p2)" aria-hidden="true"></div><span class="sl">Engine</span><span class="sv">Pure Node.js</span></div>
           <div class="si"><div class="sd" style="background:var(--cyan)" aria-hidden="true"></div><span class="sl">Patterns</span><span class="sv">11 total</span></div>
           <div class="si"><div class="sd" style="background:var(--yel)" aria-hidden="true"></div><span class="sl">Max</span><span class="sv">150 MB</span></div>
@@ -898,25 +836,24 @@ footer a:hover{text-decoration:underline}
           <!-- Drop Zone -->
           <div class="dropzone" id="dz-f"
                ondragover="dzOver(this,event)" ondragleave="dzLeave(this)" ondrop="dzDrop(this,event,'f')"
-               role="button" tabindex="0"
-               aria-label="Upload libflutter.so — seret ke sini atau tekan Enter untuk memilih"
-               onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();document.getElementById('file-f').click()}">
+               role="button" tabindex="0" aria-label="Upload libflutter.so — drop here or click to browse"
+               onkeydown="if(event.key==='Enter'||event.key===' ')document.getElementById('file-f').click()">
             <input type="file" id="file-f" accept=".so,.bin" onchange="onPick(this,'f')"
                    tabindex="-1" aria-hidden="true"/>
             <div class="dz-icon" aria-hidden="true">📁</div>
             <div class="dz-title">Drop <code>libflutter.so</code> di sini</div>
-            <div class="dz-sub">atau tap untuk memilih file</div>
+            <div class="dz-sub">atau tap untuk pilih file</div>
             <div class="dz-hint"><span class="drag-only">Drag &amp; drop atau </span>📎 .so / .bin · maks 150 MB</div>
           </div>
 
           <!-- File preview -->
-          <div class="file-preview" id="fp-f" role="status" aria-live="polite">
+          <div class="file-preview" id="fp-f" role="status">
             <div class="fp-icon" aria-hidden="true">🔧</div>
             <div class="fp-info">
               <div class="fp-name" id="fp-f-name">—</div>
               <div class="fp-meta" id="fp-f-meta">—</div>
             </div>
-            <button class="fp-rm" onclick="clearFile('f')" aria-label="Hapus file yang dipilih" title="Hapus file">✕</button>
+            <button class="fp-rm" onclick="clearFile('f')" aria-label="Hapus file yang dipilih" title="Hapus">✕</button>
           </div>
 
           <!-- Upload progress -->
@@ -925,7 +862,7 @@ footer a:hover{text-decoration:underline}
               <span>Mengupload…</span>
               <span id="up-pct-f">0%</span>
             </div>
-            <div class="up-prog-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" aria-labelledby="up-pct-f">
+            <div class="up-prog-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
               <div class="up-prog-fill" id="up-fill-f"></div>
             </div>
           </div>
@@ -935,7 +872,7 @@ footer a:hover{text-decoration:underline}
             <div class="opt-group">
               <label class="opt-label" for="arch-f">Architecture</label>
               <div class="sel-wrap">
-                <select id="arch-f" aria-label="Pilih architecture target">
+                <select id="arch-f" aria-label="Select architecture">
                   <option value="auto">🔍 Auto Detect (Rekomendasi)</option>
                   <option value="arm64">arm64 — 64-bit</option>
                   <option value="arm">arm — 32-bit</option>
@@ -945,8 +882,8 @@ footer a:hover{text-decoration:underline}
             </div>
             <div class="opt-group">
               <label class="opt-label" id="mode-f-label">Mode</label>
-              <div class="tg-row" style="margin-top:.5rem">
-                <label class="tg" title="Print Only — hanya tampilkan offset tanpa menulis file">
+              <div class="tg-row" style="margin-top:.52rem">
+                <label class="tg" title="Print Only — hanya tampilkan offset tanpa patch file">
                   <input type="checkbox" id="print-f" aria-labelledby="mode-f-label" aria-describedby="mode-f-desc"/>
                   <div class="tg-track"></div>
                   <div class="tg-thumb"></div>
@@ -958,7 +895,7 @@ footer a:hover{text-decoration:underline}
 
           <!-- Action button -->
           <button class="btn btn-primary" id="btn-f" onclick="runFlutterPatch()" disabled
-                  aria-label="Mulai Flutter SSL patch">
+                  aria-label="Mulai patch Flutter SSL sekarang">
             <div class="spin" aria-hidden="true"></div>
             <span class="btn-text">⚡ Patch SSL Sekarang</span>
           </button>
@@ -970,9 +907,7 @@ footer a:hover{text-decoration:underline}
               <span id="prog-f-pct" aria-hidden="true">—</span>
             </div>
             <div class="prog-bg">
-              <div class="prog-fill" id="prog-f-fill"
-                   role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"
-                   aria-labelledby="prog-f-lbl"></div>
+              <div class="prog-fill" id="prog-f-fill" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
             </div>
           </div>
 
@@ -980,20 +915,16 @@ footer a:hover{text-decoration:underline}
           <div class="log-panel" id="log-f" role="log" aria-label="Log output Flutter patch" aria-live="polite">
             <div class="log-head">
               <span class="log-title-txt">
-                <span class="log-live-dot stopped" id="log-f-dot" aria-hidden="true"></span>
+                <span class="log-live-dot" id="log-f-dot" aria-hidden="true"></span>
                 📋 Live Log
-                <span class="log-count" id="log-f-cnt">0</span>
+                <span class="log-count" id="log-f-cnt" aria-label="log lines count">0</span>
               </span>
               <div class="log-actions">
                 <button class="log-btn" onclick="scrollLog('f')" aria-label="Scroll ke bawah log">↓ Bawah</button>
-                <button class="log-btn" onclick="copyLog('f')" aria-label="Salin semua log">📋 Copy</button>
-                <button class="log-btn" onclick="clearLog('f')" aria-label="Hapus isi log">🗑 Clear</button>
+                <button class="log-btn" onclick="clearLog('f')" aria-label="Hapus log">🗑 Clear</button>
               </div>
             </div>
-            <div class="log-wrap">
-              <div class="log-body" id="log-f-body"></div>
-              <div class="log-scroll-pause" id="log-f-pause" onclick="resumeScroll('f')" title="Klik untuk scroll ke bawah">↓ Scroll ke bawah</div>
-            </div>
+            <div class="log-body" id="log-f-body"></div>
           </div>
 
           <!-- Result -->
@@ -1006,7 +937,7 @@ footer a:hover{text-decoration:underline}
     <section class="section" id="how">
       <div class="section-title">🔬 Cara Kerja Flutter SSL Patch</div>
       <div class="tool-card">
-        <div class="flow-row" aria-label="Diagram alur proses">
+        <div class="flow-row" aria-label="Processing flow diagram">
           <div class="fn"><div class="fn-ico" aria-hidden="true">📁</div><div class="fn-t">Upload</div><div class="fn-s">libflutter.so</div></div>
           <div class="arr" aria-hidden="true">→</div>
           <div class="fn"><div class="fn-ico" aria-hidden="true">🔍</div><div class="fn-t">Detect ELF</div><div class="fn-s">arm64/arm/x86</div></div>
@@ -1019,7 +950,7 @@ footer a:hover{text-decoration:underline}
           <div class="arr" aria-hidden="true">→</div>
           <div class="fn"><div class="fn-ico" aria-hidden="true">📥</div><div class="fn-t">Download</div><div class="fn-s">Patched .so</div></div>
         </div>
-        <div style="padding:.75rem 1.15rem;border-top:1px solid var(--b1)">
+        <div style="padding:.8rem 1.2rem;border-top:1px solid var(--b1)">
           <div class="g2">
             <div class="alert alert-i"><span class="alert-ico" aria-hidden="true">ℹ️</span><div>Engine murni Node.js — tanpa radare2, tanpa dependency tambahan di sisi client.</div></div>
             <div class="alert alert-w"><span class="alert-ico" aria-hidden="true">⚠️</span><div>Hanya untuk security research &amp; CTF. Jangan gunakan melanggar ToS aplikasi.</div></div>
@@ -1033,10 +964,10 @@ footer a:hover{text-decoration:underline}
       <div class="section-title">🧩 Byte Patterns — ssl_verify_peer_cert</div>
       <div class="tool-card">
         <div class="tabs" role="tablist">
-          <button class="tab-btn active" role="tab" aria-selected="true" onclick="switchTab(this,'pat-arm64')">arm64 (5)</button>
-          <button class="tab-btn" role="tab" aria-selected="false" onclick="switchTab(this,'pat-arm')">arm (1)</button>
-          <button class="tab-btn" role="tab" aria-selected="false" onclick="switchTab(this,'pat-x86')">x86 (5)</button>
-          <button class="tab-btn" role="tab" aria-selected="false" onclick="switchTab(this,'pat-ret0')">ret0 Bytes</button>
+          <button class="tab-btn active" role="tab" onclick="switchTab(this,'pat-arm64')">arm64 (5)</button>
+          <button class="tab-btn" role="tab" onclick="switchTab(this,'pat-arm')">arm (1)</button>
+          <button class="tab-btn" role="tab" onclick="switchTab(this,'pat-x86')">x86 (5)</button>
+          <button class="tab-btn" role="tab" onclick="switchTab(this,'pat-ret0')">ret0 Bytes</button>
         </div>
         <div id="pat-arm64" class="tab-pane active" role="tabpanel">
           <div class="pat-item"><span class="pat-n">[1]</span>F. 0F 1C F8 F. 5. 01 A9 F. 5. 02 A9 F. .. 03 A9 .. .. .. .. 68 1A 40 F9</div>
@@ -1049,7 +980,7 @@ footer a:hover{text-decoration:underline}
           <div class="pat-item"><span class="pat-n">[1]</span>2D E9 F. 4. D0 F8 00 80 81 46 D8 F8 18 00 D0 F8</div>
         </div>
         <div id="pat-x86" class="tab-pane" role="tabpanel">
-          <div class="pat-item"><span class="pat-n">[1]</span>55 41 57 41 56 41 55 41 54 53 50 49 89 fe 48 8b 1f 48 8b 43 30 4c 8b b8 d0 01 00 00 4d 85 ff 74 12 4d 8b a7 90 00 00 00 4d 85 e4…</div>
+          <div class="pat-item"><span class="pat-n">[1]</span>55 41 57 41 56 41 55 41 54 53 50 49 89 fe 48 8b 1f 48 8b 43 30 4c 8b b8 d0 01 00 00 4d 85 ff 74 12 4d 8b a7 90 00 00 00 4d 85 e4...</div>
           <div class="pat-item"><span class="pat-n">[2]</span>55 41 57 41 56 41 55 41 54 53 50 49 89 f. 4c 8b 37 49 8b 46 30 4c 8b a. .. 0. 00 00 4d 85 e. 74 1. 4d 8b</div>
           <div class="pat-item"><span class="pat-n">[3]</span>55 41 57 41 56 41 55 41 54 53 48 83 EC 18 49 89 FF 48 8B 1F 48 8B 43 30 4C 8B A0 28 02 00 00 4D 85 E4 74</div>
           <div class="pat-item"><span class="pat-n">[4]</span>55 41 57 41 56 41 55 41 54 53 48 83 EC 18 49 89 FE 4C 8B 27 49 8B 44 24 30 48 8B 98 D0 01 00 00 48 85 DB</div>
@@ -1059,18 +990,18 @@ footer a:hover{text-decoration:underline}
           <div class="g3">
             <div class="ic" style="border:1px solid var(--b1)">
               <div class="ici" aria-hidden="true">💪</div><h3>arm64</h3>
-              <code style="font-size:.68rem;font-family:monospace;color:var(--p2);word-break:break-all;display:block;margin-top:.28rem">00 00 80 D2 C0 03 5F D6</code>
-              <p style="margin-top:.35rem">mov x0, #0<br/>ret</p>
+              <code style="font-size:.7rem;font-family:monospace;color:var(--p2);word-break:break-all;display:block;margin-top:.3rem">00 00 80 D2 C0 03 5F D6</code>
+              <p style="margin-top:.38rem">mov x0, #0<br/>ret</p>
             </div>
             <div class="ic" style="border:1px solid var(--b1)">
               <div class="ici" aria-hidden="true">💪</div><h3>arm (32-bit)</h3>
-              <code style="font-size:.68rem;font-family:monospace;color:var(--p2);word-break:break-all;display:block;margin-top:.28rem">00 00 A0 E3 1E FF 2F E1</code>
-              <p style="margin-top:.35rem">mov r0, #0<br/>bx lr</p>
+              <code style="font-size:.7rem;font-family:monospace;color:var(--p2);word-break:break-all;display:block;margin-top:.3rem">00 00 A0 E3 1E FF 2F E1</code>
+              <p style="margin-top:.38rem">mov r0, #0<br/>bx lr</p>
             </div>
             <div class="ic" style="border:1px solid var(--b1)">
               <div class="ici" aria-hidden="true">💪</div><h3>x86 / x86_64</h3>
-              <code style="font-size:.68rem;font-family:monospace;color:var(--p2);word-break:break-all;display:block;margin-top:.28rem">48 31 C0 C3</code>
-              <p style="margin-top:.35rem">xor rax, rax<br/>ret</p>
+              <code style="font-size:.7rem;font-family:monospace;color:var(--p2);word-break:break-all;display:block;margin-top:.3rem">48 31 C0 C3</code>
+              <p style="margin-top:.38rem">xor rax, rax<br/>ret</p>
             </div>
           </div>
         </div>
@@ -1086,7 +1017,7 @@ footer a:hover{text-decoration:underline}
       <div class="tool-card">
         <!-- Status bar -->
         <div class="stats-bar">
-          <div class="si"><div class="sd" style="background:var(--g2)" aria-hidden="true"></div><span class="sl">Status</span><span class="sv" id="srv-status-a">Memeriksa…</span></div>
+          <div class="si"><div class="sd" style="background:var(--g2)" aria-hidden="true"></div><span class="sl">Status</span><span class="sv" id="srv-status-a">Online</span></div>
           <div class="si"><div class="sd" style="background:var(--org)" aria-hidden="true"></div><span class="sl">Engine</span><span class="sv">ApkPatcher</span></div>
           <div class="si"><div class="sd" style="background:var(--blue)" aria-hidden="true"></div><span class="sl">Stack</span><span class="sv">Java 21 · Apktool 2.10</span></div>
           <div class="si"><div class="sd" style="background:var(--yel)" aria-hidden="true"></div><span class="sl">Max</span><span class="sv">500 MB</span></div>
@@ -1106,32 +1037,31 @@ footer a:hover{text-decoration:underline}
 
             <!-- STEP 1: Upload & Scan -->
             <div class="step-item" role="listitem">
-              <div class="step-num" id="snum-1" aria-label="Langkah 1">1</div>
+              <div class="step-num" id="snum-1" aria-label="Step 1">1</div>
               <div class="step-body">
                 <div class="step-title">Upload &amp; Scan APK</div>
                 <div class="step-content open" id="sc-1">
                   <!-- Drop Zone APK -->
                   <div class="dropzone" id="dz-a"
                        ondragover="dzOver(this,event)" ondragleave="dzLeave(this)" ondrop="dzDrop(this,event,'a')"
-                       role="button" tabindex="0"
-                       aria-label="Upload APK — seret ke sini atau tekan Enter"
-                       onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();document.getElementById('file-a').click()}">
+                       role="button" tabindex="0" aria-label="Upload APK — drop here or click to browse"
+                       onkeydown="if(event.key==='Enter'||event.key===' ')document.getElementById('file-a').click()">
                     <input type="file" id="file-a" accept=".apk,.xapk,.apkm,.apks" onchange="onPick(this,'a')"
                            tabindex="-1" aria-hidden="true"/>
                     <div class="dz-icon" aria-hidden="true">📦</div>
                     <div class="dz-title">Drop APK di sini</div>
-                    <div class="dz-sub">atau tap untuk memilih file</div>
+                    <div class="dz-sub">atau tap untuk pilih file</div>
                     <div class="dz-hint">📎 .apk / .xapk / .apkm / .apks · maks 500 MB</div>
                   </div>
 
                   <!-- File preview APK -->
-                  <div class="file-preview" id="fp-a" role="status" aria-live="polite">
+                  <div class="file-preview" id="fp-a" role="status">
                     <div class="fp-icon" aria-hidden="true">📦</div>
                     <div class="fp-info">
                       <div class="fp-name" id="fp-a-name">—</div>
                       <div class="fp-meta" id="fp-a-meta">—</div>
                     </div>
-                    <button class="fp-rm" onclick="clearFile('a')" aria-label="Hapus APK yang dipilih" title="Hapus APK">✕</button>
+                    <button class="fp-rm" onclick="clearFile('a')" aria-label="Hapus APK" title="Hapus">✕</button>
                   </div>
 
                   <!-- Upload progress APK -->
@@ -1140,7 +1070,7 @@ footer a:hover{text-decoration:underline}
                       <span>Mengupload APK…</span>
                       <span id="up-pct-a">0%</span>
                     </div>
-                    <div class="up-prog-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                    <div class="up-prog-bar">
                       <div class="up-prog-fill" id="up-fill-a"></div>
                     </div>
                   </div>
@@ -1163,7 +1093,7 @@ footer a:hover{text-decoration:underline}
 
             <!-- STEP 2: Select patches (locked until scan done) -->
             <div class="step-item" id="step2-wrap" style="opacity:.35;pointer-events:none" aria-disabled="true">
-              <div class="step-num" id="snum-2" aria-label="Langkah 2">2</div>
+              <div class="step-num" id="snum-2" aria-label="Step 2">2</div>
               <div class="step-body">
                 <div class="step-title">Pilih Patch</div>
                 <div class="step-content" id="sc-2">
@@ -1244,16 +1174,11 @@ footer a:hover{text-decoration:underline}
 
                   <!-- Android ID (optional) -->
                   <div class="mt" style="max-width:360px">
-                    <label class="opt-label" for="aid-inp" style="display:block;font-size:.7rem;font-weight:700;color:var(--mu2);letter-spacing:.05em;text-transform:uppercase;margin-bottom:.34rem">
-                      Android ID Kustom <span style="font-family:monospace;font-size:.6rem;color:var(--p2)">[-D, opsional]</span>
+                    <label class="opt-label" for="aid-inp" style="display:block;font-size:.72rem;font-weight:700;color:var(--mu2);letter-spacing:.05em;text-transform:uppercase;margin-bottom:.36rem">
+                      Android ID Kustom <span style="font-family:monospace;font-size:.62rem;color:var(--p2)">[-D, opsional]</span>
                     </label>
-                    <input type="text" id="aid-inp" class="inp"
-                           placeholder="16 digit hex, cth: a1b2c3d4e5f60789"
-                           maxlength="16" pattern="[a-fA-F0-9]{16}"
-                           autocomplete="off" spellcheck="false"
-                           inputmode="text"
-                           aria-describedby="aid-hint"/>
-                    <div class="inp-hint" id="aid-hint">Kosongkan jika tidak perlu hook Android ID tertentu.</div>
+                    <input type="text" id="aid-inp" class="inp" placeholder="16 digit hex, cth: a1b2c3d4e5f60789" maxlength="16" pattern="[a-fA-F0-9]{16}" autocomplete="off" spellcheck="false"/>
+                    <div class="inp-hint">Kosongkan jika tidak perlu hook Android ID tertentu.</div>
                   </div>
 
                   <div class="alert alert-i mt">
@@ -1273,7 +1198,7 @@ footer a:hover{text-decoration:underline}
 
             <!-- STEP 3: Processing & results (locked until patch started) -->
             <div class="step-item" id="step3-wrap" style="opacity:.35;pointer-events:none" aria-disabled="true">
-              <div class="step-num" id="snum-3" aria-label="Langkah 3">3</div>
+              <div class="step-num" id="snum-3" aria-label="Step 3">3</div>
               <div class="step-body">
                 <div class="step-title">Proses Patching</div>
                 <div class="step-content" id="sc-3">
@@ -1286,26 +1211,8 @@ footer a:hover{text-decoration:underline}
                       <span id="prog-a-pct" aria-hidden="true"></span>
                     </div>
                     <div class="prog-bg">
-                      <div class="prog-fill" id="prog-a-fill"
-                           role="progressbar" aria-valuenow="3" aria-valuemin="0" aria-valuemax="100"
-                           aria-labelledby="prog-a-lbl"
-                           style="width:3%"></div>
+                      <div class="prog-fill" id="prog-a-fill" style="width:3%"></div>
                     </div>
-                  </div>
-
-                  <!-- Stage indicators -->
-                  <div class="prog-stages" id="prog-stages" aria-hidden="true">
-                    <span class="ps" id="ps-upload"><span class="ps-dot"></span>Upload</span>
-                    <span class="ps-arr">›</span>
-                    <span class="ps" id="ps-decompile"><span class="ps-dot"></span>Decompile</span>
-                    <span class="ps-arr">›</span>
-                    <span class="ps" id="ps-patch"><span class="ps-dot"></span>Patch</span>
-                    <span class="ps-arr">›</span>
-                    <span class="ps" id="ps-recompile"><span class="ps-dot"></span>Recompile</span>
-                    <span class="ps-arr">›</span>
-                    <span class="ps" id="ps-sign"><span class="ps-dot"></span>Sign</span>
-                    <span class="ps-arr">›</span>
-                    <span class="ps" id="ps-done"><span class="ps-dot"></span>Done</span>
                   </div>
 
                   <!-- Job status & elapsed timer -->
@@ -1315,30 +1222,27 @@ footer a:hover{text-decoration:underline}
                   </div>
 
                   <!-- Live log APK -->
-                  <div class="log-panel show" id="log-a" style="margin-top:.85rem" role="log" aria-label="Live log APK patching" aria-live="polite">
+                  <div class="log-panel show" id="log-a" style="margin-top:.88rem" role="log" aria-label="Live log APK patching" aria-live="polite">
                     <div class="log-head">
                       <span class="log-title-txt">
                         <span class="log-live-dot" id="log-a-dot" aria-hidden="true"></span>
                         📋 Live Log
-                        <span class="log-count" id="log-a-cnt">0</span>
+                        <span class="log-count" id="log-a-cnt" aria-label="log lines count">0</span>
                       </span>
                       <div class="log-actions">
                         <button class="log-btn" onclick="scrollLog('a')" aria-label="Scroll ke bawah log">↓ Bawah</button>
                         <button class="log-btn" onclick="copyLog('a')" aria-label="Salin semua log">📋 Copy</button>
-                        <button class="log-btn" onclick="clearLog('a')" aria-label="Hapus isi log">🗑 Clear</button>
+                        <button class="log-btn" onclick="clearLog('a')" aria-label="Hapus log">🗑 Clear</button>
                       </div>
                     </div>
-                    <div class="log-wrap">
-                      <div class="log-body" id="log-a-body"></div>
-                      <div class="log-scroll-pause" id="log-a-pause" onclick="resumeScroll('a')" title="Klik untuk scroll ke bawah">↓ Scroll ke bawah</div>
-                    </div>
+                    <div class="log-body" id="log-a-body"></div>
                   </div>
 
                   <!-- APK Result -->
                   <div class="result-panel" id="result-a" role="status" aria-live="polite"></div>
 
                   <!-- Reset button (shown after done) -->
-                  <div id="apk-reset-row" class="hidden" style="margin-top:.75rem">
+                  <div id="apk-reset-row" class="hidden" style="margin-top:.8rem">
                     <button class="btn btn-sec" onclick="resetApk()">🔄 Patch APK Lain</button>
                   </div>
                 </div>
@@ -1355,8 +1259,8 @@ footer a:hover{text-decoration:underline}
       <div class="section-title">📖 Fitur &amp; Stack ApkPatcher</div>
       <div class="g2">
         <div class="tool-card">
-          <div style="padding:1rem">
-            <div class="section-title" style="font-size:.86rem;margin-bottom:.7rem">🛠️ Patch yang Tersedia</div>
+          <div style="padding:1.05rem">
+            <div class="section-title" style="font-size:.88rem;margin-bottom:.75rem">🛠️ Patch yang Tersedia</div>
             <table class="feat-table">
               <thead><tr><th>Patch</th><th>Fungsi</th></tr></thead>
               <tbody>
@@ -1375,9 +1279,9 @@ footer a:hover{text-decoration:underline}
           </div>
         </div>
         <div class="tool-card">
-          <div style="padding:1rem">
-            <div class="section-title" style="font-size:.86rem;margin-bottom:.7rem">⚙️ Tech Stack</div>
-            <div class="g2" style="gap:.48rem">
+          <div style="padding:1.05rem">
+            <div class="section-title" style="font-size:.88rem;margin-bottom:.75rem">⚙️ Tech Stack</div>
+            <div class="g2" style="gap:.5rem">
               <div class="ic" style="border:1px solid var(--b1)"><div class="ici" aria-hidden="true">☕</div><h3>Java 21</h3><p>OpenJDK untuk Apktool</p></div>
               <div class="ic" style="border:1px solid var(--b1)"><div class="ici" aria-hidden="true">🔧</div><h3>Apktool 2.10</h3><p>Decompile &amp; recompile</p></div>
               <div class="ic" style="border:1px solid var(--b1)"><div class="ici" aria-hidden="true">🐍</div><h3>Python 3.12</h3><p>Engine ApkPatcher</p></div>
@@ -1397,20 +1301,20 @@ footer a:hover{text-decoration:underline}
   <section class="section" id="faq">
     <div class="section-title">❓ FAQ</div>
     <div class="g2">
-      <div class="tool-card" style="padding:1rem">
-        <h3 style="font-size:.84rem;font-weight:800;color:#fff;margin-bottom:.42rem">📁 File apa yang diupload?</h3>
-        <p style="font-size:.76rem;color:var(--mu2);line-height:1.6"><strong>Flutter SSL:</strong> <code style="background:rgba(99,102,241,.15);padding:.04rem .32rem;border-radius:3px">libflutter.so</code> dari dalam APK (extract dulu).<br/><br/><strong>APK Patcher:</strong> Upload file <code>.apk</code> langsung — tidak perlu extract.</p>
+      <div class="tool-card" style="padding:1.05rem">
+        <h3 style="font-size:.86rem;font-weight:800;color:#fff;margin-bottom:.45rem">📁 File apa yang diupload?</h3>
+        <p style="font-size:.78rem;color:var(--mu2);line-height:1.6"><strong>Flutter SSL:</strong> <code style="background:rgba(99,102,241,.15);padding:.04rem .35rem;border-radius:3px">libflutter.so</code> dari dalam APK (extract dulu).<br/><br/><strong>APK Patcher:</strong> Upload file <code>.apk</code> langsung — tidak perlu extract.</p>
       </div>
-      <div class="tool-card" style="padding:1rem">
-        <h3 style="font-size:.84rem;font-weight:800;color:#fff;margin-bottom:.42rem">🔍 Cara extract libflutter.so?</h3>
+      <div class="tool-card" style="padding:1.05rem">
+        <h3 style="font-size:.86rem;font-weight:800;color:#fff;margin-bottom:.45rem">🔍 Cara extract libflutter.so?</h3>
         <div class="code-blk">
           <div class="code-hd"><span>Terminal</span><button class="cp-btn" onclick="cpCode(this)">Copy</button></div>
           <pre><code>cp app.apk app.zip
 unzip app.zip lib/arm64-v8a/libflutter.so</code></pre>
         </div>
       </div>
-      <div class="tool-card" style="padding:1rem">
-        <h3 style="font-size:.84rem;font-weight:800;color:#fff;margin-bottom:.42rem">📥 Pasang kembali ke APK?</h3>
+      <div class="tool-card" style="padding:1.05rem">
+        <h3 style="font-size:.86rem;font-weight:800;color:#fff;margin-bottom:.45rem">📥 Pasang kembali ke APK?</h3>
         <div class="code-blk">
           <div class="code-hd"><span>Terminal</span><button class="cp-btn" onclick="cpCode(this)">Copy</button></div>
           <pre><code>mv libflutter_patched.so libflutter.so
@@ -1418,9 +1322,9 @@ zip -u app.apk lib/arm64-v8a/libflutter.so
 apksigner sign --ks key.jks app.apk</code></pre>
         </div>
       </div>
-      <div class="tool-card" style="padding:1rem">
-        <h3 style="font-size:.84rem;font-weight:800;color:#fff;margin-bottom:.42rem">⚠️ Pattern tidak ditemukan?</h3>
-        <p style="font-size:.76rem;color:var(--mu2);line-height:1.6">Gunakan mode <strong>APK Patcher</strong> dengan Smali SSL bypass. Pattern tidak cocok biasanya karena Flutter versi sangat baru/lama, atau binary sudah di-obfuscate oleh developer.</p>
+      <div class="tool-card" style="padding:1.05rem">
+        <h3 style="font-size:.86rem;font-weight:800;color:#fff;margin-bottom:.45rem">⚠️ Pattern tidak ditemukan?</h3>
+        <p style="font-size:.78rem;color:var(--mu2);line-height:1.6">Gunakan mode <strong>APK Patcher</strong> dengan Smali SSL bypass. Pattern tidak cocok biasanya karena Flutter versi sangat baru/lama, atau binary sudah di-obfuscate oleh developer.</p>
       </div>
     </div>
   </section>
@@ -1431,8 +1335,8 @@ apksigner sign --ks key.jks app.apk</code></pre>
 <footer>
   <div class="fi">
     <p>🛡️ <strong>APK Patch Suite v3.1</strong> — <a href="https://github.com/AbhiTheModder/termux-scripts" target="_blank" rel="noopener noreferrer">AbhiTheModder</a> · <a href="https://github.com/TechnoIndian/ApkPatcher" target="_blank" rel="noopener noreferrer">TechnoIndian/ApkPatcher</a></p>
-    <p style="margin-top:.28rem">Untuk security research, CTF &amp; edukasi. Hormati Terms of Service setiap aplikasi.</p>
-    <p style="margin-top:.48rem;font-size:.68rem;color:var(--mu)">Node.js v20 · Express 5 · Python 3.12 · Apktool 2.10 · Java 21</p>
+    <p style="margin-top:.3rem">Untuk security research, CTF &amp; edukasi. Hormati Terms of Service setiap aplikasi.</p>
+    <p style="margin-top:.5rem;font-size:.7rem;color:var(--mu)">Node.js v20 · Express 5 · Python 3.12 · Apktool 2.10 · Java 21</p>
   </div>
 </footer>
 
@@ -1442,58 +1346,41 @@ apksigner sign --ks key.jks app.apk</code></pre>
    APP STATE
 ═══════════════════════════════════════════════════════════════════════ */
 const S = {
-  f: { file: null, logLines: [] },
+  f: { file: null },
   a: {
     file: null, token: null, filename: null, jobId: null,
     sse: null, sseRetry: 0, pollTimer: null,
     elapsedTimer: null, elapsedSec: 0, done: false,
-    logLines: [],
+    logLines: [], // cache all log text for copy
   },
 };
-const MAX_SSE_RETRY = 7;
-const LOG_MAX_LINES = 1500; // cap DOM nodes to prevent memory bloat
+const MAX_SSE_RETRY = 6;
 const LOG_ICONS = {
   info: '·', step: '▶', found: '★', success: '✔', error: '✖', warn: '⚠',
 };
-// Stage keywords for progress tracking
-const STAGE_MAP = [
-  { id: 'ps-upload',    re: /upload|start|mulai/i },
-  { id: 'ps-decompile', re: /decompil|unpack|extract/i },
-  { id: 'ps-patch',     re: /smali|patch|modif|ssl|flutter|pairip/i },
-  { id: 'ps-recompile', re: /recompil|build|compil|rebuild/i },
-  { id: 'ps-sign',      re: /sign|apksigner/i },
-  { id: 'ps-done',      re: /selesai|success|done|✅/i },
-];
-let _currentStage = -1;
 
 /* ═══════════════════════════════════════════════════════════════════════
    UTILITIES
 ═══════════════════════════════════════════════════════════════════════ */
+// HTML escape
 function esc(s) {
   return String(s ?? '')
     .replace(/&/g,'&amp;').replace(/</g,'&lt;')
     .replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
 }
+// Format bytes to human-readable
 function fmtSize(bytes) {
   if (!bytes || bytes < 0) return '0 B';
   if (bytes < 1024) return bytes + ' B';
   if (bytes < 1048576) return (bytes/1024).toFixed(1) + ' KB';
   return (bytes/1048576).toFixed(2) + ' MB';
 }
+// Get current time string
 function timeStr() {
   return new Date().toLocaleTimeString('id-ID',{hour12:false,hour:'2-digit',minute:'2-digit',second:'2-digit'});
 }
+// Clamp a number
 function clamp(n, min, max) { return Math.min(max, Math.max(min, n)); }
-
-/* ═══════════════════════════════════════════════════════════════════════
-   A11Y ANNOUNCE
-═══════════════════════════════════════════════════════════════════════ */
-function announce(msg) {
-  const el = document.getElementById('a11y-announce');
-  if (!el) return;
-  el.textContent = '';
-  requestAnimationFrame(() => { el.textContent = msg; });
-}
 
 /* ═══════════════════════════════════════════════════════════════════════
    TOAST
@@ -1501,7 +1388,6 @@ function announce(msg) {
 let _toastTimer = null;
 function toast(msg, dur=3200) {
   const el = document.getElementById('toast');
-  if (!el) return;
   el.textContent = msg;
   el.classList.add('show');
   clearTimeout(_toastTimer);
@@ -1513,10 +1399,9 @@ function toast(msg, dur=3200) {
 ═══════════════════════════════════════════════════════════════════════ */
 function setConnStatus(state) {
   const el = document.getElementById('conn-status');
-  if (!el) return;
   el.className = '';
-  if (state === 'offline')       { el.className='offline'; el.textContent='⚠ Offline'; }
-  else if (state === 'reconnecting') { el.className='reconnecting'; el.textContent='🔄 Menyambung…'; }
+  if (state === 'offline')       { el.className='offline'; el.textContent='⚠ Koneksi terputus'; }
+  else if (state === 'reconnecting') { el.className='reconnecting'; el.textContent='🔄 Menyambung ulang…'; }
 }
 window.addEventListener('online',  () => { setConnStatus('ok'); toast('✅ Koneksi kembali'); });
 window.addEventListener('offline', () => { setConnStatus('offline'); toast('⚠️ Koneksi terputus!', 5000); });
@@ -1532,28 +1417,17 @@ function switchMode(mode, btn) {
   document.querySelectorAll('.mode-content').forEach(c => c.classList.remove('active'));
   btn.classList.add('active');
   btn.setAttribute('aria-selected','true');
-  const panel = document.getElementById('mode-' + mode);
-  if (panel) panel.classList.add('active');
-  // Scroll to tool smoothly
-  const toolEl = document.getElementById('tool');
-  if (toolEl) {
-    const top = toolEl.getBoundingClientRect().top + window.scrollY - 60;
-    window.scrollTo({top, behavior:'smooth'});
-  }
+  document.getElementById('mode-' + mode).classList.add('active');
+  document.getElementById('tool').scrollIntoView({behavior:'smooth',block:'start'});
 }
 
 function switchTab(btn, id) {
   const card = btn.closest('.tool-card');
-  if (!card) return;
-  card.querySelectorAll('.tab-btn').forEach(b => {
-    b.classList.remove('active');
-    b.setAttribute('aria-selected','false');
-  });
+  card.querySelectorAll('.tab-btn').forEach(b => { b.classList.remove('active'); b.setAttribute('aria-selected','false'); });
   card.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
   btn.classList.add('active');
   btn.setAttribute('aria-selected','true');
-  const pane = document.getElementById(id);
-  if (pane) pane.classList.add('active');
+  document.getElementById(id).classList.add('active');
 }
 
 /* ═══════════════════════════════════════════════════════════════════════
@@ -1575,34 +1449,30 @@ function dzDrop(el, e, mode) {
    FILE VALIDATION & SELECTION
 ═══════════════════════════════════════════════════════════════════════ */
 const FILE_RULES = {
-  f: { ext: /\.(so|bin)$/i,                     maxMB: 150, label: '.so / .bin' },
-  a: { ext: /\.(apk|xapk|apkm|apks)$/i,         maxMB: 500, label: '.apk / .xapk / .apkm / .apks' },
+  f: { ext: /\.(so|bin)$/i,                      maxMB: 150, label: '.so / .bin' },
+  a: { ext: /\.(apk|xapk|apkm|apks)$/i,          maxMB: 500, label: '.apk / .xapk / .apkm / .apks' },
 };
 
 function onPick(input, mode) {
   if (input.files?.[0]) setFile(mode, input.files[0]);
-  // Reset input so same file can be re-selected after clear
-  input.value = '';
 }
 
 function setFile(mode, file) {
   const rule = FILE_RULES[mode];
-  if (!rule) return;
-
   // Validate extension
   if (!rule.ext.test(file.name)) {
-    const ext = file.name.includes('.') ? file.name.split('.').pop().toUpperCase() : 'unknown';
-    toast(`⚠️ Format .${ext} tidak didukung. Gunakan: ${rule.label}`, 4500);
+    const ext = file.name.split('.').pop().toUpperCase() || 'unknown';
+    toast(`⚠️ Format .${ext} tidak didukung. Harus ${rule.label}`, 4000);
     return;
   }
   // Validate size
   if (file.size > rule.maxMB * 1048576) {
-    toast(`⚠️ File terlalu besar! Maksimum ${rule.maxMB} MB (file: ${fmtSize(file.size)})`, 4500);
+    toast(`⚠️ File terlalu besar! Maksimum ${rule.maxMB} MB`, 4000);
     return;
   }
   // Validate not zero-byte
   if (file.size === 0) {
-    toast('⚠️ File kosong (0 byte). Pilih file yang valid.', 4500);
+    toast('⚠️ File kosong (0 byte). Pilih file yang valid.', 4000);
     return;
   }
 
@@ -1616,41 +1486,37 @@ function setFile(mode, file) {
   const fp   = document.getElementById('fp-' + mode);
   const name = document.getElementById('fp-' + mode + '-name');
   const meta = document.getElementById('fp-' + mode + '-meta');
-  if (name) name.textContent = file.name;
-  if (meta) {
-    const d = file.lastModified ? new Date(file.lastModified).toLocaleDateString('id-ID') : 'baru dipilih';
-    meta.textContent = `${fmtSize(file.size)} · ${d}`;
-  }
-  if (fp) fp.classList.add('show');
+  name.textContent = file.name;
+  meta.textContent = `${fmtSize(file.size)} · ${file.lastModifiedDate ? new Date(file.lastModified).toLocaleDateString('id-ID') : 'baru dipilih'}`;
+  fp.classList.add('show');
 
   if (mode === 'f') {
-    const btn = document.getElementById('btn-f');
-    if (btn) btn.disabled = false;
+    document.getElementById('btn-f').disabled = false;
     resetFlutterResult();
   } else {
     S.a.token = null; S.a.filename = null;
-    const btnScan = document.getElementById('btn-scan');
-    if (btnScan) btnScan.disabled = false;
-    document.getElementById('scan-res')?.classList.remove('show');
+    document.getElementById('btn-scan').disabled = false;
+    document.getElementById('scan-res').classList.remove('show');
     lockStep2(true); lockStep3(true);
   }
 }
 
 function clearFile(mode) {
   S[mode].file = null;
-  document.getElementById('fp-' + mode)?.classList.remove('show');
+  document.getElementById('fp-' + mode).classList.remove('show');
+  const inp = document.getElementById('file-' + mode);
+  if (inp) inp.value = '';
+
   const dz = document.getElementById('dz-' + mode);
   if (dz) dz.classList.remove('has-file');
 
   if (mode === 'f') {
-    const btn = document.getElementById('btn-f');
-    if (btn) btn.disabled = true;
+    document.getElementById('btn-f').disabled = true;
     resetFlutterResult();
   } else {
-    const btn = document.getElementById('btn-scan');
-    if (btn) btn.disabled = true;
+    document.getElementById('btn-scan').disabled = true;
     S.a.token = null;
-    document.getElementById('scan-res')?.classList.remove('show');
+    document.getElementById('scan-res').classList.remove('show');
     lockStep2(true); lockStep3(true);
   }
 }
@@ -1660,12 +1526,11 @@ function clearFile(mode) {
 ═══════════════════════════════════════════════════════════════════════ */
 function resetFlutterResult() {
   clearLog('f');
-  S.f.logLines = [];
   const r = document.getElementById('result-f');
-  if (r) { r.innerHTML = ''; r.classList.remove('show'); }
-  document.getElementById('log-f')?.classList.remove('show');
-  document.getElementById('prog-f')?.classList.remove('show');
-  document.getElementById('up-prog-f')?.classList.remove('show');
+  r.innerHTML = ''; r.classList.remove('show');
+  document.getElementById('log-f').classList.remove('show');
+  document.getElementById('prog-f').classList.remove('show');
+  document.getElementById('up-prog-f').classList.remove('show');
   setLiveDot('f', false);
 }
 
@@ -1680,65 +1545,9 @@ function setLiveDot(mode, active) {
 }
 
 /* ═══════════════════════════════════════════════════════════════════════
-   STAGE INDICATOR (APK mode only)
+   LOG HELPERS
 ═══════════════════════════════════════════════════════════════════════ */
-function updateStage(text) {
-  const stages = document.getElementById('prog-stages');
-  if (!stages) return;
-  stages.classList.add('show');
-
-  const lower = (text || '').toLowerCase();
-  for (let i = 0; i < STAGE_MAP.length; i++) {
-    if (STAGE_MAP[i].re.test(lower) && i > _currentStage) {
-      _currentStage = i;
-      break;
-    }
-  }
-
-  STAGE_MAP.forEach((s, i) => {
-    const el = document.getElementById(s.id);
-    if (!el) return;
-    el.classList.remove('active','done');
-    if (i < _currentStage) el.classList.add('done');
-    else if (i === _currentStage) el.classList.add('active');
-  });
-}
-
-function resetStages() {
-  _currentStage = -1;
-  STAGE_MAP.forEach(s => {
-    const el = document.getElementById(s.id);
-    if (el) el.classList.remove('active','done');
-  });
-  document.getElementById('prog-stages')?.classList.remove('show');
-}
-
-/* ═══════════════════════════════════════════════════════════════════════
-   LOG HELPERS — with auto-scroll pause detection
-═══════════════════════════════════════════════════════════════════════ */
-const logState = {
-  f: { count: 0, paused: false },
-  a: { count: 0, paused: false },
-};
-
-function _initLogScroll(mode) {
-  const body = document.getElementById('log-' + mode + '-body');
-  const pause = document.getElementById('log-' + mode + '-pause');
-  if (!body || !pause) return;
-  body.addEventListener('scroll', () => {
-    const nearBottom = body.scrollHeight - body.scrollTop - body.clientHeight < 120;
-    logState[mode].paused = !nearBottom;
-    pause.classList.toggle('show', logState[mode].paused);
-  }, { passive: true });
-}
-
-function resumeScroll(mode) {
-  logState[mode].paused = false;
-  const body = document.getElementById('log-' + mode + '-body');
-  const pause = document.getElementById('log-' + mode + '-pause');
-  if (body) body.scrollTo({top: body.scrollHeight, behavior:'smooth'});
-  if (pause) pause.classList.remove('show');
-}
+const logCounts = { f: 0, a: 0 };
 
 function addLog(mode, entry) {
   if (!entry || typeof entry !== 'object' || !entry.text) return;
@@ -1750,81 +1559,52 @@ function addLog(mode, entry) {
   panel.classList.add('show');
   setLiveDot(mode, true);
 
-  // Update stage (APK only)
-  if (mode === 'a') updateStage(entry.text);
-
   const validLevels = ['info','step','found','success','error','warn'];
   const lvl = validLevels.includes(entry.level) ? entry.level : 'info';
-
-  // Cap log DOM nodes to prevent memory issues
-  if (logState[mode].count >= LOG_MAX_LINES) {
-    const firstChild = body.firstElementChild;
-    if (firstChild) body.removeChild(firstChild);
-  } else {
-    logState[mode].count++;
-  }
 
   const line = document.createElement('div');
   line.className = `log-line lv-${lvl} new`;
   const ts  = timeStr();
   const ico = LOG_ICONS[lvl] || '·';
-  line.innerHTML =
-    `<span class="log-ts">[${esc(ts)}]</span>` +
-    `<span class="log-ico">${ico}</span>` +
-    `<span class="log-txt">${esc(String(entry.text))}</span>`;
+  line.innerHTML = `<span class="log-ts">[${esc(ts)}]</span><span class="log-ico">${ico}</span><span class="log-txt">${esc(String(entry.text))}</span>`;
   body.appendChild(line);
 
-  // Remove animation after play
+  // Remove animation class after it plays
   line.addEventListener('animationend', () => line.classList.remove('new'), {once:true});
 
+  logCounts[mode]++;
   const cntEl = document.getElementById('log-' + mode + '-cnt');
-  if (cntEl) cntEl.textContent = logState[mode].count;
+  if (cntEl) cntEl.textContent = logCounts[mode];
 
   // Cache for copy
-  S[mode].logLines = S[mode].logLines || [];
-  S[mode].logLines.push(`[${ts}] ${ico} ${entry.text}`);
+  if (mode === 'a') S.a.logLines.push(`[${ts}] ${ico} ${entry.text}`);
 
-  // Auto-scroll only if not paused by user
-  if (!logState[mode].paused) {
-    requestAnimationFrame(() => {
-      if (!logState[mode].paused) body.scrollTop = body.scrollHeight;
-    });
-  }
+  // Auto-scroll: only if user is within 100px of bottom
+  const nearBottom = body.scrollHeight - body.scrollTop - body.clientHeight < 100;
+  if (nearBottom) requestAnimationFrame(() => { body.scrollTop = body.scrollHeight; });
 }
 
 function scrollLog(mode) {
-  resumeScroll(mode);
+  const body = document.getElementById('log-' + mode + '-body');
+  if (body) body.scrollTo({top: body.scrollHeight, behavior:'smooth'});
 }
 
 function clearLog(mode) {
-  logState[mode].count = 0;
-  logState[mode].paused = false;
+  logCounts[mode] = 0;
   const cntEl = document.getElementById('log-' + mode + '-cnt');
   if (cntEl) cntEl.textContent = '0';
   const body = document.getElementById('log-' + mode + '-body');
   if (body) body.innerHTML = '';
-  const pause = document.getElementById('log-' + mode + '-pause');
-  if (pause) pause.classList.remove('show');
   if (mode === 'a') S.a.logLines = [];
-  else S.f.logLines = [];
   setLiveDot(mode, false);
 }
 
 function copyLog(mode) {
-  const lines = S[mode]?.logLines || [];
-  const text = lines.join('\n');
-  if (!text) { toast('Log masih kosong'); return; }
+  const text = S[mode]?.logLines?.join('\n') || '';
+  if (!text) { toast('Log kosong'); return; }
   navigator.clipboard?.writeText(text)
     .then(() => toast('✅ Log disalin ke clipboard'))
-    .catch(() => {
-      // Fallback for older browsers / no clipboard permission
-      const ta = document.createElement('textarea');
-      ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
-      document.body.appendChild(ta); ta.select();
-      try { document.execCommand('copy'); toast('✅ Log disalin'); }
-      catch { toast('❌ Gagal menyalin log'); }
-      document.body.removeChild(ta);
-    });
+    .catch(() => toast('❌ Gagal menyalin log'));
 }
 
 /* ═══════════════════════════════════════════════════════════════════════
@@ -1835,12 +1615,12 @@ function setProgress(mode, pct, label, state='') {
   const fill  = document.getElementById('prog-' + mode + '-fill');
   const lbl   = document.getElementById('prog-' + mode + '-lbl');
   const pctEl = document.getElementById('prog-' + mode + '-pct');
-  if (!wrap || !fill) return;
+  if (!wrap) return;
   wrap.classList.add('show');
   const pv = clamp(pct, 0, 100);
   fill.style.width = pv + '%';
   fill.className = 'prog-fill' + (state ? ' ' + state : '');
-  fill.setAttribute('aria-valuenow', String(pv));
+  fill.setAttribute('aria-valuenow', pv);
   if (label && lbl) lbl.textContent = label;
   if (pctEl) pctEl.textContent = pct >= 0 ? pct + '%' : '';
 }
@@ -1852,18 +1632,17 @@ function setUploadProgress(mode, pct) {
   const wrap  = document.getElementById('up-prog-' + mode);
   const fill  = document.getElementById('up-fill-' + mode);
   const pctEl = document.getElementById('up-pct-' + mode);
-  if (!wrap || !fill) return;
+  if (!wrap) return;
   wrap.classList.add('show');
-  const clamped = clamp(pct, 0, 100);
-  fill.style.width = clamped + '%';
-  if (pctEl) pctEl.textContent = clamped + '%';
+  fill.style.width = pct + '%';
+  if (pctEl) pctEl.textContent = pct + '%';
   if (pct >= 100) {
-    setTimeout(() => { wrap.classList.remove('show'); }, 900);
+    setTimeout(() => { if (wrap) wrap.classList.remove('show'); }, 800);
   }
 }
 
 /* ═══════════════════════════════════════════════════════════════════════
-   XHR WITH UPLOAD PROGRESS
+   XHR WITH UPLOAD PROGRESS (for real upload progress bar)
 ═══════════════════════════════════════════════════════════════════════ */
 function xhrPost(url, formData, onProgress, timeoutMs=600000) {
   return new Promise((resolve, reject) => {
@@ -1877,18 +1656,18 @@ function xhrPost(url, formData, onProgress, timeoutMs=600000) {
     xhr.onload = () => {
       if (xhr.status >= 200 && xhr.status < 300) {
         try { resolve(JSON.parse(xhr.responseText)); }
-        catch { reject(new Error(`Respons server tidak valid (HTTP ${xhr.status})`)); }
+        catch { reject(new Error(`Server error: response tidak bisa di-parse (HTTP ${xhr.status})`)); }
       } else {
         let errMsg = `Server error HTTP ${xhr.status}`;
         try {
-          const d = JSON.parse(xhr.responseText);
-          if (d?.error) errMsg = d.error;
+          const errData = JSON.parse(xhr.responseText);
+          if (errData?.error) errMsg = errData.error;
         } catch {}
         reject(new Error(errMsg));
       }
     };
-    xhr.onerror   = () => reject(new Error('Network error — tidak dapat terhubung ke server. Periksa koneksi internet.'));
-    xhr.ontimeout = () => reject(new Error('Timeout — koneksi terlalu lambat atau file sangat besar.'));
+    xhr.onerror   = () => reject(new Error('Network error — tidak bisa terhubung ke server. Periksa koneksi internet.'));
+    xhr.ontimeout = () => reject(new Error('Request timeout — file terlalu besar atau koneksi lambat.'));
     xhr.timeout   = timeoutMs;
     xhr.send(formData);
   });
@@ -1902,8 +1681,6 @@ async function runFlutterPatch() {
   if (!file) { toast('⚠️ Pilih file dulu!'); return; }
 
   const btn = document.getElementById('btn-f');
-  if (!btn || btn.disabled) return;
-
   btn.disabled = true;
   btn.classList.add('loading');
   resetFlutterResult();
@@ -1914,8 +1691,8 @@ async function runFlutterPatch() {
 
   const fd = new FormData();
   fd.append('file', file);
-  fd.append('arch', document.getElementById('arch-f')?.value || 'auto');
-  fd.append('printOnly', document.getElementById('print-f')?.checked ? 'true' : 'false');
+  fd.append('arch', document.getElementById('arch-f').value);
+  fd.append('printOnly', document.getElementById('print-f').checked ? 'true' : 'false');
 
   try {
     setUploadProgress('f', 0);
@@ -1931,23 +1708,18 @@ async function runFlutterPatch() {
     if (data.error) throw new Error(data.error);
 
     // Replay server log entries
-    const logEntries = Array.isArray(data.log) ? data.log : [];
-    logEntries.forEach(e => {
-      if (e && e.text) addLog('f', e);
-    });
+    (data.log || []).forEach(e => addLog('f', e));
 
     setProgress('f', 100, data.success ? 'Selesai!' : 'Gagal!', data.success ? 'done' : 'error');
     setLiveDot('f', false);
     renderFlutterResult(data);
-    announce(data.success ? 'Flutter SSL Patch berhasil! File siap didownload.' : 'Flutter SSL Patch gagal. Lihat log untuk detail.');
 
   } catch (err) {
-    const msg = err?.message || 'Terjadi kesalahan tidak dikenal';
+    const msg = err.message || 'Terjadi kesalahan tidak dikenal';
     addLog('f', {level:'error', text:`❌ Error: ${msg}`});
     setProgress('f', 100, 'Error!', 'error');
     setLiveDot('f', false);
-    renderFlutterResult({success:false, _clientError: msg});
-    announce('Flutter SSL Patch gagal: ' + msg);
+    renderFlutterResult({success:false, _clientError:msg});
     console.error('[runFlutterPatch]', err);
   } finally {
     btn.disabled = false;
@@ -1957,23 +1729,22 @@ async function runFlutterPatch() {
 
 function renderFlutterResult(data) {
   const el = document.getElementById('result-f');
-  if (!el) return;
   el.classList.add('show');
 
   if (!data.success) {
-    const reason = esc(data._clientError || 'ssl_verify_peer_cert tidak ditemukan di binary ini.');
+    const reason = data._clientError || 'ssl_verify_peer_cert tidak ditemukan di binary ini.';
     el.innerHTML = `
       <div class="res-err">
         <div class="res-head">
           <div class="res-ico res-ico-err" aria-hidden="true">❌</div>
           <div>
             <div class="res-t">Patch Gagal</div>
-            <div class="res-s">${reason}</div>
+            <div class="res-s">${esc(reason)}</div>
           </div>
         </div>
-        <div class="alert alert-w" style="margin-top:.65rem">
+        <div class="alert alert-w" style="margin-top:.7rem">
           <span class="alert-ico" aria-hidden="true">💡</span>
-          <div>Coba mode <strong>APK Patcher</strong> untuk bypass SSL via Smali, atau pastikan file adalah <code>libflutter.so</code> yang valid. Coba pilih architecture secara manual jika auto-detect gagal.</div>
+          <div>Coba mode <strong>APK Patcher</strong> untuk bypass SSL via Smali, atau pastikan file adalah <code>libflutter.so</code> yang valid dan belum di-obfuscate. Coba juga pilih architecture secara manual.</div>
         </div>
       </div>`;
     toast('❌ Patch gagal. Lihat log untuk detail.', 4500);
@@ -2022,8 +1793,8 @@ function renderFlutterResult(data) {
         <div class="mi"><div class="mi-l">Found Offset</div><div class="mi-v">${esc(m.foundOffset||'—')}</div></div>
         <div class="mi"><div class="mi-l">Fn Start</div><div class="mi-v">${esc(m.fnOffset||'—')}</div></div>
         <div class="mi"><div class="mi-l">File Size</div><div class="mi-v">${fmtSize(data.sizeBytes||0)}</div></div>
-        <div class="mi"><div class="mi-l">Original Bytes</div><div class="mi-v" style="font-size:.66rem">${esc(m.originalBytes||'—')}</div></div>
-        <div class="mi" style="border-color:rgba(16,185,129,.2)"><div class="mi-l">Patched Bytes</div><div class="mi-v" style="font-size:.66rem;color:var(--g2)">${esc(m.patchedBytes||'—')}</div></div>
+        <div class="mi"><div class="mi-l">Original Bytes</div><div class="mi-v" style="font-size:.68rem">${esc(m.originalBytes||'—')}</div></div>
+        <div class="mi" style="border-color:rgba(16,185,129,.2)"><div class="mi-l">Patched Bytes</div><div class="mi-v" style="font-size:.68rem;color:var(--g2)">${esc(m.patchedBytes||'—')}</div></div>
       </div>
       <div class="res-actions">
         <a class="btn-dl" href="/api/download/${esc(data.downloadId)}"
@@ -2034,9 +1805,9 @@ function renderFlutterResult(data) {
         </a>
         <button class="btn-sec" onclick="clearFile('f')">🔄 Patch File Lain</button>
       </div>
-      <div class="alert alert-i" style="margin-top:.65rem">
+      <div class="alert alert-i" style="margin-top:.7rem">
         <span class="alert-ico" aria-hidden="true">📱</span>
-        <div>Ganti <code>libflutter.so</code> di dalam APK, lalu re-sign dan install. Intercept dengan Burp Suite / mitmproxy. <strong>Link download valid 20 menit.</strong></div>
+        <div>Ganti <code>libflutter.so</code> di dalam APK, lalu re-sign dan install. Intercept traffic dengan Burp Suite / mitmproxy.</div>
       </div>
     </div>`;
   toast('✅ Patch berhasil! Siap didownload.', 5000);
@@ -2050,10 +1821,9 @@ async function scanApk() {
   if (!file) { toast('⚠️ Pilih APK dulu!'); return; }
 
   const btn = document.getElementById('btn-scan');
-  if (!btn || btn.disabled) return;
   btn.disabled = true;
   btn.classList.add('loading');
-  document.getElementById('scan-res')?.classList.remove('show');
+  document.getElementById('scan-res').classList.remove('show');
 
   const fd = new FormData();
   fd.append('file', file);
@@ -2065,34 +1835,29 @@ async function scanApk() {
     });
     setUploadProgress('a', 100);
 
-    if (!data?.success) throw new Error(data?.error || 'Scan gagal — respons tidak valid');
+    if (!data?.success) throw new Error(data?.error || 'Scan gagal tanpa pesan error');
 
     S.a.token    = data.token;
     S.a.filename = data.filename;
 
     // Render scan result badges
-    const chipsEl = document.getElementById('scan-chips');
-    if (chipsEl) {
-      chipsEl.innerHTML = '';
-      const addChip = (txt, cls) => {
-        const b = document.createElement('span');
-        b.className = 'chip ' + cls;
-        b.textContent = txt;
-        chipsEl.appendChild(b);
-      };
-      addChip('📄 ' + (data.filename || 'unknown'), 'ch-b');
-      addChip('📦 ' + fmtSize(data.size || 0), 'ch-p');
-      if (data.files != null) addChip(`🗂 ${data.files} file`, 'ch-c');
-      if (data.pkg)           addChip('📛 ' + data.pkg, 'ch-y');
-      addChip(
-        data.flutter ? '✅ Flutter detected' : '❌ No Flutter lib',
-        data.flutter ? 'ch-g' : 'ch-o'
-      );
-      if (data.pairip)  addChip('⚠️ Pairip detected', 'ch-o');
-      if (data.error)   addChip('⚠️ ' + data.error, 'ch-y');
-    }
+    const chips = document.getElementById('scan-chips');
+    chips.innerHTML = '';
+    const addChip = (txt, cls) => {
+      const b = document.createElement('span');
+      b.className = 'chip ' + cls;
+      b.textContent = txt;
+      chips.appendChild(b);
+    };
+    addChip('📄 ' + (data.filename || 'unknown'), 'ch-b');
+    addChip('📦 ' + fmtSize(data.size || 0), 'ch-p');
+    if (data.files)   addChip(`🗂 ${data.files} file`, 'ch-c');
+    if (data.pkg)     addChip('📛 ' + data.pkg, 'ch-y');
+    addChip(data.flutter ? '✅ Flutter detected' : '❌ No Flutter lib', data.flutter ? 'ch-g' : 'ch-o');
+    if (data.pairip)  addChip('⚠️ Pairip detected', 'ch-o');
+    if (data.error)   addChip('⚠️ ' + data.error, 'ch-y');
 
-    document.getElementById('scan-res')?.classList.add('show');
+    document.getElementById('scan-res').classList.add('show');
 
     // Auto-check flutter SSL if detected
     if (data.flutter) {
@@ -2102,20 +1867,18 @@ async function scanApk() {
 
     // Unlock step 2
     lockStep2(false);
-    document.getElementById('snum-1')?.classList.add('done-num');
+    document.getElementById('snum-1').classList.add('done-num');
 
     // Smooth scroll to step 2
     setTimeout(() => {
-      document.getElementById('step2-wrap')?.scrollIntoView({behavior:'smooth', block:'nearest'});
-    }, 380);
+      const s2 = document.getElementById('step2-wrap');
+      if (s2) s2.scrollIntoView({behavior:'smooth', block:'nearest'});
+    }, 350);
 
-    announce('Scan selesai. Lanjutkan ke langkah 2 untuk memilih patch.');
     toast('✅ Scan selesai!');
-
   } catch (err) {
-    const msg = err?.message || 'Scan gagal';
-    toast('❌ ' + msg, 4800);
-    announce('Scan gagal: ' + msg);
+    const msg = err.message || 'Scan gagal';
+    toast('❌ ' + msg, 4500);
     console.error('[scanApk]', err);
   } finally {
     btn.disabled = false;
@@ -2124,15 +1887,15 @@ async function scanApk() {
 }
 
 /* ═══════════════════════════════════════════════════════════════════════
-   PATCH OPTION SYNC
+   PATCH OPTION SYNC (toggle card style)
 ═══════════════════════════════════════════════════════════════════════ */
-const PATCH_KEYS = ['flutter','pairip','pairip_corex','spoof_pkg','remove_ads',
-                    'remove_ss','remove_usb','random_info','purchase','tg_patch'];
-
 function syncPopt(chk) {
   const label = chk.closest('.popt');
   if (label) label.classList.toggle('on', chk.checked);
-  const anyOn = PATCH_KEYS.some(k => document.getElementById('ck-' + k)?.checked);
+  // Enable patch button only if any option is checked
+  const KEYS = ['flutter','pairip','pairip_corex','spoof_pkg','remove_ads',
+                 'remove_ss','remove_usb','random_info','purchase','tg_patch'];
+  const anyOn = KEYS.some(k => document.getElementById('ck-' + k)?.checked);
   const btn = document.getElementById('btn-patch-apk');
   if (btn) btn.disabled = !anyOn;
 }
@@ -2149,6 +1912,7 @@ function lockStep2(locked) {
   wrap.setAttribute('aria-disabled', locked ? 'true' : 'false');
   sc.classList.toggle('open', !locked);
   if (!locked) {
+    // Reset patch button — re-check via syncPopt
     const btn = document.getElementById('btn-patch-apk');
     if (btn) btn.disabled = true;
   }
@@ -2170,42 +1934,43 @@ function lockStep3(locked) {
 async function runApkPatch() {
   if (!S.a.token) { toast('⚠️ Scan APK dulu di Step 1!'); return; }
 
+  // Collect options
+  const KEYS = ['flutter','pairip','pairip_corex','spoof_pkg','remove_ads',
+                 'remove_ss','remove_usb','random_info','purchase','tg_patch'];
   const options = {};
-  PATCH_KEYS.forEach(k => { options[k] = document.getElementById('ck-' + k)?.checked || false; });
+  KEYS.forEach(k => { options[k] = document.getElementById('ck-' + k)?.checked || false; });
 
-  // Validate Android ID if provided
+  // Validate android ID if provided
   const aid = (document.getElementById('aid-inp')?.value || '').trim();
   if (aid) {
     if (!/^[a-fA-F0-9]{16}$/.test(aid)) {
       toast('⚠️ Android ID harus tepat 16 karakter hex!', 4000);
-      document.getElementById('aid-inp')?.focus();
+      document.getElementById('aid-inp').focus();
       return;
     }
     options.android_id = aid;
   }
 
   // At least one patch must be selected
-  if (!PATCH_KEYS.some(k => options[k])) {
+  if (!KEYS.some(k => options[k])) {
     toast('⚠️ Pilih minimal satu patch!', 3500);
     return;
   }
 
   const btn = document.getElementById('btn-patch-apk');
-  if (!btn || btn.disabled) return;
   btn.disabled = true;
   btn.classList.add('loading');
 
   // Show step 3
   lockStep3(false);
-  document.getElementById('snum-2')?.classList.add('done-num');
+  document.getElementById('snum-2').classList.add('done-num');
   clearLog('a');
   S.a.logLines = [];
-  resetStages();
-
   const rA = document.getElementById('result-a');
-  if (rA) { rA.innerHTML = ''; rA.classList.remove('show'); }
-  document.getElementById('apk-reset-row')?.classList.add('hidden');
+  rA.innerHTML = ''; rA.classList.remove('show');
+  document.getElementById('apk-reset-row').classList.add('hidden');
 
+  // Reset job UI
   const pill = document.getElementById('job-pill');
   if (pill) { pill.className='status-pill sp-run sp-pulse'; pill.textContent='⏳ Menjalankan ApkPatcher…'; }
   setProgress('a', 3, 'Memulai job…');
@@ -2214,50 +1979,37 @@ async function runApkPatch() {
 
   // Scroll to step 3
   setTimeout(() => {
-    document.getElementById('step3-wrap')?.scrollIntoView({behavior:'smooth', block:'nearest'});
-  }, 340);
+    const s3 = document.getElementById('step3-wrap');
+    if (s3) s3.scrollIntoView({behavior:'smooth', block:'nearest'});
+  }, 320);
 
   try {
-    const ctrl   = new AbortController();
-    const tId    = setTimeout(() => ctrl.abort(), 30000);
-    let resp;
-    try {
-      resp = await fetch('/api/apk/patch', {
-        method: 'POST',
-        headers: {'Content-Type':'application/json'},
-        body: JSON.stringify({token: S.a.token, filename: S.a.filename, options}),
-        signal: ctrl.signal,
-      });
-    } finally {
-      clearTimeout(tId);
-    }
-
+    const resp = await fetch('/api/apk/patch', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({token: S.a.token, filename: S.a.filename, options}),
+      signal: AbortSignal.timeout(30000), // 30s for job start
+    });
     if (!resp.ok) {
-      let errMsg = `Server error HTTP ${resp.status}`;
-      try { const d = await resp.json(); if (d?.error) errMsg = d.error; } catch {}
-      throw new Error(errMsg);
+      const errData = await resp.json().catch(() => ({}));
+      throw new Error(errData?.error || `Server error HTTP ${resp.status}`);
     }
-
-    let data;
-    try { data = await resp.json(); } catch { throw new Error('Respons server tidak valid'); }
+    const data = await resp.json().catch(() => ({}));
     if (!data?.success) throw new Error(data?.error || 'Gagal memulai job');
 
     S.a.jobId = data.jobId;
     connectSSE(data.jobId);
 
   } catch (err) {
-    const msg = err?.name === 'AbortError'
-      ? 'Request timeout (30s). Server tidak merespons.'
-      : (err?.message || 'Gagal memulai patch');
+    const msg = err.message || 'Gagal memulai patch';
     addLog('a', {level:'error', text:'❌ Gagal memulai: ' + msg});
     setProgress('a', 100, 'Error!', 'error');
     setLiveDot('a', false);
     stopElapsed();
-    document.getElementById('apk-reset-row')?.classList.remove('hidden');
+    document.getElementById('apk-reset-row').classList.remove('hidden');
     btn.disabled = false;
     btn.classList.remove('loading');
-    toast('❌ ' + msg, 4800);
-    announce('Patch APK gagal: ' + msg);
+    toast('❌ ' + msg, 4500);
     console.error('[runApkPatch]', err);
   }
 }
@@ -2276,6 +2028,7 @@ function startElapsed() {
     if (el) el.textContent = `${m > 0 ? m + 'm ' : ''}${String(s).padStart(2,'0')}s berlalu`;
   }, 1000);
 }
+
 function stopElapsed() {
   if (S.a.elapsedTimer) { clearInterval(S.a.elapsedTimer); S.a.elapsedTimer = null; }
 }
@@ -2290,43 +2043,24 @@ function connectSSE(jobId) {
 }
 
 function _openSSE(jobId) {
-  if (S.a.done) return; // guard against late retries
   setConnStatus('ok');
-
-  let sse;
-  try {
-    sse = new EventSource(`/api/apk/status/${jobId}`);
-  } catch (e) {
-    console.error('[SSE open error]', e);
-    _startPolling(jobId);
-    return;
-  }
+  const sse = new EventSource(`/api/apk/status/${jobId}`);
   S.a.sse = sse;
 
-  let logBuf = 0;
+  let logBuf = 0; // log line counter for progress estimation
 
   sse.onmessage = (e) => {
     let entry;
     try { entry = JSON.parse(e.data); } catch { return; }
 
-    if (!entry || entry.level === '__ping__') return;
+    if (entry.level === '__ping__') return; // keep-alive heartbeat
 
     if (entry.level === '__done__') {
-      try { sse.close(); } catch {}
-      S.a.sse = null;
+      sse.close(); S.a.sse = null;
       stopElapsed();
       setConnStatus('ok');
       setLiveDot('a', false);
       S.a.done = true;
-
-      // Complete all stages visually
-      if (entry.success) {
-        _currentStage = STAGE_MAP.length - 1;
-        STAGE_MAP.forEach((s, i) => {
-          const el = document.getElementById(s.id);
-          if (el) { el.classList.remove('active'); el.classList.add('done'); }
-        });
-      }
 
       const pill = document.getElementById('job-pill');
       if (pill) {
@@ -2335,10 +2069,9 @@ function _openSSE(jobId) {
       }
       setProgress('a', 100, entry.success ? 'Selesai!' : 'Gagal!', entry.success ? 'done' : 'error');
       renderApkResult(entry);
-      document.getElementById('apk-reset-row')?.classList.remove('hidden');
-      const btnPatch = document.getElementById('btn-patch-apk');
-      if (btnPatch) btnPatch.classList.remove('loading');
-      announce(entry.success ? 'APK berhasil di-patch! Siap didownload.' : 'Patch APK gagal. Lihat log di atas.');
+      document.getElementById('apk-reset-row').classList.remove('hidden');
+      const btn = document.getElementById('btn-patch-apk');
+      if (btn) btn.classList.remove('loading');
       return;
     }
 
@@ -2346,23 +2079,21 @@ function _openSSE(jobId) {
       addLog('a', entry);
       logBuf++;
 
-      // Smart progress estimation: 5% → 90% from log density + keyword
-      const pct = clamp(5 + Math.round(logBuf * 1.5), 5, 90);
-      const low = String(entry.text).toLowerCase();
+      // Progress: 5% → 90% based on log volume + keyword detection
+      const pct = clamp(5 + logBuf * 1.8, 5, 90);
+      const low = entry.text.toLowerCase();
       let lbl = 'Memproses…';
       if (/decompil/i.test(low))                   lbl = '📂 Decompiling APK…';
       else if (/smali|patch/i.test(low))           lbl = '🔧 Patching Smali…';
-      else if (/recompil|build|compil/i.test(low)) lbl = '🔨 Recompiling APK…';
+      else if (/recompil|build|compil/i.test(low)) lbl = '🔨 Recompiling…';
       else if (/sign|apksigner/i.test(low))        lbl = '✒️ Signing APK…';
       else if (/flutter|ssl/i.test(low))           lbl = '⚡ Flutter SSL Patch…';
-      else if (/pairip/i.test(low))                lbl = '🔓 Pairip Bypass…';
-      setProgress('a', pct, lbl);
+      setProgress('a', Math.round(pct), lbl);
     }
   };
 
   sse.onerror = () => {
-    try { sse.close(); } catch {}
-    S.a.sse = null;
+    sse.close(); S.a.sse = null;
     if (S.a.done) return;
 
     S.a.sseRetry++;
@@ -2373,40 +2104,34 @@ function _openSSE(jobId) {
       return;
     }
     setConnStatus('reconnecting');
-    const delay = Math.min(1000 * Math.pow(1.5, S.a.sseRetry), 12000);
-    addLog('a', {level:'warn', text:`Koneksi SSE terputus. Retry ${S.a.sseRetry}/${MAX_SSE_RETRY} dalam ${(delay/1000).toFixed(1)}s…`});
+    const delay = Math.min(1200 * S.a.sseRetry, 10000);
+    addLog('a', {level:'warn', text:`Koneksi terputus. Menyambung ulang dalam ${(delay/1000).toFixed(1)}s… (${S.a.sseRetry}/${MAX_SSE_RETRY})`});
     setTimeout(() => { if (!S.a.done) _openSSE(jobId); }, delay);
   };
 }
 
 /* ═══════════════════════════════════════════════════════════════════════
-   POLLING FALLBACK
+   POLLING FALLBACK (when SSE fails)
 ═══════════════════════════════════════════════════════════════════════ */
 function _startPolling(jobId) {
   if (S.a.pollTimer) { clearInterval(S.a.pollTimer); S.a.pollTimer = null; }
   let lastCount = 0;
   let pollFails = 0;
-  const MAX_POLL_FAIL = 8;
+  const MAX_POLL_FAIL = 10;
 
   const poll = async () => {
-    if (S.a.done) { clearInterval(S.a.pollTimer); S.a.pollTimer = null; return; }
+    if (S.a.done) { clearInterval(S.a.pollTimer); return; }
     try {
-      const ctrl = new AbortController();
-      const tId  = setTimeout(() => ctrl.abort(), 9000);
-      let r, d;
-      try {
-        r = await fetch(`/api/apk/job/${jobId}`, {signal: ctrl.signal});
-      } finally {
-        clearTimeout(tId);
-      }
+      const r = await fetch(`/api/apk/job/${jobId}`, {signal: AbortSignal.timeout(8000)});
       if (!r.ok) throw new Error(`HTTP ${r.status}`);
-      d = await r.json();
-      pollFails = 0;
+      const d = await r.json();
+      pollFails = 0; // reset on success
 
-      if (Array.isArray(d.logs) && d.logs.length > lastCount) {
-        d.logs.slice(lastCount).forEach(e => { if (e?.level && e?.text) addLog('a', e); });
+      if (d.logs && d.logs.length > lastCount) {
+        const newEntries = d.logs.slice(lastCount);
+        newEntries.forEach(e => { if (e.level && e.text) addLog('a', e); });
         lastCount = d.logs.length;
-        setProgress('a', clamp(5 + Math.round(lastCount * 1.5), 5, 90), 'Memproses (polling)…');
+        setProgress('a', clamp(5 + lastCount * 1.8, 5, 90), 'Memproses (polling)…');
       }
 
       if (d.done) {
@@ -2416,24 +2141,21 @@ function _startPolling(jobId) {
         setLiveDot('a', false);
         setProgress('a', 100, d.success ? 'Selesai!' : 'Gagal!', d.success ? 'done' : 'error');
         renderApkResult({success: d.success, downloadId: d.downloadId, filename: d.filename});
-        document.getElementById('apk-reset-row')?.classList.remove('hidden');
-        const btnPatch = document.getElementById('btn-patch-apk');
-        if (btnPatch) btnPatch.classList.remove('loading');
-        announce(d.success ? 'APK berhasil di-patch!' : 'Patch APK gagal.');
+        document.getElementById('apk-reset-row').classList.remove('hidden');
+        const btn = document.getElementById('btn-patch-apk');
+        if (btn) btn.classList.remove('loading');
       }
     } catch (err) {
-      if (err?.name === 'AbortError') return; // timeout, skip
       pollFails++;
-      console.warn('[poll]', err.message, `fails:${pollFails}`);
       if (pollFails >= MAX_POLL_FAIL) {
-        clearInterval(S.a.pollTimer); S.a.pollTimer = null;
+        clearInterval(S.a.pollTimer);
         addLog('a', {level:'error', text:'Koneksi ke server gagal berulang kali. Refresh halaman dan coba lagi.'});
-        toast('❌ Koneksi gagal. Silakan refresh halaman.', 7000);
+        toast('❌ Koneksi gagal. Silakan refresh.', 6000);
       }
     }
   };
 
-  S.a.pollTimer = setInterval(poll, 3500);
+  S.a.pollTimer = setInterval(poll, 3000);
   poll(); // immediate first poll
 }
 
@@ -2444,7 +2166,7 @@ function renderApkResult(data) {
   const el = document.getElementById('result-a');
   if (!el) return;
   el.classList.add('show');
-  document.getElementById('snum-3')?.classList.add('done-num');
+  document.getElementById('snum-3').classList.add('done-num');
 
   if (!data.success) {
     el.innerHTML = `
@@ -2456,9 +2178,9 @@ function renderApkResult(data) {
             <div class="res-s">Lihat log di atas untuk detail error.</div>
           </div>
         </div>
-        <div class="alert alert-i" style="margin-top:.65rem">
+        <div class="alert alert-i" style="margin-top:.7rem">
           <span class="alert-ico" aria-hidden="true">💡</span>
-          <div>Tips: Pastikan APK valid dan tidak terkorupsi. Deselect patch yang tidak kompatibel (misal: Flutter SSL jika APK bukan Flutter). Beberapa APK memerlukan Java yang kompatibel.</div>
+          <div>Tips: Pastikan APK valid dan tidak terkorupsi. Coba deselect patch yang mungkin tidak kompatibel (misal: Flutter SSL jika APK bukan Flutter app). Beberapa APK memerlukan Java yang kompatibel.</div>
         </div>
       </div>`;
     toast('❌ Patch gagal. Lihat log untuk detail.', 5000);
@@ -2482,7 +2204,7 @@ function renderApkResult(data) {
           Download ${esc(data.filename||'patched.apk')}
         </a>
       </div>
-      <div class="alert alert-w" style="margin-top:.65rem">
+      <div class="alert alert-w" style="margin-top:.7rem">
         <span class="alert-ico" aria-hidden="true">📱</span>
         <div>Install APK di perangkat Android. Jika ada proteksi Pairip: install di VM/Multi-App. Untuk Flutter SSL: intercept traffic dengan Burp Suite / mitmproxy.</div>
       </div>
@@ -2491,24 +2213,26 @@ function renderApkResult(data) {
 }
 
 /* ═══════════════════════════════════════════════════════════════════════
-   RESET APK PATCHER
+   RESET APK PATCHER (back to step 1)
 ═══════════════════════════════════════════════════════════════════════ */
 function resetApk() {
+  // Close SSE / polling
   if (S.a.sse) { try { S.a.sse.close(); } catch {} S.a.sse = null; }
   if (S.a.pollTimer) { clearInterval(S.a.pollTimer); S.a.pollTimer = null; }
   stopElapsed();
 
+  // Reset state
   S.a = {
     file:null, token:null, filename:null, jobId:null,
     sse:null, sseRetry:0, pollTimer:null,
     elapsedTimer:null, elapsedSec:0, done:false, logLines:[],
   };
 
+  // Reset UI
   clearFile('a');
-  document.getElementById('scan-res')?.classList.remove('show');
+  document.getElementById('scan-res').classList.remove('show');
   lockStep2(true); lockStep3(true);
   clearLog('a');
-  resetStages();
 
   const rA = document.getElementById('result-a');
   if (rA) { rA.innerHTML = ''; rA.classList.remove('show'); }
@@ -2516,42 +2240,47 @@ function resetApk() {
   const prog = document.getElementById('prog-a');
   if (prog) prog.classList.remove('show');
   const progFill = document.getElementById('prog-a-fill');
-  if (progFill) { progFill.style.width='3%'; progFill.className='prog-fill'; progFill.setAttribute('aria-valuenow','3'); }
+  if (progFill) { progFill.style.width='3%'; progFill.className='prog-fill'; }
 
-  document.getElementById('apk-reset-row')?.classList.add('hidden');
+  document.getElementById('apk-reset-row').classList.add('hidden');
 
   const pill = document.getElementById('job-pill');
   if (pill) { pill.className='status-pill sp-run sp-pulse'; pill.textContent='⏳ Menjalankan ApkPatcher…'; }
   const elapsed = document.getElementById('job-elapsed');
   if (elapsed) elapsed.textContent = '';
 
-  document.getElementById('snum-1')?.classList.remove('done-num');
-  document.getElementById('snum-2')?.classList.remove('done-num');
-  document.getElementById('snum-3')?.classList.remove('done-num');
+  document.getElementById('snum-1').classList.remove('done-num');
+  document.getElementById('snum-2').classList.remove('done-num');
+  document.getElementById('snum-3').classList.remove('done-num');
 
-  const btnPatch = document.getElementById('btn-patch-apk');
-  if (btnPatch) { btnPatch.classList.remove('loading'); btnPatch.disabled = true; }
+  const btn = document.getElementById('btn-patch-apk');
+  if (btn) btn.classList.remove('loading');
 
-  PATCH_KEYS.forEach(k => {
+  // Uncheck all patch options
+  ['flutter','pairip','pairip_corex','spoof_pkg','remove_ads',
+   'remove_ss','remove_usb','random_info','purchase','tg_patch'].forEach(k => {
     const ck = document.getElementById('ck-' + k);
-    if (ck) { ck.checked = false; ck.closest('.popt')?.classList.remove('on'); }
+    if (ck) { ck.checked = false; const lbl = ck.closest('.popt'); if (lbl) lbl.classList.remove('on'); }
   });
   const aid = document.getElementById('aid-inp');
   if (aid) aid.value = '';
 
   setConnStatus('ok');
-  window.scrollTo({top: Math.max(0, (document.getElementById('tool')?.offsetTop||0) - 64), behavior:'smooth'});
+
+  // Scroll to top of tool
+  window.scrollTo({top: (document.getElementById('tool')?.offsetTop||0) - 64, behavior:'smooth'});
 }
 
 /* ═══════════════════════════════════════════════════════════════════════
-   CLIPBOARD PASTE (Ctrl+V)
+   CLIPBOARD PASTE support (Ctrl+V / Cmd+V)
 ═══════════════════════════════════════════════════════════════════════ */
 document.addEventListener('paste', (e) => {
+  // Don't intercept paste in input fields
   if (['INPUT','TEXTAREA'].includes(e.target?.tagName)) return;
   const files = e.clipboardData?.files;
   if (!files?.length) return;
   const f = files[0];
-  if (/\.(so|bin)$/i.test(f.name))                  setFile('f', f);
+  if (/\.(so|bin)$/i.test(f.name))           setFile('f', f);
   else if (/\.(apk|xapk|apkm|apks)$/i.test(f.name)) setFile('a', f);
 });
 
@@ -2561,8 +2290,7 @@ document.addEventListener('paste', (e) => {
 function cpCode(btn) {
   const code = btn.closest('.code-blk')?.querySelector('code');
   if (!code) return;
-  const text = code.textContent.trim();
-  navigator.clipboard?.writeText(text)
+  navigator.clipboard?.writeText(code.textContent.trim())
     .then(() => {
       btn.textContent = '✓ Copied!';
       btn.classList.add('ok');
@@ -2575,15 +2303,13 @@ function cpCode(btn) {
    KEYBOARD SHORTCUTS
 ═══════════════════════════════════════════════════════════════════════ */
 document.addEventListener('keydown', (e) => {
+  // No shortcut when typing in inputs
   if (['INPUT','TEXTAREA','SELECT'].includes(e.target?.tagName)) return;
-  if (e.ctrlKey || e.metaKey || e.altKey) return;
-  if (e.key === '1') {
+  // Tab 1/2 via keyboard
+  if (e.key === '1' && !e.ctrlKey && !e.metaKey) {
     switchMode('flutter', document.getElementById('tab-flutter'));
-  } else if (e.key === '2') {
+  } else if (e.key === '2' && !e.ctrlKey && !e.metaKey) {
     switchMode('apk', document.getElementById('tab-apk'));
-  } else if (e.key === 'Escape') {
-    // Close any visible toast
-    document.getElementById('toast')?.classList.remove('show');
   }
 });
 
@@ -2591,69 +2317,43 @@ document.addEventListener('keydown', (e) => {
    INITIALIZATION
 ═══════════════════════════════════════════════════════════════════════ */
 window.addEventListener('DOMContentLoaded', async () => {
-  // Init log scroll listeners
-  _initLogScroll('f');
-  _initLogScroll('a');
+  // Open step 1 content for APK mode by default
+  const sc1 = document.getElementById('sc-1');
+  if (sc1) sc1.classList.add('open');
 
-  // Open step 1 content for APK mode
-  document.getElementById('sc-1')?.classList.add('open');
-
-  // Health check with retry
-  let healthAttempts = 0;
-  const MAX_HEALTH_RETRY = 3;
-
-  async function doHealthCheck() {
-    healthAttempts++;
-    try {
-      const ctrl  = new AbortController();
-      const tId   = setTimeout(() => ctrl.abort(), 7000);
-      let r;
-      try { r = await fetch('/api/health', {signal: ctrl.signal}); }
-      finally { clearTimeout(tId); }
-
-      if (!r.ok) throw new Error(`HTTP ${r.status}`);
-      const d = await r.json();
-
-      // Update status dots
-      ['srv-status-f','srv-status-a'].forEach(id => {
-        const el = document.getElementById(id);
-        if (el) { el.textContent = 'Online'; el.style.color = 'var(--g2)'; }
-      });
-
-      console.log(`✅ APK Patch Suite ${d.version} | Node ${d.node} | uptime ${d.uptime}s`);
-
-      if (d.tools && (!d.tools.java || !d.tools.apktool || !d.tools.python3)) {
-        console.warn('⚠️ Some tools missing:', d.tools);
-        ['srv-status-a'].forEach(id => {
-          const el = document.getElementById(id);
-          if (el) { el.textContent = 'Partial'; el.style.color = 'var(--yel)'; }
-        });
-      }
-    } catch (err) {
-      if (healthAttempts < MAX_HEALTH_RETRY) {
-        setTimeout(doHealthCheck, 3000 * healthAttempts);
-        return;
-      }
-      ['srv-status-f','srv-status-a'].forEach(id => {
-        const el = document.getElementById(id);
-        if (el) { el.textContent = 'Offline'; el.style.color = 'var(--r2)'; }
-      });
-      console.warn('Health check failed after retries:', err?.message);
+  // Health check — update status dots
+  try {
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 6000);
+    const r = await fetch('/api/health', {signal: ctrl.signal});
+    clearTimeout(timer);
+    const d = await r.json();
+    // Update status indicators
+    ['srv-status-f','srv-status-a'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) { el.textContent = 'Online'; el.style.color = 'var(--g2)'; }
+    });
+    console.log(`✅ APK Patch Suite ${d.version} | Node ${d.node} | uptime ${d.uptime}s`);
+    if (!d.tools?.java || !d.tools?.apktool) {
+      console.warn('⚠️ Some tools missing:', d.tools);
     }
+  } catch (e) {
+    ['srv-status-f','srv-status-a'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) { el.textContent = 'Offline'; el.style.color = 'var(--r2)'; }
+    });
+    console.warn('Health check failed:', e.message);
   }
-
-  doHealthCheck();
 });
 
 /* ═══════════════════════════════════════════════════════════════════════
-   BEFORE UNLOAD — warn if APK job running
+   BEFORE UNLOAD — warn if APK job is running
 ═══════════════════════════════════════════════════════════════════════ */
 window.addEventListener('beforeunload', (e) => {
   if (S.a.jobId && !S.a.done) {
-    const msg = 'Proses APK Patcher sedang berjalan. Yakin ingin meninggalkan halaman?';
     e.preventDefault();
-    e.returnValue = msg;
-    return msg;
+    e.returnValue = 'Proses APK Patcher sedang berjalan. Yakin ingin meninggalkan halaman?';
+    return e.returnValue;
   }
 });
 </script>

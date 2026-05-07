@@ -1,12 +1,12 @@
+'use strict';
+
 /**
  * Flutter SSL Patch Engine (Pure Node.js)
  * Ported from flutter_ssl_patch.py by AbhiTheModder
  * https://github.com/AbhiTheModder/termux-scripts
  */
 
-'use strict';
-
-// ─── Byte Patterns (identical to original Python/JS scripts) ─────────────────
+// ─── Byte Patterns ───────────────────────────────────────────────────────────
 const PATTERNS = {
   arm64: [
     'F. 0F 1C F8 F. 5. 01 A9 F. 5. 02 A9 F. .. 03 A9 .. .. .. .. 68 1A 40 F9',
@@ -27,62 +27,56 @@ const PATTERNS = {
   ],
 };
 
-// ret0 patch bytes per architecture
-// These overwrite the function prologue so it immediately returns 0
 const RET0_PATCHES = {
-  arm64: Buffer.from([0x00, 0x00, 0x80, 0xD2, 0xC0, 0x03, 0x5F, 0xD6]), // mov x0,#0; ret
-  arm:   Buffer.from([0x00, 0x00, 0xA0, 0xE3, 0x1E, 0xFF, 0x2F, 0xE1]), // mov r0,#0; bx lr
-  x86:   Buffer.from([0x48, 0x31, 0xC0, 0xC3]),                          // xor rax,rax; ret
+  arm64: Buffer.from([0x00, 0x00, 0x80, 0xD2, 0xC0, 0x03, 0x5F, 0xD6]),
+  arm:   Buffer.from([0x00, 0x00, 0xA0, 0xE3, 0x1E, 0xFF, 0x2F, 0xE1]),
+  x86:   Buffer.from([0x48, 0x31, 0xC0, 0xC3]),
 };
 
 // ─── Architecture Detection ──────────────────────────────────────────────────
 function detectArch(buf) {
-  // ELF magic check
-  if (buf[0] !== 0x7F || buf[1] !== 0x45 || buf[2] !== 0x4C || buf[3] !== 0x46) {
-    return { arch: null, error: 'Not a valid ELF binary' };
+  // Guard: must be a Buffer with at least 20 bytes
+  if (!buf || !Buffer.isBuffer(buf) || buf.length < 20) {
+    return { arch: null, bits: null, error: 'File too small or invalid' };
   }
-
-  const elfClass  = buf[4]; // 1=32-bit, 2=64-bit
+  // ELF magic
+  if (buf[0] !== 0x7F || buf[1] !== 0x45 || buf[2] !== 0x4C || buf[3] !== 0x46) {
+    return { arch: null, bits: null, error: 'Not a valid ELF binary (bad magic bytes)' };
+  }
+  const elfClass   = buf[4]; // 1=32-bit  2=64-bit
   const elfMachine = buf.readUInt16LE(18);
-
-  // e_machine values:
-  // 0x28 = ARM (32-bit)
-  // 0xB7 = AArch64 (ARM64)
-  // 0x3E = x86-64
-  // 0x03 = x86 (32-bit)
 
   if (elfMachine === 0xB7) return { arch: 'arm64', bits: 64 };
   if (elfMachine === 0x28) return { arch: 'arm',   bits: 32 };
   if (elfMachine === 0x3E) return { arch: 'x86',   bits: 64 };
   if (elfMachine === 0x03) return { arch: 'x86',   bits: 32 };
 
-  return { arch: null, error: `Unsupported e_machine: 0x${elfMachine.toString(16)}` };
+  return { arch: null, bits: elfClass === 2 ? 64 : 32,
+           error: `Unsupported e_machine: 0x${elfMachine.toString(16).toUpperCase()}` };
 }
 
 // ─── Pattern Parser ──────────────────────────────────────────────────────────
-// Converts "F. 0F 1C F8 .." into array of { byte, mask } objects
 function parsePattern(patternStr) {
   return patternStr.trim().split(/\s+/).map(tok => {
     if (tok === '..') return { byte: 0x00, mask: 0x00 };
     if (tok.includes('.')) {
-      // Partial wildcard e.g. "F." "4." ".3"
       const hi = tok[0] === '.' ? null : parseInt(tok[0], 16);
       const lo = tok[1] === '.' ? null : parseInt(tok[1], 16);
       let byte_ = 0, mask = 0;
       if (hi !== null) { byte_ |= (hi << 4); mask |= 0xF0; }
-      if (lo !== null) { byte_ |= lo;         mask |= 0x0F; }
+      if (lo !== null) { byte_ |= lo;        mask |= 0x0F; }
       return { byte: byte_, mask };
     }
     return { byte: parseInt(tok, 16), mask: 0xFF };
   });
 }
 
-// ─── Boyer-Moore-like pattern search with wildcards ──────────────────────────
+// ─── Pattern Search ──────────────────────────────────────────────────────────
 function searchPattern(buf, parsed) {
   const patLen = parsed.length;
   const bufLen = buf.length;
+  if (patLen === 0 || patLen > bufLen) return [];
   const results = [];
-
   outer:
   for (let i = 0; i <= bufLen - patLen; i++) {
     for (let j = 0; j < patLen; j++) {
@@ -94,139 +88,135 @@ function searchPattern(buf, parsed) {
   return results;
 }
 
-// ─── Find function start (walk back to find prologue) ────────────────────────
-// For arm64: look for common prologues like "stp x29, x30" or "sub sp"
-// For arm: look for PUSH {r4-r11, lr}
-// Fallback: use found offset directly
+// ─── Find Function Start ─────────────────────────────────────────────────────
 function findFunctionStart(buf, offset, arch) {
-  const SEARCH_BACK = 256; // max bytes to walk back
+  const SEARCH_BACK = 256;
   const start = Math.max(0, offset - SEARCH_BACK);
 
   if (arch === 'arm64') {
-    // STP x29, x30, [sp, ...] = FD 7B ?? A9
-    // SUB SP, SP = FF ?? ?? D1
     for (let i = offset; i >= start; i -= 4) {
+      if (i + 4 > buf.length) continue;
       const w = buf.readUInt32LE(i);
-      // STP x29, x30, [sp, #-N]!
       if ((w & 0xFFC07FFF) === 0xA9807BFD) return i;
-      // STP x29, x30, [sp, #offset]
       if ((w & 0xFFC07FFF) === 0xA9007BFD) return i;
-      // SUB sp, sp, #imm
-      if ((w & 0xFFFFF000) === 0xD10003FF) return i;
       if ((w & 0xFF8003FF) === 0xD10003FF) return i;
     }
   } else if (arch === 'arm') {
-    // PUSH { ..., lr } = 2D E9 ?? 4x
     for (let i = offset; i >= start; i -= 2) {
-      if (i + 1 < buf.length) {
-        const lo = buf[i], hi = buf[i + 1];
-        if (lo === 0x2D && hi === 0xE9) return i;
-        if (lo === 0xF0 && (hi & 0xF0) === 0x40) return i; // PUSH (THUMB2)
-      }
+      if (i + 2 > buf.length) continue;
+      if (buf[i] === 0x2D && buf[i + 1] === 0xE9) return i;
+      if (buf[i] === 0xF0 && (buf[i + 1] & 0xF0) === 0x40) return i;
     }
   } else if (arch === 'x86') {
-    // PUSH rbp = 55, or standard prologue 55 48 89 E5
     for (let i = offset; i >= start; i--) {
       if (buf[i] === 0x55) return i;
     }
   }
-
-  return offset; // fallback: use found offset
+  return offset;
 }
 
-// ─── Main Patch Function ─────────────────────────────────────────────────────
+// ─── Main Patch ──────────────────────────────────────────────────────────────
 function patchBinary(inputBuf, forcedArch, log) {
-  const push = (msg) => { log.push(msg); };
+  // Defensive: ensure log is an array and push helper works
+  if (!Array.isArray(log)) log = [];
+  const push = (level, text) => log.push({ level, text });
 
-  // 1. Detect architecture
+  // Guard: validate input
+  if (!inputBuf || !Buffer.isBuffer(inputBuf)) {
+    push('error', 'Invalid input: not a Buffer');
+    return { success: false, log };
+  }
+  if (inputBuf.length < 64) {
+    push('error', `File too small (${inputBuf.length} bytes) — not a valid ELF binary`);
+    return { success: false, log };
+  }
+  if (inputBuf.length > 200 * 1024 * 1024) {
+    push('error', 'File too large (>200 MB)');
+    return { success: false, log };
+  }
+
+  // Detect arch
   const detected = detectArch(inputBuf);
   const arch = forcedArch || detected.arch;
 
   if (!arch) {
-    push({ level: 'error', text: detected.error || 'Could not detect architecture' });
+    push('error', detected.error || 'Could not detect architecture');
     return { success: false, log };
   }
 
-  push({ level: 'info',  text: `Binary detected: ELF ${detected.bits || '?'}-bit` });
-  push({ level: 'info',  text: `Architecture: ${arch}` });
+  push('info',  `Binary: ELF ${detected.bits || '?'}-bit`);
+  push('info',  `Architecture: ${arch}${forcedArch ? ' (forced)' : ' (auto-detected)'}`);
 
   const archPatterns = PATTERNS[arch];
-  if (!archPatterns) {
-    push({ level: 'error', text: `No patterns defined for architecture: ${arch}` });
+  if (!archPatterns || archPatterns.length === 0) {
+    push('error', `No patterns defined for architecture: ${arch}`);
     return { success: false, log };
   }
 
-  push({ level: 'step',  text: 'Analyzing binary...' });
-  push({ level: 'step',  text: `Searching for ssl_verify_peer_cert (${archPatterns.length} patterns)...` });
+  push('step',  `Scanning binary (${(inputBuf.length / 1024 / 1024).toFixed(2)} MB)...`);
+  push('step',  `Searching ssl_verify_peer_cert using ${archPatterns.length} pattern(s)...`);
 
-  // 2. Search patterns
-  let foundOffset = null;
-  let matchedPattern = null;
-  let patternIdx = null;
+  // Search patterns
+  let foundOffset = null, patternIdx = null;
 
   for (let i = 0; i < archPatterns.length; i++) {
-    const parsed = parsePattern(archPatterns[i]);
+    let parsed;
+    try { parsed = parsePattern(archPatterns[i]); } catch { continue; }
     const hits = searchPattern(inputBuf, parsed);
     if (hits.length > 0) {
       foundOffset = hits[0];
-      matchedPattern = archPatterns[i];
-      patternIdx = i + 1;
-      push({ level: 'found', text: `Pattern [${i + 1}/${archPatterns.length}] matched at offset 0x${foundOffset.toString(16).toUpperCase()}` });
+      patternIdx  = i + 1;
+      push('found', `Pattern [${i + 1}/${archPatterns.length}] matched at offset 0x${foundOffset.toString(16).toUpperCase()}`);
+      if (hits.length > 1) push('info', `(${hits.length} matches total — using first)`);
       break;
     } else {
-      push({ level: 'info', text: `Pattern [${i + 1}/${archPatterns.length}] → no match` });
+      push('info', `Pattern [${i + 1}/${archPatterns.length}] → no match`);
     }
   }
 
   if (foundOffset === null) {
-    push({ level: 'error', text: 'ssl_verify_peer_cert not found. Try a different Flutter version or architecture.' });
+    push('error', 'ssl_verify_peer_cert not found. The Flutter binary may be unsupported, obfuscated, or wrong arch.');
+    push('info',  'Tip: Try a different architecture, or use APK Patcher mode for Smali-based SSL bypass.');
     return { success: false, log };
   }
 
-  // 3. Find function start
+  // Find function start
   const fnOffset = findFunctionStart(inputBuf, foundOffset, arch);
-  push({ level: 'info',  text: `Function start at offset: 0x${fnOffset.toString(16).toUpperCase()}` });
+  if (fnOffset !== foundOffset) {
+    push('info', `Function start: 0x${fnOffset.toString(16).toUpperCase()} (walked back from match offset)`);
+  } else {
+    push('info', `Function start: 0x${fnOffset.toString(16).toUpperCase()}`);
+  }
 
-  // 4. Apply patch
+  // Apply patch
   const patch = RET0_PATCHES[arch];
   if (!patch) {
-    push({ level: 'error', text: `No ret0 patch defined for ${arch}` });
+    push('error', `No ret0 patch bytes defined for ${arch}`);
     return { success: false, log };
   }
-
-  // Validate we have enough space
   if (fnOffset + patch.length > inputBuf.length) {
-    push({ level: 'error', text: 'Patch would exceed binary bounds' });
+    push('error', 'Patch would exceed binary bounds — invalid offset');
     return { success: false, log };
   }
 
-  // Read original bytes for reporting
-  const originalBytes = inputBuf.slice(fnOffset, fnOffset + patch.length)
-    .toString('hex').toUpperCase().match(/.{2}/g).join(' ');
-  push({ level: 'info', text: `Original bytes: ${originalBytes}` });
+  const originalBytes = Array.from(inputBuf.slice(fnOffset, fnOffset + patch.length))
+    .map(b => b.toString(16).toUpperCase().padStart(2, '0')).join(' ');
+  push('info', `Original bytes: ${originalBytes}`);
 
-  // Clone buffer and apply patch
   const patchedBuf = Buffer.from(inputBuf);
   patch.copy(patchedBuf, fnOffset);
 
-  const patchedBytes = patch.toString('hex').toUpperCase().match(/.{2}/g).join(' ');
-  push({ level: 'info', text: `Patched  bytes: ${patchedBytes}` });
-
-  push({ level: 'success', text: 'ssl_verify_peer_cert patched successfully!' });
-  push({ level: 'success', text: 'SSL certificate verification is now bypassed.' });
+  const patchedBytes = Array.from(patch)
+    .map(b => b.toString(16).toUpperCase().padStart(2, '0')).join(' ');
+  push('info',    `Patched  bytes: ${patchedBytes}`);
+  push('success', 'ssl_verify_peer_cert patched successfully!');
+  push('success', 'SSL certificate verification is now bypassed.');
 
   return {
-    success: true,
-    log,
-    patchedBuf,
-    meta: {
-      arch,
-      foundOffset: `0x${foundOffset.toString(16).toUpperCase()}`,
-      fnOffset:    `0x${fnOffset.toString(16).toUpperCase()}`,
-      patternIdx,
-      originalBytes,
-      patchedBytes,
-    },
+    success: true, log, patchedBuf,
+    meta: { arch, foundOffset: `0x${foundOffset.toString(16).toUpperCase()}`,
+            fnOffset: `0x${fnOffset.toString(16).toUpperCase()}`,
+            patternIdx, originalBytes, patchedBytes },
   };
 }
 
