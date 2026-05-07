@@ -85,7 +85,9 @@ def main():
     options  = data['options']
     out_path = data['output_path']
 
-    cmd = ['python3', '-m', 'ApkPatcher', '-i', apk_path]
+    cmd = ['python3', '-c',
+           'import sys; from ApkPatcher.APK_PATCHER import RK_Techno_IND; RK_Techno_IND()',
+           '-i', apk_path]
 
     if options.get('flutter'):       cmd.append('-f')
     if options.get('pairip_corex'):  cmd.extend(['-p', '-x'])
