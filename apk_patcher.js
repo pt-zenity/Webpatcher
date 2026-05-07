@@ -104,6 +104,10 @@ def main():
         if aid:
             cmd.extend(['-D', aid])
 
+    # Selalu gunakan APKEditor (-a) karena aapt2 bawaan APKTool.jar
+    # di sistem ini adalah ARM binary yang tidak bisa dijalankan di x86_64
+    cmd.append('-a')
+
     env = os.environ.copy()
     env['PYTHONUNBUFFERED'] = '1'
     env['TERM'] = 'dumb'
